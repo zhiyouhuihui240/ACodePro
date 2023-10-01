@@ -20,14 +20,12 @@ class JunkUtil {
 
     static abc = "abcdefghijklmnopqrstuvwxyz".toCharArray()
     static color = "0123456789abcdef".toCharArray()
-    static List<String> stringList = new ArrayList<>()
-    static List<String> stringNameList = new ArrayList<>()
-    static List<String> otherClassNameList = new ArrayList<>()
-    static List<String> otherPackageNameList = new ArrayList<>()
-    static List<String> otherClassMethodsNameList = new ArrayList<>()
-    static Map<String, List<String>> otherClassMethodsAccessMap = new HashMap<String, List<String>>()
-    // 包名 + 类名，方法名
-    static Map<String, List<String>> otherAllPathMap = new HashMap<String, List<String>>()
+//    static List<String> otherClassNameList = new ArrayList<>()
+//    static List<String> otherPackageNameList = new ArrayList<>()
+//    static List<String> otherClassMethodsNameList = new ArrayList<>()
+//    static Map<String, List<String>> otherClassMethodsAccessMap = new HashMap<String, List<String>>()
+//    // 包名 + 类名，方法名
+//    static Map<String, List<String>> otherAllPathMap = new HashMap<String, List<String>>()
 
 
     // 随机生成一个名称
@@ -57,18 +55,18 @@ class JunkUtil {
         def sdk = "cn.hx.plugin.junkcode.utils.Utils"
         def isSDK = false
         def sdkStr = "logg"
-        if (otherPackageNameList.size() > 1 && otherClassNameList.size() > 1) {
+        if (ConstantKey.otherPackageNameList.size() > 1 && ConstantKey.otherClassNameList.size() > 1) {
             // todo: ClassName.get() 可以导入尚未存在的类
-            fullName = ClassName.get("${otherPackageNameList.get(1)}", "${otherClassNameList.get(1)}")
-            isSDK = CoonUtil.fetchSDK(otherPackageNameList, otherClassNameList)
+            fullName = ClassName.get("${ConstantKey.otherPackageNameList.get(1)}", "${ConstantKey.otherClassNameList.get(1)}")
+            isSDK = CoonUtil.fetchSDK(ConstantKey.otherPackageNameList, ConstantKey.otherClassNameList)
             if (isSDK) {
-                sdk = ClassName.get("${otherPackageNameList.get(1)}", "${otherClassNameList.get(1)}")
+                sdk = ClassName.get("${ConstantKey.otherPackageNameList.get(1)}", "${ConstantKey.otherClassNameList.get(1)}")
             } else {
                 sdk = ClassName.get(Utils.class)
             }
-            if (otherClassMethodsAccessMap.get(otherClassNameList.get(1)) != null && otherClassMethodsAccessMap.get(otherClassNameList.get(1)).size() > 0) {
+            if (ConstantKey.otherClassMethodsAccessMap.get(ConstantKey.otherClassNameList.get(1)) != null && ConstantKey.otherClassMethodsAccessMap.get(ConstantKey.otherClassNameList.get(1)).size() > 0) {
 //            if (otherClassMethodsAccessMap.get(otherClassNameList.first())!= null && otherClassMethodsAccessMap.get(otherClassNameList.first()).size() >0) {
-                values = otherClassMethodsAccessMap.get(otherClassNameList.get(1))
+                values = ConstantKey.otherClassMethodsAccessMap.get(ConstantKey.otherClassNameList.get(1))
                 if (values != null && !values.isEmpty() && values.size() > 0) {
                     String firstValue = values.get(0)
                     values.remove(0)
@@ -98,7 +96,7 @@ class JunkUtil {
         if (fullName == ClassName.get(Utils.class)) {
             str = "logg"
         }
-        MethodsUtil.generateR(methodBuilder, str, fullName, isLoad, otherAllPathMap )
+        MethodsUtil.generateR(methodBuilder, str, fullName, isLoad, ConstantKey.otherAllPathMap )
     }
 
 
@@ -111,7 +109,7 @@ class JunkUtil {
 
     // 生成activity
     static List<String> generateActivity(File javaDir, File resDir, String namespace, String packageName, JunkCodeConfig config) {
-        otherPackageNameList.add(0, packageName)
+        ConstantKey.otherPackageNameList.add(0, packageName)
         def activityList = new ArrayList()
         // gradle 中指定生成多少个 activity
         for (int i = 0; i < config.activityCountPerPackage; i++) {
@@ -119,7 +117,6 @@ class JunkUtil {
             def layoutName
             if (config.activityCreator) {
                 def activityNameBuilder = new StringBuilder()
-//                def activityNameBuilder = getRandomActivityName(i)
                 def layoutNameBuilder = new StringBuilder()
                 def layoutContentBuilder = new StringBuilder()
 //                config.activityCreator.execute(new Tuple4(i, getRandomActivityName(i), layoutNameBuilder, layoutContentBuilder))
@@ -127,71 +124,71 @@ class JunkUtil {
                 className = activityNameBuilder.toString()
                 layoutName = layoutNameBuilder.toString()
                 writeStringToFile(new File(resDir, "layout/${layoutName}.xml"), layoutContentBuilder.toString())
-            } else {
-//                def activityPreName = generateName(i)
-                // todo：从固有列表中随机获取任意一个 Activity 名称
-                def activityPreName = CoonUtil.getRandomActivityName(i)
-                // activityPreName.capitalize() 将首字母大写  再拼接 Activity
+            }
+            else {
+                def activityPreName = generateName(i)
                 className = activityPreName.capitalize() + "Activity"
                 layoutName = "${config.resPrefix.toLowerCase()}${packageName.replace(".", "_")}_activity_${activityPreName}"
                 generateLayout(resDir, layoutName, config)
             }
+
+            // 编写内容
             if (!config.excludeActivityJavaFile) {
                 // todo: 保存activity的类名
-                otherClassNameList.add(0, className)
+                ConstantKey.otherClassNameList.add(0, className)
                 def typeBuilder = TypeSpec.classBuilder(className)
                 // todo:   activity的继承父类更改为AppCompatActivity
-//                typeBuilder.superclass(ClassName.get("android.app", "Activity"))
                 typeBuilder.superclass(ClassName.get("androidx.appcompat.app", "AppCompatActivity"))
                 typeBuilder.addModifiers(Modifier.PUBLIC)
                 if (config.typeGenerator) {
                     config.typeGenerator.execute(typeBuilder)
                 } else {
                     // 下一个方法，对之前的数据进行清理
-                    stringNameList.clear()
-                    stringList.clear()
-                    // gradle 中指定生成多少个 methods
-                    for (int j = 0; j < config.methodCountPerClass; j++) {
+                    ConstantKey.stringNameList.clear()
+                    ConstantKey.stringList.clear()
+                    // todo: 这里不使用gradle中指定的数目，而是进行随机，从而达到每个类下的方法数目不定
+                    def methods = CoonUtil.randomLength(12)
+                    for (int j = 0; j < methods; j++) {
+//                    for (int j = 0; j < config.methodCountPerClass; j++) {
                         def methodName
                         if (config.methodNameCreator) {
                             def methodNameBuilder = new StringBuilder()
                             config.methodNameCreator.execute(new Tuple2(j, methodNameBuilder))
                             methodName = methodNameBuilder.toString()
                         } else {
-//                            methodName = generateRandomMethodsName(j)
                             methodName = generateName(j)
                         }
-
-                        stringNameList.add(methodName)
+                        // 保存方法名
+                        ConstantKey.stringNameList.add(methodName)
                         def methodBuilder = MethodSpec.methodBuilder(methodName)
                         if (config.methodGenerator) {
                             config.methodGenerator.execute(methodBuilder)
                         } else {
+                            // 生成随机方法
                             generateMethods(methodBuilder, false)
 //                            generateActivityMethods(methodBuilder)
                         }
                         typeBuilder.addMethod(methodBuilder.build())
 
-                        // 只添加没有参数的方法，且将新添加的数据放在首位
+                        // todo：函数方法数据保存，只添加没有参数的方法，且将新添加的数据放在首位
                         if (methodBuilder.build().parameters.size() == 0) {
-                            stringList.add(methodBuilder.build().name)
-                            otherClassMethodsNameList.add(0,methodBuilder.build().name)
-                            if (otherClassMethodsAccessMap.containsKey(className)) {
-                                otherClassMethodsAccessMap.get(className).add(methodBuilder.build().name)
+                            ConstantKey.stringList.add(methodBuilder.build().name)
+                            ConstantKey.otherClassMethodsNameList.add(0,methodBuilder.build().name)
+                            if (ConstantKey.otherClassMethodsAccessMap.containsKey(className)) {
+                                ConstantKey.otherClassMethodsAccessMap.get(className).add(methodBuilder.build().name)
                             } else {
                                 List<String> values = new ArrayList<String>()
                                 values.add(methodBuilder.build().name)
-                                otherClassMethodsAccessMap.put(className, values)
+                                ConstantKey.otherClassMethodsAccessMap.put(className, values)
                             }
 
-
-                            def allPath = "${otherPackageNameList.get(0)}.${otherClassNameList.get(0)}"
-                            if (otherAllPathMap.containsKey(allPath)) {
-                                otherAllPathMap.get(allPath).add(methodBuilder.build().name)
+                            def allPath = "${ConstantKey.otherPackageNameList.get(0)}.${ConstantKey.otherClassNameList.get(0)}"
+                            if (ConstantKey.otherAllPathMap.containsKey(allPath)) {
+                                ConstantKey.otherAllPathMap.get(allPath).add(methodBuilder.build().name)
                             } else {
-                                List<String> values = otherAllPathMap.getOrDefault(allPath, new ArrayList<>());
+                                List<String> values = ConstantKey.otherAllPathMap.getOrDefault(allPath, new ArrayList<>());
                                 values.add(methodBuilder.build().name)
-                                otherAllPathMap.put(allPath.toString(), values)
+                                ConstantKey.otherAllPathMap.put(allPath.toString(), values)
                             }
                         }
                     }
@@ -199,10 +196,10 @@ class JunkUtil {
 
                 // 定义回调函数
                 def bundleClassName = ClassName.get("android.os", "Bundle")
-                MethodsUtil.generateActivityRandom(typeBuilder, bundleClassName, layoutName, namespace, stringList)
-                MethodsUtil.generateActivityRandom1(typeBuilder, bundleClassName, layoutName, namespace, stringList)
-                MethodsUtil.generateActivityRandom2(typeBuilder, bundleClassName, layoutName, namespace, stringList)
-                MethodsUtil.generateActivityRandom3(typeBuilder, bundleClassName, layoutName, namespace, stringList)
+                MethodsUtil.generateActivityRandom(typeBuilder, bundleClassName, layoutName, namespace, ConstantKey.stringList)
+                MethodsUtil.generateActivityRandom1(typeBuilder, bundleClassName, layoutName, namespace, ConstantKey.stringList)
+                MethodsUtil.generateActivityRandom2(typeBuilder, bundleClassName, layoutName, namespace, ConstantKey.stringList)
+                MethodsUtil.generateActivityRandom3(typeBuilder, bundleClassName, layoutName, namespace, ConstantKey.stringList)
 
                 def javaFile = JavaFile.builder(packageName, typeBuilder.build()).build()
                 writeJavaToFile(javaDir, javaFile)
@@ -215,7 +212,7 @@ class JunkUtil {
 
     // 生成其他类文件
     static void generateJava(File javaDir, String packageName, JunkCodeConfig config) {
-        otherPackageNameList.add(0, packageName)
+        ConstantKey.otherPackageNameList.add(0, packageName)
         for (int i = 0; i < config.otherCountPerPackage; i++) {
             def className
             if (config.classNameCreator) {
@@ -226,7 +223,7 @@ class JunkUtil {
                 className = generateName(i).capitalize()
             }
             def typeBuilder = TypeSpec.classBuilder(className)
-            otherClassNameList.add(0, className)
+            ConstantKey.otherClassNameList.add(0, className)
             if (config.typeGenerator) {
                 config.typeGenerator.execute(typeBuilder)
             } else {
@@ -252,26 +249,26 @@ class JunkUtil {
 
                     // 只添加没有参数的方法，且将新添加的数据放在首位
                     if (methodBuilder.build().parameters.size() == 0) {
-                        otherClassMethodsNameList.add(0,methodBuilder.build().name)
+                        ConstantKey.otherClassMethodsNameList.add(0,methodBuilder.build().name)
 //                        otherClassMethodsAccessMap.put(className, methodBuilder.build().name)
 
-                        if (otherClassMethodsAccessMap.containsKey(className)) {
-                            otherClassMethodsAccessMap.get(className).add(methodBuilder.build().name);
+                        if (ConstantKey.otherClassMethodsAccessMap.containsKey(className)) {
+                            ConstantKey.otherClassMethodsAccessMap.get(className).add(methodBuilder.build().name);
                         } else {
                             List<String> values = new ArrayList<String>();
                             values.add(methodBuilder.build().name);
-                            otherClassMethodsAccessMap.put(className, values);
+                            ConstantKey.otherClassMethodsAccessMap.put(className, values);
                         }
 
 
-                        def allPath = "${otherPackageNameList.get(0)}.${otherClassNameList.get(0)}"
-                        if (otherAllPathMap.containsKey(allPath)) {
-                            otherAllPathMap.get(allPath).add(methodBuilder.build().name)
+                        def allPath = "${ConstantKey.otherPackageNameList.get(0)}.${ConstantKey.otherClassNameList.get(0)}"
+                        if (ConstantKey.otherAllPathMap.containsKey(allPath)) {
+                            ConstantKey.otherAllPathMap.get(allPath).add(methodBuilder.build().name)
                         } else {
 //                            List<String> values = new ArrayList<String>()
-                            List<String> values = otherAllPathMap.getOrDefault(allPath, new ArrayList<>())
+                            List<String> values = ConstantKey.otherAllPathMap.getOrDefault(allPath, new ArrayList<>())
                             values.add(methodBuilder.build().name)
-                            otherAllPathMap.put(allPath.toString(), values)
+                            ConstantKey.otherAllPathMap.put(allPath.toString(), values)
                         }
                     }
 //                    otherClassMethodsNameList.removeLast()

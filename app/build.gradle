@@ -1,16 +1,34 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+
+
+
 if (PLUGIN_ENABLE.toBoolean()) {
     apply plugin: 'android-junk-code'
 }
+
+import java.security.SecureRandom
 apply plugin: 'com.getkeepsafe.dexcount'
 apply plugin: 'kotlin-kapt'
 
-import java.security.SecureRandom
 
 
-// 随机生成一个名称
+apply from: 'random.gradle'
+
+//def randomFile = rootProject.file('app/random.gradle')
+//apply from: randomFile
+
+task getName1{
+    doLast{
+        def name = generateName3(5)
+        println "Romdd $name"
+        aaa = name
+    }
+}
+
+
 static String generateName(int index) {
+//    return generateName3(index)
     def random = new Random()
     def abc = "abcdefghijklmnopqrstuvwxyz".toCharArray()
     def sb = new StringBuilder()
@@ -28,7 +46,6 @@ static String generateName(int index) {
     sb.append(index.toString())
     return sb.toString()
 }
-
 
 // 定义生成随机字符串的函数
 static def randomString(int length) {
@@ -52,7 +69,6 @@ static def randomString(int length) {
     return sb.toString()
 }
 
-
 // 定义生成随机字符串的函数
 static def randomLowerString(int length) {
 // 首先定义一个随机数生成器
@@ -75,14 +91,13 @@ static def randomLowerString(int length) {
     return sb.toString()
 }
 
-// 返回 0-15之间的随机数
-static def random15(int length) {
+// 返回 3-length之间的随机数
+static def randomLength(int length) {
     SecureRandom secureRandom = new SecureRandom()
-    int randomNum = secureRandom.nextInt(16) // 生成0~15之间的随机数
+    int randomNum = secureRandom.nextInt(length) + 3
     return randomNum
 }
 
-// 定义生成随机字符串的函数
 static def randomInt(int length) {
 // 首先定义一个随机数生成器
     SecureRandom secureRandom = new SecureRandom()
@@ -104,19 +119,24 @@ static def randomInt(int length) {
     return sb.toInteger()
 }
 
+static def randomLayout(){
+
+}
+
 if (PLUGIN_ENABLE.toBoolean()) {
 
     androidJunkCode {
         debug true
         def debugConfig =  {
 //注意：这里的release是变体名称，如果没有设置productFlavors就是buildType名称，如果有设置productFlavors就是flavor+buildType，例如（freeRelease、proRelease）
-            packageBase = "com.vds.fk.ui"  //生成java类根包名
-            packageCount = 10 //生成包数量
-            activityCountPerPackage = 3 //每个包下生成Activity类数量
+//            packageBase = "com.vds.fk.ui"  //生成java类根包名
+//            packageCount = 10 //生成包数量
+            packageCount = randomLength(10) //生成包数量
+//            activityCountPerPackage = 3 //每个包下生成Activity类数量
             excludeActivityJavaFile = false // 是否将生成的activity写入到AndroidManifest.xml文件中
             //是否排除生成Activity的Java文件,默认false(layout和写入AndroidManifest.xml还会执行)，主要用于处理类似神策全埋点编译过慢问题
-            otherCountPerPackage = 30  //每个包下生成其它类的数量
-            methodCountPerClass = 20  //每个类下生成方法数量
+//            otherCountPerPackage = 30  //每个包下生成其它类的数量
+//            methodCountPerClass = 20  //每个类下生成方法数量
             resPrefix = "ic_"  //生成的layout、drawable、string等资源名前缀
             drawableCount = 194  //生成drawable资源数量
             stringCount = 300  //生成string数量
@@ -125,118 +145,83 @@ if (PLUGIN_ENABLE.toBoolean()) {
             //注意，要把生成的包名加入混淆文件
             packageCreator = { tuple2 ->
                 //int:下标 [0,packageCount)
-                def index = tuple2.first
+                def isSDK = false
                 //StringBuilder: 生成包名格式xx.xx.xx
                 def packageNameBuilder = tuple2.second
-
-                switch (random15(10)) {
+                def basePak = "com.dupsdsds.app"
+                switch (randomLength(10)) {
                     case 0:
-                        activityCountPerPackage = 3 //每个包下生成Activity类数量
-                        otherCountPerPackage = 11  //每个包下生成其它类的数量
-                        methodCountPerClass = 20  //每个类下生成方法数量
-                        packageNameBuilder.append("com.dup.app.view")
+                        packageNameBuilder.append("${basePak}.view")
                         break
                     case 1:
-                        activityCountPerPackage = 2 //每个包下生成Activity类数量
-                        otherCountPerPackage = 7  //每个包下生成其它类的数量
-                        methodCountPerClass = 6  //每个类下生成方法数量
-                        packageNameBuilder.append("com.dup.app.ui")
+                        packageNameBuilder.append("${basePak}.ui")
                         break
                     case 2:
-                        activityCountPerPackage = 5 //每个包下生成Activity类数量
-                        otherCountPerPackage = 7  //每个包下生成其它类的数量
-                        methodCountPerClass = 11  //每个类下生成方法数量
-                        packageNameBuilder.append("com.dup.app.screen")
+                        packageNameBuilder.append("${basePak}.screen")
                         break
                     case 3:
-                        activityCountPerPackage = 4 //每个包下生成Activity类数量
-                        otherCountPerPackage = 5  //每个包下生成其它类的数量
-                        methodCountPerClass = 12  //每个类下生成方法数量
-                        packageNameBuilder.append("com.dup.app.view.custom")
+                        packageNameBuilder.append("${basePak}.view.custom")
                         break
                     case 4:
-                        activityCountPerPackage = 2 //每个包下生成Activity类数量
-                        otherCountPerPackage = 6  //每个包下生成其它类的数量
-                        methodCountPerClass = 7  //每个类下生成方法数量
-                        packageNameBuilder.append("com.dup.app.common")
+                        packageNameBuilder.append("${basePak}.common")
                         break
                     case 5:
-                        activityCountPerPackage = 1 //每个包下生成Activity类数量
-                        otherCountPerPackage = 12  //每个包下生成其它类的数量
-                        methodCountPerClass = 7  //每个类下生成方法数量
-                        packageNameBuilder.append("com.dup.app.common.utils")
+                        packageNameBuilder.append("${basePak}.common.utils")
                         break
                     case 6:
-                        activityCountPerPackage = 2 //每个包下生成Activity类数量
-                        otherCountPerPackage = 13  //每个包下生成其它类的数量
-                        methodCountPerClass = 20  //每个类下生成方法数量
-                        packageNameBuilder.append("com.dup.app.activity")
+                        packageNameBuilder.append("${basePak}.activity")
                         break
                     case 7:
-                        activityCountPerPackage = 1 //每个包下生成Activity类数量
-                        otherCountPerPackage = 11  //每个包下生成其它类的数量
-                        methodCountPerClass = 5  //每个类下生成方法数量
-                        packageNameBuilder.append("com.dup.app.activity.adapter")
+                        packageNameBuilder.append("${basePak}.activity.adapter")
                         break
                     case 8:
-                        activityCountPerPackage = 1 //每个包下生成Activity类数量
-                        otherCountPerPackage = 16  //每个包下生成其它类的数量
-                        methodCountPerClass = 10  //每个类下生成方法数量
-                        packageNameBuilder.append("com.dup.app.compenents")
+                        packageNameBuilder.append("${basePak}.compenents")
                         break
                         // todo: 在 sdk 中添加类
                     case 9:
-                        otherCountPerPackage = 6  //每个包下生成其它类的数量
-                        methodCountPerClass = 10  //每个类下生成方法数量
                         packageNameBuilder.append("com.bytedance.sdk.component.utils")
+                        isSDK = true
                         break
                     case 10:
-                        otherCountPerPackage = 3  //每个包下生成其它类的数量
-                        methodCountPerClass = 6  //每个类下生成方法数量
                         packageNameBuilder.append("com.google.android.gms.ads.identifier")
+                        isSDK = true
                         break
                     case 11:
-                        otherCountPerPackage = 13  //每个包下生成其它类的数量
-                        methodCountPerClass = 8  //每个类下生成方法数量
                         packageNameBuilder.append("com.iab.omid.library.applovin")
+                        isSDK = true
                         break
                     case 12:
-                        activityCountPerPackage = 6 //每个包下生成Activity类数量
-                        otherCountPerPackage = 12  //每个包下生成其它类的数量
-                        methodCountPerClass = 12  //每个类下生成方法数量
                         packageNameBuilder.append("com.anythink.core.activity")
+                        isSDK = true
                         break
                     case 13:
-                        otherCountPerPackage = 5  //每个包下生成其它类的数量
-                        methodCountPerClass = 15  //每个类下生成方法数量
                         packageNameBuilder.append("com.bytedance")
+                        isSDK = true
                         break
                     default:
-                        activityCountPerPackage = 2 //每个包下生成Activity类数量
-                        otherCountPerPackage = 7  //每个包下生成其它类的数量
-                        methodCountPerClass = 7  //每个类下生成方法数量
-                        packageNameBuilder.append("com.dup.app.data")
+                        packageNameBuilder.append("${basePak}.data")
                         break
                 }
+                // todo：如果是sdk的话，就不生成activity了，没有起到效果？
+                if (!isSDK){
+                    activityCountPerPackage = randomLength(10) //每个包下生成Activity类数量
+                }
+                otherCountPerPackage = randomLength(10)  //每个包下生成其它类的数量
+                methodCountPerClass = randomLength(20)  //每个类下生成方法数量
+
             }
 
             // 自定义生成Activity
             activityCreator = { tuple4 ->
-                //int:下标 [0,activityCountPerPackage)
-                def index = tuple4.first
                 //StringBuilder: 生成Activity文件名
                 def activityNameBuilder = tuple4.second
                 //StringBuilder: 生成layout文件名
                 def layoutNameBuilder = tuple4.third
                 //StringBuilder: 生成layout内容
                 def layoutContentBuilder = tuple4.fourth
-
-                activityNameBuilder.append("${generateName(7)}")
-//                -------------------------------------
-//                activityNameBuilder.append("dsDssss")
-//                *************************************
-                layoutNameBuilder.append("${randomLowerString(5)}")
-
+                def name = generateName(7)
+                activityNameBuilder.append("${name}")
+                layoutNameBuilder.append("activity_${name}")
 
                 def randomLayout = ""
                 randomLayout = '''<?xml version="1.0" encoding="utf-8"?>
@@ -583,8 +568,10 @@ if (PLUGIN_ENABLE.toBoolean()) {
                 }
 
                 layoutContentBuilder.append(randomLayout)
-
             }
+
+
+
 
             //自定义生成类名（Activity除外）
             classNameCreator = { tuple2 ->
@@ -1763,7 +1750,6 @@ android:state_focused="true" />
             //自定义方法实现（方法名已经实现随机，其它自己实现随机）
             //MethodSpec.Builder用法请参考(https://github.com/square/javapoet)
 //            methodGenerator = { methodBuilder ->
-//               //例
 ////                methodBuilder.addCode("" + "int total = 0;\n" + "for (int i = 0; i < 50000; i++) {\n" + "  total += i;\n" + "}\n")
 //            }
 
@@ -1780,8 +1766,6 @@ android:state_focused="true" />
         }
     }
 }
-
-
 
 android {
     compileSdkVersion 33
@@ -1806,6 +1790,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+
     lintOptions {
         checkReleaseBuilds false
         abortOnError false
@@ -1824,7 +1810,5 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
-//    implementation 'com.example:mylib:1.2.5'
-
-
+    implementation 'com.example:mylib:1.2.8'
 }

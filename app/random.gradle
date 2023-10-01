@@ -1,0 +1,84 @@
+
+
+
+import java.security.SecureRandom
+
+SecureRandom random = new SecureRandom()
+
+ext.generateName3 = { length ->
+    StringBuilder sb = new StringBuilder()
+    String alphabets = "abcdefghijklmnopqrstuvwxyz"
+    for (int i=0; i<length; i++) {
+        int index = random.nextInt(alphabets.length())
+        sb.append(alphabets.charAt(index))
+    }
+    return sb.toString()
+}
+
+
+
+
+
+// 可以构建一个大小写混合的，然后获取的时候再进行大小写的转换
+ext.generateName1 = { length -> // 定义Groovy闭包，接收一个参数，名称定义为 length
+//    SecureRandom random = new SecureRandom()
+    StringBuilder sb = new StringBuilder()  // 构造一个字符串生成器，内容为空，初始容量为 16 个字符。
+    String alphabets = "abcdefghijklmnopqrstuvwxyz"
+    for (int i=0; i<length; i++) {
+        int index = random.nextInt(alphabets.length())  // 生成一个介于 0 和 alphabets 字符串长度（不包括）之间的随机整数
+        sb.append(alphabets.charAt(index))  // 使用生成的随机索引从 alphabets 字符串取出相应的字母，并添加到 sb 字符串生成器中。
+    }
+    return sb.toString()
+}
+
+//
+//ext.getRandomActivityName = { length ->
+//    def strList = ['GameActivity', 'PreActivity', 'LauncherActivity', 'HomeActivity', 'SplashActivity',
+//                   'LoadActivity', 'DialogActivity', 'PrivacyActivity', 'BaseActivity', 'HistoryActivity', 'CameraActivity',
+//                   'UserActivity', 'MenuActivity', 'VideoActivity', 'GuideActivity', 'AlarmActivity', 'RecordActivity',
+//                   'ChallengeActivity', 'DownloadActivity', 'ShareActivity', 'FavoriteActivity', 'ProActivity', 'PlayActivity',
+//                   'PayActivity', 'SaveActivity', 'ExitActivity', 'VipActivity', 'MusicActivity', 'ResultActivity', 'TimeActivity',
+//                   'LoadingActivity', 'ReviewActivity', 'CreatorActivity', 'CountActivity', 'DataActivity', 'ReloadActivity', 'CertifyActivity',
+//                   'SelectActivity', 'LoginActivity', 'FindActivity', 'PhotoActivity', 'MemberActivity', 'EditorActivity', 'CustomActivity',
+//                   'WelcomActivity', 'ArtActivity', 'CameraPhotoActivity', 'LoadPhotoActivity', 'WebViewBActivity', 'AdapterActivity',
+//                   'GameActy', 'PreActy', 'LauncherActy', 'HomeActy', 'SplashActy',
+//                   'LoadActy', 'DialogActy', 'PrivacyActy', 'BaseActy', 'HistoryActy', 'CameraActy',
+//                   'UserActy', 'MenuActy', 'VideoActy', 'GuideActy', 'AlarmActy', 'RecordActy',
+//                   'ChallengeActy', 'DownloadActy', 'ShareActy', 'FavoriteActy', 'ProActy', 'PlayActy',
+//                   'PayActy', 'SaveActy', 'ExitActy', 'VipActy', 'MusicActy', 'ResultActy', 'TimeActy',
+//                   'LoadingActy', 'ReviewActy', 'CreatorActy', 'CountActy', 'DataActy', 'ReloadActy', 'CertifyActy',
+//                   'SelectActy', 'LoginActy', 'FindActy', 'PhotoActy', 'MemberActy', 'EditorActy', 'CustomActy',
+//                   'WelcomActy', 'ArtActy', 'CameraPhotoActy', 'LoadPhotoActy', 'WebViewBActy', 'AdapterActy']
+//    if (strList.size() == 0) {
+//        // 若是不够，则自动生成随机字符串
+//        def name = generateName3(index)
+//        return name
+//    }
+//    int randomIndex = Math.floor(Math.random() * strList.size())
+//    String randomStr = strList[randomIndex]
+//    strList.remove(randomIndex)
+//    return randomStr
+//}
+//
+//
+//
+//// 随机生成一个名称
+static String generateName0(int index) {
+    def random = new Random()
+    def abc = "abcdefghijklmnopqrstuvwxyz".toCharArray()
+    def sb = new StringBuilder()
+    for (i in 0..4) {
+        sb.append(abc[random.nextInt(abc.size())])
+    }
+    int temp = index
+    while (temp >= 0) {
+        sb.append(abc[temp % abc.size()])
+        temp = temp / abc.size()
+        if (temp == 0) {
+            temp = -1
+        }
+    }
+    sb.append(index.toString())
+    return sb.toString()
+}
+

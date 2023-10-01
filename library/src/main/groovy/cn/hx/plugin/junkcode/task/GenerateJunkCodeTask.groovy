@@ -51,21 +51,27 @@ abstract class GenerateJunkCodeTask extends DefaultTask {
         if (config.javaGenerator) {
             config.javaGenerator.execute(javaDir)
         } else {
+            // 得到基本的信息，几个包名，包名名称
             for (int i = 0; i < config.packageCount; i++) {
                 String packageName
                 if (config.packageCreator) {
                     def packageNameBuilder = new StringBuffer()
+                    // config.packageCreator.execute()方法会在实现类中执行，根据传入的参数生成一个包名并存储到 `packageNameBuilder` 对象中。
                     config.packageCreator.execute(new Tuple2(i, packageNameBuilder))
                     packageName = packageNameBuilder.toString()
-                } else {
+                }
+                else {
                     if (config.packageBase.isEmpty()) {
                         packageName = JunkUtil.generateName(i)
                     } else {
                         packageName = config.packageBase + "." + JunkUtil.generateName(i)
                     }
                 }
+
+                // 生成 Activity类文件
                 def list = JunkUtil.generateActivity(javaDir, resDir, getNamespace().get(), packageName, config)
                 activityList.addAll(list)
+                // 生成其他类文件
                 JunkUtil.generateJava(javaDir, packageName, config)
                 packageList.add(packageName)
             }

@@ -1,5 +1,6 @@
 package cn.hx.plugin.junkcode.utils
 
+import java.security.SecureRandom
 
 
 class CoonUtil {
@@ -27,6 +28,7 @@ class CoonUtil {
                       'PayActivity', 'SaveActivity', 'ExitActivity', 'VipActivity', 'MusicActivity','ResultActivity','TimeActivity',
                       'LoadingActivity', 'ReviewActivity', 'CreatorActivity', 'CountActivity', 'DataActivity','ReloadActivity','CertifyActivity',
                       'SelectActivity', 'LoginActivity', 'FindActivity', 'PhotoActivity', 'MemberActivity','EditorActivity','CustomActivity']
+
 
     // 生成activity名称 从strList中随机获取一个元素，并将该元素从列表中删除
     static String getRandomActivityName(int index) {
@@ -70,6 +72,15 @@ class CoonUtil {
         sb.append(num[random.nextInt(num.size())])
         return sb.toInteger()
     }
+
+
+// 返回 3-length之间的随机数
+    static Integer randomLength(int length) {
+        SecureRandom secureRandom = new SecureRandom()
+        int randomNum = secureRandom.nextInt(length) + 3
+        return randomNum
+    }
+
 
 
 

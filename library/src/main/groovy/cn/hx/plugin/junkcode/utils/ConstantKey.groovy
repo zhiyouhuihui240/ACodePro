@@ -15,6 +15,14 @@ class ConstantKey {
 
 
 
+    static List<String> stringList = new ArrayList<>()
+    static List<String> stringNameList = new ArrayList<>()
 
+    static List<String> otherClassNameList = new ArrayList<>()
+    static List<String> otherPackageNameList = new ArrayList<>()
+    static List<String> otherClassMethodsNameList = new ArrayList<>()
+    static Map<String, List<String>> otherClassMethodsAccessMap = new HashMap<String, List<String>>()
+    // 包名 + 类名，方法名
+    static Map<String, List<String>> otherAllPathMap = new HashMap<String, List<String>>()
 
 }
