@@ -10,7 +10,7 @@ class ConstantKey {
      'compiry.com',"GlideTo","skjfsnv",'www','85', 'PRIVETE_KEY','52','base',
      'mxcxmcf',"werdsfxxc","1332dssxd12sfwe4",'lyi.ckkd','66',
     'wefhkdsjwek',"com.ds.weredk","1f2s2d1f22312dsf",'https://play.google.com/store','26',
-    'com.udp.kki',"true","false",'https://play.google.com/store','26',]
+    'com.udp.kki',"true","false",'https://play.google.com/store','26']
 
 
 
@@ -24,5 +24,9 @@ class ConstantKey {
     static Map<String, List<String>> otherClassMethodsAccessMap = new HashMap<String, List<String>>()
     // 包名 + 类名，方法名
     static Map<String, List<String>> otherAllPathMap = new HashMap<String, List<String>>()
+
+    static String otherPathClassNameObj = ""
+    static String otherPathClassNameValue = ""
+
 
 }

@@ -1,5 +1,7 @@
 package cn.hx.plugin.junkcode.utils
 
+import com.squareup.javapoet.ClassName
+
 import java.security.SecureRandom
 
 
@@ -18,6 +20,7 @@ class CoonUtil {
     static ABC = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray()
     static abcABC = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray()
     static abcABC123 = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".toCharArray()
+
 
 
 

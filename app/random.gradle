@@ -32,36 +32,36 @@ ext.generateName1 = { length -> // 定义Groovy闭包，接收一个参数，名
 }
 
 //
-//ext.getRandomActivityName = { length ->
-//    def strList = ['GameActivity', 'PreActivity', 'LauncherActivity', 'HomeActivity', 'SplashActivity',
-//                   'LoadActivity', 'DialogActivity', 'PrivacyActivity', 'BaseActivity', 'HistoryActivity', 'CameraActivity',
-//                   'UserActivity', 'MenuActivity', 'VideoActivity', 'GuideActivity', 'AlarmActivity', 'RecordActivity',
-//                   'ChallengeActivity', 'DownloadActivity', 'ShareActivity', 'FavoriteActivity', 'ProActivity', 'PlayActivity',
-//                   'PayActivity', 'SaveActivity', 'ExitActivity', 'VipActivity', 'MusicActivity', 'ResultActivity', 'TimeActivity',
-//                   'LoadingActivity', 'ReviewActivity', 'CreatorActivity', 'CountActivity', 'DataActivity', 'ReloadActivity', 'CertifyActivity',
-//                   'SelectActivity', 'LoginActivity', 'FindActivity', 'PhotoActivity', 'MemberActivity', 'EditorActivity', 'CustomActivity',
-//                   'WelcomActivity', 'ArtActivity', 'CameraPhotoActivity', 'LoadPhotoActivity', 'WebViewBActivity', 'AdapterActivity',
-//                   'GameActy', 'PreActy', 'LauncherActy', 'HomeActy', 'SplashActy',
-//                   'LoadActy', 'DialogActy', 'PrivacyActy', 'BaseActy', 'HistoryActy', 'CameraActy',
-//                   'UserActy', 'MenuActy', 'VideoActy', 'GuideActy', 'AlarmActy', 'RecordActy',
-//                   'ChallengeActy', 'DownloadActy', 'ShareActy', 'FavoriteActy', 'ProActy', 'PlayActy',
-//                   'PayActy', 'SaveActy', 'ExitActy', 'VipActy', 'MusicActy', 'ResultActy', 'TimeActy',
-//                   'LoadingActy', 'ReviewActy', 'CreatorActy', 'CountActy', 'DataActy', 'ReloadActy', 'CertifyActy',
-//                   'SelectActy', 'LoginActy', 'FindActy', 'PhotoActy', 'MemberActy', 'EditorActy', 'CustomActy',
-//                   'WelcomActy', 'ArtActy', 'CameraPhotoActy', 'LoadPhotoActy', 'WebViewBActy', 'AdapterActy']
-//    if (strList.size() == 0) {
-//        // 若是不够，则自动生成随机字符串
-//        def name = generateName3(index)
-//        return name
-//    }
-//    int randomIndex = Math.floor(Math.random() * strList.size())
-//    String randomStr = strList[randomIndex]
-//    strList.remove(randomIndex)
-//    return randomStr
-//}
-//
-//
-//
+ext.getRandomActivityName = { length ->
+    def strList = ['GameActivity', 'PreActivity', 'LauncherActivity', 'HomeActivity', 'SplashActivity',
+                   'LoadActivity', 'DialogActivity', 'PrivacyActivity', 'BaseActivity', 'HistoryActivity', 'CameraActivity',
+                   'UserActivity', 'MenuActivity', 'VideoActivity', 'GuideActivity', 'AlarmActivity', 'RecordActivity',
+                   'ChallengeActivity', 'DownloadActivity', 'ShareActivity', 'FavoriteActivity', 'ProActivity', 'PlayActivity',
+                   'PayActivity', 'SaveActivity', 'ExitActivity', 'VipActivity', 'MusicActivity', 'ResultActivity', 'TimeActivity',
+                   'LoadingActivity', 'ReviewActivity', 'CreatorActivity', 'CountActivity', 'DataActivity', 'ReloadActivity', 'CertifyActivity',
+                   'SelectActivity', 'LoginActivity', 'FindActivity', 'PhotoActivity', 'MemberActivity', 'EditorActivity', 'CustomActivity',
+                   'WelcomActivity', 'ArtActivity', 'CameraPhotoActivity', 'LoadPhotoActivity', 'WebViewBActivity', 'AdapterActivity',
+                   'GameActy', 'PreActy', 'LauncherActy', 'HomeActy', 'SplashActy',
+                   'LoadActy', 'DialogActy', 'PrivacyActy', 'BaseActy', 'HistoryActy', 'CameraActy',
+                   'UserActy', 'MenuActy', 'VideoActy', 'GuideActy', 'AlarmActy', 'RecordActy',
+                   'ChallengeActy', 'DownloadActy', 'ShareActy', 'FavoriteActy', 'ProActy', 'PlayActy',
+                   'PayActy', 'SaveActy', 'ExitActy', 'VipActy', 'MusicActy', 'ResultActy', 'TimeActy',
+                   'LoadingActy', 'ReviewActy', 'CreatorActy', 'CountActy', 'DataActy', 'ReloadActy', 'CertifyActy',
+                   'SelectActy', 'LoginActy', 'FindActy', 'PhotoActy', 'MemberActy', 'EditorActy', 'CustomActy',
+                   'WelcomActy', 'ArtActy', 'CameraPhotoActy', 'LoadPhotoActy', 'WebViewBActy', 'AdapterActy']
+    if (strList.size() == 0) {
+        // 若是不够，则自动生成随机字符串
+        def name = generateName3(index)
+        return name
+    }
+    int randomIndex = Math.floor(Math.random() * strList.size())
+    String randomStr = strList[randomIndex]
+    strList.remove(randomIndex)
+    return randomStr
+}
+
+
+
 //// 随机生成一个名称
 static String generateName0(int index) {
     def random = new Random()

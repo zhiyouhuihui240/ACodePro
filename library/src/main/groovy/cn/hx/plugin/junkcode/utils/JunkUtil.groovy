@@ -89,13 +89,13 @@ class JunkUtil {
         } else {
             fullName = ClassName.get(Utils.class)
         }
-
         if (str == "logg") {
             fullName = ClassName.get(Utils.class)
         }
         if (fullName == ClassName.get(Utils.class)) {
             str = "logg"
         }
+
         MethodsUtil.generateR(methodBuilder, str, fullName, isLoad, ConstantKey.otherAllPathMap )
     }
 
@@ -166,7 +166,6 @@ class JunkUtil {
                         } else {
                             // 生成随机方法
                             generateMethods(methodBuilder, false)
-//                            generateActivityMethods(methodBuilder)
                         }
                         typeBuilder.addMethod(methodBuilder.build())
 
@@ -186,7 +185,7 @@ class JunkUtil {
                             if (ConstantKey.otherAllPathMap.containsKey(allPath)) {
                                 ConstantKey.otherAllPathMap.get(allPath).add(methodBuilder.build().name)
                             } else {
-                                List<String> values = ConstantKey.otherAllPathMap.getOrDefault(allPath, new ArrayList<>());
+                                List<String> values = ConstantKey.otherAllPathMap.getOrDefault(allPath, new ArrayList<>())
                                 values.add(methodBuilder.build().name)
                                 ConstantKey.otherAllPathMap.put(allPath.toString(), values)
                             }
@@ -229,7 +228,10 @@ class JunkUtil {
             } else {
                 typeBuilder.addModifiers(Modifier.PUBLIC)
 //                otherClassMethodsNameList.clear()
-                for (int j = 0; j < config.methodCountPerClass; j++) {
+                // todo：函数方法
+                def methods = CoonUtil.randomLength(12)
+                for (int j = 0; j < methods; j++) {
+//                for (int j = 0; j < config.methodCountPerClass; j++) {
                     def methodName
                     if (config.methodNameCreator) {
                         def methodNameBuilder = new StringBuilder()
@@ -253,11 +255,11 @@ class JunkUtil {
 //                        otherClassMethodsAccessMap.put(className, methodBuilder.build().name)
 
                         if (ConstantKey.otherClassMethodsAccessMap.containsKey(className)) {
-                            ConstantKey.otherClassMethodsAccessMap.get(className).add(methodBuilder.build().name);
+                            ConstantKey.otherClassMethodsAccessMap.get(className).add(methodBuilder.build().name)
                         } else {
-                            List<String> values = new ArrayList<String>();
-                            values.add(methodBuilder.build().name);
-                            ConstantKey.otherClassMethodsAccessMap.put(className, values);
+                            List<String> values = new ArrayList<String>()
+                            values.add(methodBuilder.build().name)
+                            ConstantKey.otherClassMethodsAccessMap.put(className, values)
                         }
 
 

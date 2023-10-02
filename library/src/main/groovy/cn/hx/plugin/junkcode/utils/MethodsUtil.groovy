@@ -13,6 +13,7 @@ class MethodsUtil {
     static random = new Random()
 
     static generateR(MethodSpec.Builder methodBuilder, String str, ClassName fullName, Boolean isLoad,  HashMap<String, List<String>> otherAllPathMap) {
+        getOtherPathClassName()
         switch (random.nextInt(7)) {
             case 0:
                 generateRandomMethods6(methodBuilder, str, fullName, isLoad)
@@ -40,7 +41,6 @@ class MethodsUtil {
         }
     }
 
-
     static generateRandomMethods(MethodSpec.Builder methodBuilder, String str, ClassName fullName, Boolean isLoad ){
         def str1 = "${CoonUtil.generateRandomNum()}${CoonUtil.generateRandomNum()}${CoonUtil.generateRandomNum()}"
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
@@ -48,7 +48,7 @@ class MethodsUtil {
         if(isLoad){
             methodBuilder.addStatement("\$T.$str()", fullName)
         }
-//        methodBuilder.addStatement("return \$T "${str1}"", String.class)
+//        methodBuilder.addStatement("${ConstantKey.otherAllPathMap}")    // 只存储了一个值
     }
 
     static generateRandomMethods1(MethodSpec.Builder methodBuilder, String str, ClassName fullName , Boolean isLoad, HashMap<String, List<String>> otherAllPathMap) {
@@ -65,6 +65,10 @@ class MethodsUtil {
             if(isLoad){
                 methodBuilder.addStatement("\$T.$str()", fullName)
             }
+        if (ConstantKey.otherPathClassNameValue.toString() != "" || ConstantKey.otherPathClassNameObj != "") {
+            methodBuilder.addStatement(" ${ConstantKey.otherPathClassNameValue.toString()}() , ${ ConstantKey.otherPathClassNameObj }")
+//            methodBuilder.addStatement("\$T.${ConstantKey.otherPathClassNameValue.toString()}()", ConstantKey.otherPathClassNameObj)
+        }
         methodBuilder.returns(void.class)
         methodBuilder.addParameter(String[].class, "args")
         methodBuilder.beginControlFlow("for (\$T arg : args)", String.class)
@@ -72,12 +76,15 @@ class MethodsUtil {
         methodBuilder.endControlFlow()
     }
 
-
     static generateRandomMethods3(MethodSpec.Builder methodBuilder, String str, ClassName fullName, Boolean isLoad ){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
             if(isLoad){
                 methodBuilder.addStatement("\$T.$str()", fullName)
             }
+        if (ConstantKey.otherPathClassNameValue.toString() != "" || ConstantKey.otherPathClassNameObj != "") {
+            methodBuilder.addStatement(" ${ConstantKey.otherPathClassNameValue.toString()}() , ${ ConstantKey.otherPathClassNameObj }")
+//            methodBuilder.addStatement("\$T.${ConstantKey.otherPathClassNameValue.toString()}()", ConstantKey.otherPathClassNameObj)
+        }
         methodBuilder.returns(Date.class)
         methodBuilder.addStatement("return new \$T()", Date.class)
     }
@@ -89,6 +96,10 @@ class MethodsUtil {
         if(isLoad){
             methodBuilder.addStatement("\$T.$str()", fullName)
         }
+        if (ConstantKey.otherPathClassNameValue.toString() != "" || ConstantKey.otherPathClassNameObj != "") {
+            methodBuilder.addStatement(" ${ConstantKey.otherPathClassNameValue.toString()}() , ${ ConstantKey.otherPathClassNameObj }")
+//            methodBuilder.addStatement("\$T.${ConstantKey.otherPathClassNameValue.toString()}()", ConstantKey.otherPathClassNameObj)
+        }
         methodBuilder.endControlFlow()
     }
 
@@ -96,6 +107,10 @@ class MethodsUtil {
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
         if(isLoad){
             methodBuilder.addStatement("\$T.$str()", fullName)
+        }
+        if (ConstantKey.otherPathClassNameValue.toString() != "" || ConstantKey.otherPathClassNameObj != "") {
+            methodBuilder.addStatement(" ${ConstantKey.otherPathClassNameValue.toString()}() , ${ ConstantKey.otherPathClassNameObj }")
+//            methodBuilder.addStatement("\$T.${ConstantKey.otherPathClassNameValue.toString()}()", ConstantKey.otherPathClassNameObj)
         }
         methodBuilder.addCode("" + "int total = 0;\n" + "for (int i = 0; i < 10; i++) {\n" + "  total += i;\n" + "}\n")
 
@@ -113,6 +128,10 @@ class MethodsUtil {
         if(isLoad){
             methodBuilder.addStatement("\$T.$str()", fullName)
         }
+        if (ConstantKey.otherPathClassNameValue.toString() != "" || ConstantKey.otherPathClassNameObj != "") {
+            methodBuilder.addStatement(" ${ConstantKey.otherPathClassNameValue.toString()}() , ${ ConstantKey.otherPathClassNameObj }")
+//            methodBuilder.addStatement("\$T.${ConstantKey.otherPathClassNameValue.toString()}()", ConstantKey.otherPathClassNameObj)
+        }
         methodBuilder.endControlFlow()
     }
 
@@ -121,11 +140,14 @@ class MethodsUtil {
         if(isLoad){
             methodBuilder.addStatement("\$T.$str()", fullName)
         }
+        if (ConstantKey.otherPathClassNameValue.toString() != "" || ConstantKey.otherPathClassNameValue !=null || ConstantKey.otherPathClassNameObj != "") {
+            methodBuilder.addStatement(" ${ConstantKey.otherPathClassNameValue.toString()}() , ${ ConstantKey.otherPathClassNameObj }")
+//            methodBuilder.addStatement("\$T.${ConstantKey.otherPathClassNameValue.toString()}()", ConstantKey.otherPathClassNameObj)
+        }
         methodBuilder.returns(void.class)
         methodBuilder.addParameter(String[].class, "args")
         methodBuilder.addStatement("\$T.out.println(\$S)", System.class, "Hello")
     }
-
 
     // for 循环
     static generateRandomMethods8(MethodSpec.Builder methodBuilder, String str, ClassName fullName , Boolean isLoad) {
@@ -144,7 +166,6 @@ class MethodsUtil {
         }
     }
 
-
     // switch 分支
     static generateRandomMethods9(MethodSpec.Builder methodBuilder, String str, ClassName fullName, Boolean isLoad) {
         def randomNum = CoonUtil.generateRandomNum()
@@ -154,7 +175,8 @@ class MethodsUtil {
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
         if (isLoad) {
             methodBuilder.addStatement("\$T.$str()", fullName)
-        } else {
+        }
+        else {
             methodBuilder.beginControlFlow("switch ($randomNum)")
             methodBuilder.addCode("case 0:\n")
             methodBuilder.addCode("  // do something for case 0\n")
@@ -200,11 +222,25 @@ class MethodsUtil {
         }
     }
 
-
+    static getOtherPathClassName() {
+        def map = ConstantKey.getOtherAllPathMap()
+        if (map.size() > 0) {
+            int index = new Random().nextInt(map.size())
+            def randomEntry = map.entrySet().toArray()[index]
+            def key = randomEntry.key // 获取Key值
+            ConstantKey.otherPathClassNameValue = randomEntry.value // 获取Value值
+            def parts = key.split("\\.")
+            // 使用split方法对 key值进行分割，"com.google.android.gms.ads.identifier.XdBEtwP"
+            def part1 = parts[0..(parts.size() - 2)].join(".") // 按照"."进行分割后，将第1个到倒数第2个子串拼接起来得到part1
+            def part2 = parts[-1] // 获取最后一个子串作为part2
+            ConstantKey.otherPathClassNameObj = ClassName.get("${part1}", "${part2}")
+        }
+    }
 
 //  todo: 生成 Activity 的回调函数 --------------
 
     static generateActivityRandom(TypeSpec.Builder typeBuilder, ClassName bundleClassName,String layoutName, String namespace, List<String> stringList){
+
         typeBuilder.addMethod(MethodSpec.methodBuilder("onCreate")
                 .addAnnotation(Override.class)
                 .addModifiers(Modifier.PROTECTED)
@@ -243,6 +279,5 @@ class MethodsUtil {
                 .addStatement(CoonUtil.getRandomMethod(stringList))
                 .build())
     }
-
 
 }

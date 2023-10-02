@@ -27,6 +27,39 @@ task getName1{
 }
 
 
+static String generateActivityName(int index) {
+    def strList = ['GameActivity', 'PreActivity', 'LauncherActivity', 'HomeActivity', 'SplashActivity',
+                   'LoadActivity', 'DialogActivity', 'PrivacyActivity', 'BaseActivity', 'HistoryActivity', 'CameraActivity',
+                   'UserActivity', 'MenuActivity', 'VideoActivity', 'GuideActivity', 'AlarmActivity', 'RecordActivity',
+                   'ChallengeActivity', 'DownloadActivity', 'ShareActivity', 'FavoriteActivity', 'ProActivity', 'PlayActivity',
+                   'PayActivity', 'SaveActivity', 'ExitActivity', 'VipActivity', 'MusicActivity', 'ResultActivity', 'TimeActivity',
+                   'LoadingActivity', 'ReviewActivity', 'CreatorActivity', 'CountActivity', 'DataActivity', 'ReloadActivity', 'CertifyActivity',
+                   'SelectActivity', 'LoginActivity', 'FindActivity', 'PhotoActivity', 'MemberActivity', 'EditorActivity', 'CustomActivity',
+                   'WelcomActivity', 'ArtActivity', 'CameraPhotoActivity', 'LoadPhotoActivity', 'WebViewBActivity', 'AdapterActivity',
+                   'GameActy', 'PreActy', 'LauncherActy', 'HomeActy', 'SplashActy',
+                   'LoadActy', 'DialogActy', 'PrivacyActy', 'BaseActy', 'HistoryActy', 'CameraActy',
+                   'UserActy', 'MenuActy', 'VideoActy', 'GuideActy', 'AlarmActy', 'RecordActy',
+                   'ChallengeActy', 'DownloadActy', 'ShareActy', 'FavoriteActy', 'ProActy', 'PlayActy',
+                   'PayActy', 'SaveActy', 'ExitActy', 'VipActy', 'MusicActy', 'ResultActy', 'TimeActy',
+                   'LoadingActy', 'ReviewActy', 'CreatorActy', 'CountActy', 'DataActy', 'ReloadActy', 'CertifyActy',
+                   'SelectActy', 'LoginActy', 'FindActy', 'PhotoActy', 'MemberActy', 'EditorActy', 'CustomActy',
+                   'WelcomActy', 'ArtActy', 'CameraPhotoActy', 'LoadPhotoActy', 'WebViewBActy', 'AdapterActy']
+    if (strList.size() == 0) {
+        // 若是不够，则自动生成随机字符串
+        def name = generateName(index)
+        return name
+    }
+    int randomIndex = Math.floor(Math.random() * strList.size())
+    String randomStr = strList[randomIndex]
+    strList.remove(randomIndex)
+    return randomStr
+}
+
+
+
+
+
+
 static String generateName(int index) {
 //    return generateName3(index)
     def random = new Random()
@@ -119,9 +152,7 @@ static def randomInt(int length) {
     return sb.toInteger()
 }
 
-static def randomLayout(){
 
-}
 
 if (PLUGIN_ENABLE.toBoolean()) {
 
@@ -131,7 +162,9 @@ if (PLUGIN_ENABLE.toBoolean()) {
 //注意：这里的release是变体名称，如果没有设置productFlavors就是buildType名称，如果有设置productFlavors就是flavor+buildType，例如（freeRelease、proRelease）
 //            packageBase = "com.vds.fk.ui"  //生成java类根包名
 //            packageCount = 10 //生成包数量
+//            packageCount = 2 //生成包数量
             packageCount = randomLength(10) //生成包数量
+
 //            activityCountPerPackage = 3 //每个包下生成Activity类数量
             excludeActivityJavaFile = false // 是否将生成的activity写入到AndroidManifest.xml文件中
             //是否排除生成Activity的Java文件,默认false(layout和写入AndroidManifest.xml还会执行)，主要用于处理类似神策全埋点编译过慢问题
@@ -204,9 +237,12 @@ if (PLUGIN_ENABLE.toBoolean()) {
                 }
                 // todo：如果是sdk的话，就不生成activity了，没有起到效果？
                 if (!isSDK){
+//                    activityCountPerPackage = 2 //每个包下生成Activity类数量
                     activityCountPerPackage = randomLength(10) //每个包下生成Activity类数量
                 }
+//                otherCountPerPackage = 3  //每个包下生成其它类的数量
                 otherCountPerPackage = randomLength(10)  //每个包下生成其它类的数量
+//                methodCountPerClass = 12  //每个类下生成方法数量
                 methodCountPerClass = randomLength(20)  //每个类下生成方法数量
 
             }
@@ -219,9 +255,11 @@ if (PLUGIN_ENABLE.toBoolean()) {
                 def layoutNameBuilder = tuple4.third
                 //StringBuilder: 生成layout内容
                 def layoutContentBuilder = tuple4.fourth
-                def name = generateName(7)
+                def name = generateActivityName(7)
+//                def name = generateName(7)
+                def activityName = name.toLowerCase().replace("activity", "")
                 activityNameBuilder.append("${name}")
-                layoutNameBuilder.append("activity_${name}")
+                layoutNameBuilder.append("activity_${activityName}")
 
                 def randomLayout = ""
                 randomLayout = '''<?xml version="1.0" encoding="utf-8"?>
@@ -1810,5 +1848,5 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
-    implementation 'com.example:mylib:1.2.8'
+    implementation 'com.example:mylib:1.5.9'
 }
