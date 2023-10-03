@@ -1,5 +1,7 @@
 package cn.hx.plugin.junkcode.utils
 
+import com.squareup.javapoet.ClassName
+
 
 class ConstantKey {
 
@@ -16,7 +18,7 @@ class ConstantKey {
 
 
     static List<String> stringList = new ArrayList<>()
-    static List<String> stringNameList = new ArrayList<>()
+//    static List<String> stringNameList = new ArrayList<>()
 
     static List<String> otherClassNameList = new ArrayList<>()
     static List<String> otherPackageNameList = new ArrayList<>()
@@ -27,6 +29,12 @@ class ConstantKey {
 
     static String otherPathClassNameObj = ""
     static String otherPathClassNameValue = ""
+
+    // 储存类对象
+    static List<ClassName> classObj1 = new ArrayList<ClassName>()
+
+    // 存储类对象以及该类中所有生成的方法
+    static Map<ClassName, List<String>> classObj = new HashMap<ClassName, List<String>>()
 
 
 }

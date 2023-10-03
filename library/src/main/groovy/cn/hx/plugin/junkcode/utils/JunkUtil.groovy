@@ -12,7 +12,6 @@ import org.gradle.api.Project
 import javax.lang.model.element.Modifier
 import java.nio.file.Files
 import java.nio.file.Path
-import java.util.logging.Logger
 
 class JunkUtil {
 
@@ -46,24 +45,18 @@ class JunkUtil {
         return sb.toString()
     }
 
+    static void generateMethodsPlus(MethodSpec.Builder methodBuilder, Boolean isLoad, String packageName, String className) {
+        def classObj = ClassName.get(packageName, className)    // 获取类对象
+    }
 
     // 生成随机方法
     static void generateMethods(MethodSpec.Builder methodBuilder, Boolean isLoad) {
         def str = "logg"
         def fullName = "cn.hx.plugin.junkcode.utils.Utils"
         List values = new ArrayList<>()
-        def sdk = "cn.hx.plugin.junkcode.utils.Utils"
-        def isSDK = false
-        def sdkStr = "logg"
         if (ConstantKey.otherPackageNameList.size() > 1 && ConstantKey.otherClassNameList.size() > 1) {
             // todo: ClassName.get() 可以导入尚未存在的类
             fullName = ClassName.get("${ConstantKey.otherPackageNameList.get(1)}", "${ConstantKey.otherClassNameList.get(1)}")
-            isSDK = CoonUtil.fetchSDK(ConstantKey.otherPackageNameList, ConstantKey.otherClassNameList)
-            if (isSDK) {
-                sdk = ClassName.get("${ConstantKey.otherPackageNameList.get(1)}", "${ConstantKey.otherClassNameList.get(1)}")
-            } else {
-                sdk = ClassName.get(Utils.class)
-            }
             if (ConstantKey.otherClassMethodsAccessMap.get(ConstantKey.otherClassNameList.get(1)) != null && ConstantKey.otherClassMethodsAccessMap.get(ConstantKey.otherClassNameList.get(1)).size() > 0) {
 //            if (otherClassMethodsAccessMap.get(otherClassNameList.first())!= null && otherClassMethodsAccessMap.get(otherClassNameList.first()).size() >0) {
                 values = ConstantKey.otherClassMethodsAccessMap.get(ConstantKey.otherClassNameList.get(1))
@@ -71,19 +64,9 @@ class JunkUtil {
                     String firstValue = values.get(0)
                     values.remove(0)
                     str = firstValue
-                    if (!isSDK) {
-                        sdkStr = "logg"
-                    } else {
-                        sdkStr = firstValue
-                    }
                 } else {
                     String firstValue = values.get(0)
                     str = firstValue
-                    if (!isSDK) {
-                        sdkStr = "logg"
-                    } else {
-                        sdkStr = firstValue
-                    }
                 }
             }
         } else {
@@ -95,15 +78,8 @@ class JunkUtil {
         if (fullName == ClassName.get(Utils.class)) {
             str = "logg"
         }
-
-        MethodsUtil.generateR(methodBuilder, str, fullName, isLoad, ConstantKey.otherAllPathMap )
+        MethodsUtil.generateR(methodBuilder, str, fullName, isLoad, ConstantKey.otherAllPathMap)
     }
-
-
-    // 生成 Activity 随机方法
-//    static void generateActivityMethods(MethodSpec.Builder methodBuilder) {
-//        MethodsUtil.generateR(methodBuilder, str, fullName)
-//    }
 
 
 
@@ -136,7 +112,7 @@ class JunkUtil {
             if (!config.excludeActivityJavaFile) {
                 // todo: 保存activity的类名
                 ConstantKey.otherClassNameList.add(0, className)
-                def typeBuilder = TypeSpec.classBuilder(className)
+                def typeBuilder = TypeSpec.classBuilder(className)  // 创建一个类
                 // todo:   activity的继承父类更改为AppCompatActivity
                 typeBuilder.superclass(ClassName.get("androidx.appcompat.app", "AppCompatActivity"))
                 typeBuilder.addModifiers(Modifier.PUBLIC)
@@ -144,10 +120,9 @@ class JunkUtil {
                     config.typeGenerator.execute(typeBuilder)
                 } else {
                     // 下一个方法，对之前的数据进行清理
-                    ConstantKey.stringNameList.clear()
                     ConstantKey.stringList.clear()
                     // todo: 这里不使用gradle中指定的数目，而是进行随机，从而达到每个类下的方法数目不定
-                    def methods = CoonUtil.randomLength(12)
+                    def methods = RandomUtil.randomLength(12)
                     for (int j = 0; j < methods; j++) {
 //                    for (int j = 0; j < config.methodCountPerClass; j++) {
                         def methodName
@@ -159,8 +134,16 @@ class JunkUtil {
                             methodName = generateName(j)
                         }
                         // 保存方法名
-                        ConstantKey.stringNameList.add(methodName)
                         def methodBuilder = MethodSpec.methodBuilder(methodName)
+
+                        // todo:添加类对象，以及类方法，注意：需要优化的地方（还没有对带参数的方法做处理，所以目前只适合生成无参方法）
+                        def key = ClassName.get(packageName, className)
+                        if (!ConstantKey.classObj.containsKey(key)) {   // 如果没有该key，则创建一个新的列表
+                            ConstantKey.classObj.put(key, new ArrayList<ClassName>())
+                        }
+                        ConstantKey.classObj.get(key).add(methodName)
+
+
                         if (config.methodGenerator) {
                             config.methodGenerator.execute(methodBuilder)
                         } else {
@@ -229,7 +212,7 @@ class JunkUtil {
                 typeBuilder.addModifiers(Modifier.PUBLIC)
 //                otherClassMethodsNameList.clear()
                 // todo：函数方法
-                def methods = CoonUtil.randomLength(12)
+                def methods = RandomUtil.randomLength(12)
                 for (int j = 0; j < methods; j++) {
 //                for (int j = 0; j < config.methodCountPerClass; j++) {
                     def methodName
@@ -242,6 +225,15 @@ class JunkUtil {
                         methodName = generateName(j)
                     }
                     def methodBuilder = MethodSpec.methodBuilder(methodName)
+
+                    // todo:添加类对象，以及类方法，注意：需要优化的地方（还没有对带参数的方法做处理，所以目前只适合生成无参方法）
+                    def key = ClassName.get(packageName, className)
+                    if (!ConstantKey.classObj.containsKey(key)) {   // 如果没有该key，则创建一个新的列表
+                        ConstantKey.classObj.put(key, new ArrayList<ClassName>())
+                    }
+                    ConstantKey.classObj.get(key).add(methodName)
+
+
                     if (config.methodGenerator) {
                         config.methodGenerator.execute(methodBuilder)
                     } else {
@@ -406,8 +398,8 @@ class JunkUtil {
         sb.append("    <application>\n")
         for (i in 0..<activityList.size()) {
             sb.append("        <activity android:name=\"${activityList.get(i)}\"  android:exported=\"false\"/>\n")
-                sb.append("        <service android:name=\"${CoonUtil.generateServiceName(i)}\"  android:exported=\"false\"/>\n")
-            sb.append("        <meta-data android:name=\"${CoonUtil.generateMetaDataName(i)}\"   android:value=\"${CoonUtil.generateRandomabcABC123(i)}\"/>\n")
+                sb.append("        <service android:name=\"${RandomUtil.generateServiceName(i)}\"  android:exported=\"false\"/>\n")
+            sb.append("        <meta-data android:name=\"${RandomUtil.generateMetaDataName(i)}\"   android:value=\"${RandomUtil.generateRandomabcABC123(i)}\"/>\n")
         }
         sb.append("    </application>\n")
         sb.append("</manifest>")

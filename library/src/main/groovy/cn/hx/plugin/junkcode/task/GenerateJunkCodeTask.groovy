@@ -68,7 +68,8 @@ abstract class GenerateJunkCodeTask extends DefaultTask {
                     }
                 }
 
-                // 生成 Activity类文件
+                // todo：每个路径下，会生成多个类，目前只有 Activity类和普通类型
+                // 生成 Activity类文件，(Java代码输出目录，资源输出目录，命名空间，应用程序包名，配置文件)
                 def list = JunkUtil.generateActivity(javaDir, resDir, getNamespace().get(), packageName, config)
                 activityList.addAll(list)
                 // 生成其他类文件

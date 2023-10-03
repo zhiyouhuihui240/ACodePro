@@ -5,6 +5,7 @@ import com.squareup.javapoet.MethodSpec
 import com.squareup.javapoet.TypeSpec
 
 import javax.lang.model.element.Modifier
+import java.util.logging.Logger
 
 
 class MethodsUtil {
@@ -14,60 +15,68 @@ class MethodsUtil {
 
     static generateR(MethodSpec.Builder methodBuilder, String str, ClassName fullName, Boolean isLoad,  HashMap<String, List<String>> otherAllPathMap) {
         getOtherPathClassName()
+//        def classObj = RandomUtil.removeRandomValue()
         switch (random.nextInt(7)) {
             case 0:
                 generateRandomMethods6(methodBuilder, str, fullName, isLoad)
+//                generateRandomMethods6(methodBuilder, str, fullName, isLoad, classObj)
                 break
             case 1:
                 generateRandomMethods5(methodBuilder, str, fullName, isLoad)
+//                generateRandomMethods5(methodBuilder, str, fullName, isLoad, classObj)
                 break
             case 2:
                 generateRandomMethods4(methodBuilder, str, fullName, isLoad)
+//                generateRandomMethods4(methodBuilder, str, fullName, isLoad, classObj)
                 break
             case 3:
                 generateRandomMethods3(methodBuilder, str, fullName, isLoad)
+//                generateRandomMethods3(methodBuilder, str, fullName, isLoad, classObj)
                 break
             case 4:
                 generateRandomMethods2(methodBuilder, str, fullName, isLoad)
+//                generateRandomMethods2(methodBuilder, str, fullName, isLoad, classObj)
                 break
             case 5:
                 generateRandomMethods1(methodBuilder, str, fullName, isLoad, otherAllPathMap)
+//                generateRandomMethods1(methodBuilder, str, fullName, isLoad, otherAllPathMap, classObj)
                 break
             case 6:
                 generateRandomMethods(methodBuilder, str, fullName, isLoad)
                 break
             default:
-                generateRandomMethods7(methodBuilder, str, fullName, isLoad)
+                generateRandomMethods8(methodBuilder, str, fullName, isLoad)
+//                generateRandomMethods8(methodBuilder, str, fullName, isLoad, classObj)
         }
     }
 
-    static generateRandomMethods(MethodSpec.Builder methodBuilder, String str, ClassName fullName, Boolean isLoad ){
-        def str1 = "${CoonUtil.generateRandomNum()}${CoonUtil.generateRandomNum()}${CoonUtil.generateRandomNum()}"
+    static generateRandomMethods(MethodSpec.Builder methodBuilder, String str, ClassName fullName, Boolean isLoad){
+        def classObj = RandomUtil.removeRandomValue()
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
 //                .returns(String.class)
         if(isLoad){
             methodBuilder.addStatement("\$T.$str()", fullName)
         }
-//        methodBuilder.addStatement("${ConstantKey.otherAllPathMap}")    // 只存储了一个值
+//            methodBuilder.addStatement("\$T.${classObj.getValue()}", classObj.getKey())
+            methodBuilder.addStatement("${classObj}----")
+            methodBuilder.addStatement("${ConstantKey.classObj}")
+//            methodBuilder.addStatement("\$T.${classObj.getValue()}", classObj.getKey().class, classObj.getValue())
+
     }
 
-    static generateRandomMethods1(MethodSpec.Builder methodBuilder, String str, ClassName fullName , Boolean isLoad, HashMap<String, List<String>> otherAllPathMap) {
+    static generateRandomMethods1(MethodSpec.Builder methodBuilder, String str, ClassName fullName , Boolean isLoad, HashMap<String, List<String>> otherAllPathMap){
+//    static generateRandomMethods1(MethodSpec.Builder methodBuilder, String str, ClassName fullName , Boolean isLoad, HashMap<String, List<String>> otherAllPathMap, Map.Entry<ClassName, String> classObj){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
         if(isLoad){
             methodBuilder.addStatement("\$T.$str()", fullName)
         }
-//        methodBuilder.addStatement("$otherAllPathMap")
-
     }
 
     static generateRandomMethods2(MethodSpec.Builder methodBuilder, String str, ClassName fullName , Boolean isLoad){
+//    static generateRandomMethods2(MethodSpec.Builder methodBuilder, String str, ClassName fullName , Boolean isLoad, Map.Entry<ClassName, String> classObj){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-            if(isLoad){
-                methodBuilder.addStatement("\$T.$str()", fullName)
-            }
-        if (ConstantKey.otherPathClassNameValue.toString() != "" || ConstantKey.otherPathClassNameObj != "") {
-            methodBuilder.addStatement(" ${ConstantKey.otherPathClassNameValue.toString()}() , ${ ConstantKey.otherPathClassNameObj }")
-//            methodBuilder.addStatement("\$T.${ConstantKey.otherPathClassNameValue.toString()}()", ConstantKey.otherPathClassNameObj)
+        if(isLoad){
+            methodBuilder.addStatement("\$T.$str()", fullName)
         }
         methodBuilder.returns(void.class)
         methodBuilder.addParameter(String[].class, "args")
@@ -76,47 +85,39 @@ class MethodsUtil {
         methodBuilder.endControlFlow()
     }
 
-    static generateRandomMethods3(MethodSpec.Builder methodBuilder, String str, ClassName fullName, Boolean isLoad ){
+    static generateRandomMethods3(MethodSpec.Builder methodBuilder, String str, ClassName fullName, Boolean isLoad){
+//    static generateRandomMethods3(MethodSpec.Builder methodBuilder, String str, ClassName fullName, Boolean isLoad, Map.Entry<ClassName, String> classObj){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-            if(isLoad){
-                methodBuilder.addStatement("\$T.$str()", fullName)
-            }
-        if (ConstantKey.otherPathClassNameValue.toString() != "" || ConstantKey.otherPathClassNameObj != "") {
-            methodBuilder.addStatement(" ${ConstantKey.otherPathClassNameValue.toString()}() , ${ ConstantKey.otherPathClassNameObj }")
-//            methodBuilder.addStatement("\$T.${ConstantKey.otherPathClassNameValue.toString()}()", ConstantKey.otherPathClassNameObj)
+        if(isLoad){
+            methodBuilder.addStatement("\$T.$str()", fullName)
         }
         methodBuilder.returns(Date.class)
         methodBuilder.addStatement("return new \$T()", Date.class)
     }
 
-    static generateRandomMethods4(MethodSpec.Builder methodBuilder, String str, ClassName fullName, Boolean isLoad ){
+    static generateRandomMethods4(MethodSpec.Builder methodBuilder, String str, ClassName fullName, Boolean isLoad){
+//    static generateRandomMethods4(MethodSpec.Builder methodBuilder, String str, ClassName fullName, Boolean isLoad,  Map.Entry<ClassName, String> classObj){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC).beginControlFlow("try")
                 .addStatement("throw new Exception(\$S)", "Failed")
                 .nextControlFlow("catch (\$T e)", Exception.class)
         if(isLoad){
             methodBuilder.addStatement("\$T.$str()", fullName)
         }
-        if (ConstantKey.otherPathClassNameValue.toString() != "" || ConstantKey.otherPathClassNameObj != "") {
-            methodBuilder.addStatement(" ${ConstantKey.otherPathClassNameValue.toString()}() , ${ ConstantKey.otherPathClassNameObj }")
-//            methodBuilder.addStatement("\$T.${ConstantKey.otherPathClassNameValue.toString()}()", ConstantKey.otherPathClassNameObj)
-        }
         methodBuilder.endControlFlow()
     }
 
     static generateRandomMethods5(MethodSpec.Builder methodBuilder, String str, ClassName fullName , Boolean isLoad){
+//    static generateRandomMethods5(MethodSpec.Builder methodBuilder, String str, ClassName fullName , Boolean isLoad,  Map.Entry<ClassName, String> classObj){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
         if(isLoad){
             methodBuilder.addStatement("\$T.$str()", fullName)
-        }
-        if (ConstantKey.otherPathClassNameValue.toString() != "" || ConstantKey.otherPathClassNameObj != "") {
-            methodBuilder.addStatement(" ${ConstantKey.otherPathClassNameValue.toString()}() , ${ ConstantKey.otherPathClassNameObj }")
-//            methodBuilder.addStatement("\$T.${ConstantKey.otherPathClassNameValue.toString()}()", ConstantKey.otherPathClassNameObj)
         }
         methodBuilder.addCode("" + "int total = 0;\n" + "for (int i = 0; i < 10; i++) {\n" + "  total += i;\n" + "}\n")
 
     }
 
     static generateRandomMethods6(MethodSpec.Builder methodBuilder, String str, ClassName fullName , Boolean isLoad){
+//    static generateRandomMethods6(MethodSpec.Builder methodBuilder, String str, ClassName fullName , Boolean isLoad,  Map.Entry<ClassName, String> classObj){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                 .addStatement("long now = \$T.currentTimeMillis()", System.class)
                 .beginControlFlow("if (\$T.currentTimeMillis() < now)", System.class)
@@ -128,21 +129,14 @@ class MethodsUtil {
         if(isLoad){
             methodBuilder.addStatement("\$T.$str()", fullName)
         }
-        if (ConstantKey.otherPathClassNameValue.toString() != "" || ConstantKey.otherPathClassNameObj != "") {
-            methodBuilder.addStatement(" ${ConstantKey.otherPathClassNameValue.toString()}() , ${ ConstantKey.otherPathClassNameObj }")
-//            methodBuilder.addStatement("\$T.${ConstantKey.otherPathClassNameValue.toString()}()", ConstantKey.otherPathClassNameObj)
-        }
         methodBuilder.endControlFlow()
     }
 
     static generateRandomMethods7(MethodSpec.Builder methodBuilder, String str, ClassName fullName , Boolean isLoad){
+//    static generateRandomMethods7(MethodSpec.Builder methodBuilder, String str, ClassName fullName , Boolean isLoad,  Map.Entry<ClassName, String> classObj){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
         if(isLoad){
             methodBuilder.addStatement("\$T.$str()", fullName)
-        }
-        if (ConstantKey.otherPathClassNameValue.toString() != "" || ConstantKey.otherPathClassNameValue !=null || ConstantKey.otherPathClassNameObj != "") {
-            methodBuilder.addStatement(" ${ConstantKey.otherPathClassNameValue.toString()}() , ${ ConstantKey.otherPathClassNameObj }")
-//            methodBuilder.addStatement("\$T.${ConstantKey.otherPathClassNameValue.toString()}()", ConstantKey.otherPathClassNameObj)
         }
         methodBuilder.returns(void.class)
         methodBuilder.addParameter(String[].class, "args")
@@ -150,8 +144,9 @@ class MethodsUtil {
     }
 
     // for 循环
-    static generateRandomMethods8(MethodSpec.Builder methodBuilder, String str, ClassName fullName , Boolean isLoad) {
-        def randomNum = CoonUtil.generateRandomNum()
+    static generateRandomMethods8(MethodSpec.Builder methodBuilder, String str, ClassName fullName , Boolean isLoad){
+//    static generateRandomMethods8(MethodSpec.Builder methodBuilder, String str, ClassName fullName , Boolean isLoad,  Map.Entry<ClassName, String> classObj){
+        def randomNum = RandomUtil.generateRandomNum()
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
         if (isLoad) {
             methodBuilder.addStatement("\$T.$str()", fullName)
@@ -167,8 +162,8 @@ class MethodsUtil {
     }
 
     // switch 分支
-    static generateRandomMethods9(MethodSpec.Builder methodBuilder, String str, ClassName fullName, Boolean isLoad) {
-        def randomNum = CoonUtil.generateRandomNum()
+    static generateRandomMethods9(MethodSpec.Builder methodBuilder, String str, ClassName fullName, Boolean isLoad,  Map.Entry<ClassName, String> classObj){
+        def randomNum = RandomUtil.generateRandomNum()
 
 //        fullName = ClassName.get("${otherPackageNameList.get(1)}", "${otherClassNameList.get(1)}")
 
@@ -234,6 +229,7 @@ class MethodsUtil {
             def part1 = parts[0..(parts.size() - 2)].join(".") // 按照"."进行分割后，将第1个到倒数第2个子串拼接起来得到part1
             def part2 = parts[-1] // 获取最后一个子串作为part2
             ConstantKey.otherPathClassNameObj = ClassName.get("${part1}", "${part2}")
+            Logger.getLogger("----数据啊啊啊啊， ${ConstantKey.otherPathClassNameObj},, ${ConstantKey.otherPathClassNameValue}")
         }
     }
 
@@ -247,9 +243,9 @@ class MethodsUtil {
                 .addParameter(bundleClassName, "savedInstanceState")
                 .addStatement("super.onCreate(savedInstanceState)")
                 .addStatement("setContentView(\$T.layout.${layoutName})", ClassName.get(namespace, "R"))
-                .addStatement(CoonUtil.getRandomMethod(stringList))
-                .addStatement(CoonUtil.getRandomMethod(stringList))
-                .addStatement(CoonUtil.getRandomMethod(stringList))
+                .addStatement(RandomUtil.getRandomMethod(stringList))
+                .addStatement(RandomUtil.getRandomMethod(stringList))
+                .addStatement(RandomUtil.getRandomMethod(stringList))
                 .build())
     }
 
@@ -258,8 +254,8 @@ class MethodsUtil {
                 .addAnnotation(Override.class)
                 .addModifiers(Modifier.PROTECTED)
                 .addStatement("super.onResume()")
-                .addStatement(CoonUtil.getRandomMethod(stringList))
-                .addStatement(CoonUtil.getRandomMethod(stringList))
+                .addStatement(RandomUtil.getRandomMethod(stringList))
+                .addStatement(RandomUtil.getRandomMethod(stringList))
                 .build())
     }
 
@@ -276,8 +272,9 @@ class MethodsUtil {
                 .addAnnotation(Override.class)
                 .addModifiers(Modifier.PUBLIC)
                 .addStatement("super.onBackPressed()")
-                .addStatement(CoonUtil.getRandomMethod(stringList))
+                .addStatement(RandomUtil.getRandomMethod(stringList))
                 .build())
     }
+
 
 }

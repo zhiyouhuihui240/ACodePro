@@ -5,7 +5,7 @@ import com.squareup.javapoet.ClassName
 import java.security.SecureRandom
 
 
-class CoonUtil {
+class RandomUtil {
 
     /**
      * 规则类型与无规则类型
@@ -193,4 +193,48 @@ class CoonUtil {
 
 
 
+
+//    static String removeRandomValue() {
+//        def classObj = ConstantKey.classObj
+//        // 获取所有的 key
+//        List<ClassName> keys = new ArrayList<>(classObj.keySet());
+//        // 随机获取一个 key
+//        ClassName randomKey = keys.get(new Random().nextInt(keys.size()));
+//        // 获取该 key 对应的 value
+//        List<String> values = classObj.get(randomKey);
+//        // 随机获取一个 value
+//        String randomValue = values.get(new Random().nextInt(values.size()));
+//        // 从 list 中移除该 value
+//        values.remove(randomValue);
+//        // 如果该 key 下已经没有其他的 value 了，就移除该 key
+//        if(values.isEmpty()) {
+//            classObj.remove(randomKey);
+//        } else {
+//            classObj.put(randomKey, values);
+//        }
+//        return randomValue;
+//    }
+
+
+
+// 随机移除一个值
+    static Map.Entry<ClassName, String> removeRandomValue() {
+        def classObj = ConstantKey.classObj
+        // 从classObj中随机获取一个key
+        List<ClassName> keys = new ArrayList<>(classObj.keySet());
+        if (keys.isEmpty()) {
+            return [null, null] as Map.Entry<ClassName, String>
+        }
+        ClassName randomKey = keys.get(new Random().nextInt(keys.size()));
+        // 从这个key对应的value集合中随机获取一个value
+        List<String> values = classObj.get(randomKey);
+        String randomValue = values.get(new Random().nextInt(values.size()));
+        // 移除这个值
+        values.remove(randomValue);
+        // 如果这个key下没有值了，就把key移除
+        if (values.isEmpty()) {
+            classObj.remove(randomKey);
+        }
+        return [randomKey, randomValue] as Map.Entry<ClassName, String>
+    }
 }

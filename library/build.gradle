@@ -1,11 +1,4 @@
 
-
-
-
-
-
-
-
 buildscript {
     repositories {
         gradlePluginPortal()
@@ -20,18 +13,12 @@ buildscript {
     }
 
 }
-
 apply plugin: 'groovy'
-
-
-// todo：---------------------------下面是注释内容---------------------------------
-
-
 
 // todo：下面进行本地部署，当修改完内容之后，更新下版本，然后运行一下 下面那个 task，再更新gradle文件里面的版本号即可
 apply plugin: 'maven-publish'
 group = 'com.example'
-version = '1.5.9'
+version = '1.9.1'
 
 publishing {
     publications {
@@ -39,11 +26,10 @@ publishing {
             from components.java
             groupId = 'com.example'
             artifactId = 'mylib'
-            version = '1.5.9'
+            version = '1.9.1'
         }
     }
 }
-
 
 task publishToMavenLocals {
     dependsOn publishMavenJavaPublicationToMavenLocal
