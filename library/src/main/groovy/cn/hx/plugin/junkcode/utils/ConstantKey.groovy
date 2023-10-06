@@ -31,7 +31,9 @@ class ConstantKey {
     static String otherPathClassNameValue = ""
 
     // 储存类对象
-    static List<ClassName> classObj1 = new ArrayList<ClassName>()
+    static String packageName = ""
+    static String simpleName = ""
+    static String classStr = ""
 
     // 存储类对象以及该类中所有生成的方法
     static Map<ClassName, List<String>> classObj = new HashMap<ClassName, List<String>>()

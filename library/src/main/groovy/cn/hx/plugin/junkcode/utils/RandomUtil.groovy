@@ -193,48 +193,42 @@ class RandomUtil {
 
 
 
-
-//    static String removeRandomValue() {
-//        def classObj = ConstantKey.classObj
-//        // 获取所有的 key
-//        List<ClassName> keys = new ArrayList<>(classObj.keySet());
-//        // 随机获取一个 key
-//        ClassName randomKey = keys.get(new Random().nextInt(keys.size()));
-//        // 获取该 key 对应的 value
-//        List<String> values = classObj.get(randomKey);
-//        // 随机获取一个 value
-//        String randomValue = values.get(new Random().nextInt(values.size()));
-//        // 从 list 中移除该 value
-//        values.remove(randomValue);
-//        // 如果该 key 下已经没有其他的 value 了，就移除该 key
-//        if(values.isEmpty()) {
-//            classObj.remove(randomKey);
-//        } else {
-//            classObj.put(randomKey, values);
-//        }
-//        return randomValue;
-//    }
-
-
-
-// 随机移除一个值
+    // 随机移除一个值
     static Map.Entry<ClassName, String> removeRandomValue() {
-        def classObj = ConstantKey.classObj
         // 从classObj中随机获取一个key
-        List<ClassName> keys = new ArrayList<>(classObj.keySet());
+        List<ClassName> keys = new ArrayList<>(ConstantKey.classObj.keySet())
         if (keys.isEmpty()) {
             return [null, null] as Map.Entry<ClassName, String>
         }
-        ClassName randomKey = keys.get(new Random().nextInt(keys.size()));
+        ClassName randomKey = keys.get(new Random().nextInt(keys.size()))
         // 从这个key对应的value集合中随机获取一个value
-        List<String> values = classObj.get(randomKey);
-        String randomValue = values.get(new Random().nextInt(values.size()));
+        List<String> values = ConstantKey.classObj.get(randomKey)
+        String randomValue = ConstantKey.classObj.get(randomKey).get(new Random().nextInt(values.size()))
+
+
+        def fullClassName = "$randomKey"
+        ConstantKey.packageName = fullClassName.substring(0, fullClassName.lastIndexOf("."))
+        ConstantKey.simpleName = fullClassName.substring(fullClassName.lastIndexOf(".") + 1)
+
+        def path = ConstantKey.packageName.replaceAll("\\.","/")
+        def file = new File("$path")
+//        if (!file.exists()){
+//            ConstantKey.packageName = ""
+//            return [null, null] as Map.Entry<ClassName, String>
+//        }
         // 移除这个值
-        values.remove(randomValue);
+        values.remove(randomValue)
         // 如果这个key下没有值了，就把key移除
         if (values.isEmpty()) {
-            classObj.remove(randomKey);
+            ConstantKey.classObj.remove(randomKey)
         }
+
+        ConstantKey.classStr = randomValue
+
         return [randomKey, randomValue] as Map.Entry<ClassName, String>
     }
+
+
+
+
 }

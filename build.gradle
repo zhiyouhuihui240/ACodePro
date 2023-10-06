@@ -15,7 +15,8 @@ buildscript {
 //        }
 
 
-        classpath 'com.example:mylib:1.9.1'
+        classpath 'com.example:mylib:2.2.7'
+        //
 
 
         // NOTE: Do not place your application dependencies here; they belong
