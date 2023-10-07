@@ -1904,5 +1904,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
-    implementation 'com.example:mylib:2.3.6'
+//    implementation 'com.example:mylib:2.3.6'
+
+
 }
