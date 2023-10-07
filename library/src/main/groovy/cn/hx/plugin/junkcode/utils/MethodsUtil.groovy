@@ -65,8 +65,7 @@ class MethodsUtil {
 
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
 //        methodBuilder.addStatement("${ConstantKey.fullPath}")
-        methodBuilder.addStatement("\$T.out.println(\$S)", System.class, "$bundleClassName")
-        methodBuilder.addStatement("\$T.out.println(\$S)", System.class, "${ConstantKey.isExists}")
+        
     }
     
     static generateRandomMethods1(MethodSpec.Builder methodBuilder, String str, ClassName fullName , Boolean isLoad, HashMap<String, List<String>> otherAllPathMap){
@@ -74,8 +73,8 @@ class MethodsUtil {
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
         def bundleClassName = ClassName.get("${ConstantKey.packageName}", "${ConstantKey.simpleName}")
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
-        methodBuilder.addStatement("\$T.out.println(\$S)", System.class, "$bundleClassName")
-        methodBuilder.addStatement("\$T.out.println(\$S)", System.class, "${ConstantKey.isExists}")
+        
+        
     }
     
     static generateRandomMethods2(MethodSpec.Builder methodBuilder, String str, ClassName fullName , Boolean isLoad){
@@ -83,8 +82,8 @@ class MethodsUtil {
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
         def bundleClassName = ClassName.get("${ConstantKey.packageName}", "${ConstantKey.simpleName}")
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
-        methodBuilder.addStatement("\$T.out.println(\$S)", System.class, "$bundleClassName")
-        methodBuilder.addStatement("\$T.out.println(\$S)", System.class, "${ConstantKey.isExists}")
+        
+        
         methodBuilder.returns(Date.class)
         methodBuilder.addStatement("return new \$T()", Date.class)
     }
@@ -94,8 +93,8 @@ class MethodsUtil {
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
         def bundleClassName = ClassName.get("${ConstantKey.packageName}", "${ConstantKey.simpleName}")
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
-        methodBuilder.addStatement("\$T.out.println(\$S)", System.class, "$bundleClassName")
-        methodBuilder.addStatement("\$T.out.println(\$S)", System.class, "${ConstantKey.isExists}")
+        
+        
         methodBuilder.returns(Date.class)
         methodBuilder.addStatement("return new \$T()", Date.class)
     }
@@ -107,8 +106,8 @@ class MethodsUtil {
                 .nextControlFlow("catch (\$T e)", Exception.class)
         def bundleClassName = ClassName.get("${ConstantKey.packageName}", "${ConstantKey.simpleName}")
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
-        methodBuilder.addStatement("\$T.out.println(\$S)", System.class, "$bundleClassName")
-        methodBuilder.addStatement("\$T.out.println(\$S)", System.class, "${ConstantKey.isExists}")
+        
+        
         methodBuilder.endControlFlow()
     }
 
@@ -117,8 +116,8 @@ class MethodsUtil {
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
         def bundleClassName = ClassName.get("${ConstantKey.packageName}", "${ConstantKey.simpleName}")
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
-        methodBuilder.addStatement("\$T.out.println(\$S)", System.class, "$bundleClassName")
-        methodBuilder.addStatement("\$T.out.println(\$S)", System.class, "${ConstantKey.isExists}")
+        
+        
         methodBuilder.addCode("" + "int total = 0;\n" + "for (int i = 0; i < 10; i++) {\n" + "  total += i;\n" + "}\n")
     }
 
@@ -134,8 +133,8 @@ class MethodsUtil {
                 .addStatement("\$T.out.println(\$S)", System.class, "Ok, time still moving forward")
         def bundleClassName = ClassName.get("${ConstantKey.packageName}", "${ConstantKey.simpleName}")
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
-        methodBuilder.addStatement("\$T.out.println(\$S)", System.class, "$bundleClassName")
-        methodBuilder.addStatement("\$T.out.println(\$S)", System.class, "${ConstantKey.isExists}")
+        
+        
         methodBuilder.endControlFlow()
     }
 
@@ -144,8 +143,8 @@ class MethodsUtil {
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
         def bundleClassName = ClassName.get("${ConstantKey.packageName}", "${ConstantKey.simpleName}")
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
-        methodBuilder.addStatement("\$T.out.println(\$S)", System.class, "$bundleClassName")
-        methodBuilder.addStatement("\$T.out.println(\$S)", System.class, "${ConstantKey.isExists}")
+        
+        
         methodBuilder.returns(void.class)
         methodBuilder.addParameter(String[].class, "args")
         methodBuilder.addStatement("\$T.out.println(\$S)", System.class, "Hello")
