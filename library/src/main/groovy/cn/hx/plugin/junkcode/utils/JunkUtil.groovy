@@ -143,7 +143,6 @@ class JunkUtil {
                         }
                         ConstantKey.classObj.get(key).add(methodName)
 
-
                         if (config.methodGenerator) {
                             config.methodGenerator.execute(methodBuilder)
                         } else {

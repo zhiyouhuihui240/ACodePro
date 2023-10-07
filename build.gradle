@@ -15,7 +15,7 @@ buildscript {
 //        }
 
 
-        classpath 'com.example:mylib:2.2.7'
+        classpath 'com.example:mylib:2.3.6'
         //
 
 

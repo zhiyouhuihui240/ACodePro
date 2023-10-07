@@ -205,17 +205,24 @@ class RandomUtil {
         List<String> values = ConstantKey.classObj.get(randomKey)
         String randomValue = ConstantKey.classObj.get(randomKey).get(new Random().nextInt(values.size()))
 
-
         def fullClassName = "$randomKey"
         ConstantKey.packageName = fullClassName.substring(0, fullClassName.lastIndexOf("."))
         ConstantKey.simpleName = fullClassName.substring(fullClassName.lastIndexOf(".") + 1)
-
-        def path = ConstantKey.packageName.replaceAll("\\.","/")
-        def file = new File("$path")
-//        if (!file.exists()){
-//            ConstantKey.packageName = ""
-//            return [null, null] as Map.Entry<ClassName, String>
-//        }
+        ConstantKey.fullPath = fullClassName
+//        def path = ConstantKey.packageName.replaceAll("\\.","/")
+        def path = fullClassName.replaceAll("\\.","/")
+        def file = new File(path)
+        if (!file.exists()){
+            System.out.println("文件不存在  $file")
+            ConstantKey.isExists = "文件不存在, $file"
+            if (!file.getParentFile().exists()) {
+                file.getParentFile().mkdirs()
+                ConstantKey.isExists = "路径不存在, $file"
+            }
+            file.createNewFile()
+        }else  {
+            ConstantKey.isExists = "文件存在, $file"
+        }
         // 移除这个值
         values.remove(randomValue)
         // 如果这个key下没有值了，就把key移除
