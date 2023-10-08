@@ -61,25 +61,27 @@ class MethodsUtil {
     
     static generateRandomMethods(MethodSpec.Builder methodBuilder, String str, ClassName fullName, Boolean isLoad, log){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-        def bundleClassName = ClassName.get("${ConstantKey.packageName}", "${ConstantKey.simpleName}")
         def log1 = ClassName.get("android.util", "Log")
+        def bundleClassName = ClassName.get("${ConstantKey.packageName}", "${ConstantKey.simpleName}")
+        def str1 = ClassName.get("cn.hx.plugin.junkcode.demo", "R")
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
-        methodBuilder.addStatement("\$T.out.println(\$S)", System.class, "$bundleClassName")
-
-        // methodBuilder.addStatement("\$T.\$L(\$S, \$S)", log1, "d","TAG","${ConstantKey.targetPath}")
+        methodBuilder.addStatement("\$T.out.println(\$S)", System.class, "$bundleClassName")    // 打印
+        // 调用android项目中的字符串
+        methodBuilder.addStatement("\$T.out.println(\$T.string.yes)", System.class, ClassName.get("cn.hx.plugin.junkcode.demo", "R"))
+//         methodBuilder.addStatement("\$T.\$L(\$S, \$S)", log1, "d","TAG","")
+        methodBuilder.addStatement("\$T.d(\$S, String.valueOf(\$T.\$L))", log1, "TAG", str1, "string.yes")  // 打印日志
     }
+
+
+
 
     static generateRandomMethods1(MethodSpec.Builder methodBuilder, String str, ClassName fullName , Boolean isLoad, HashMap<String, List<String>> otherAllPathMap){
 //    static generateRandomMethods1(MethodSpec.Builder methodBuilder, String str, ClassName fullName , Boolean isLoad, HashMap<String, List<String>> otherAllPathMap, Map.Entry<ClassName, String> classObj){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
         def bundleClassName = ClassName.get("${ConstantKey.packageName}", "${ConstantKey.simpleName}")
         def log1 = ClassName.get("android.util", "Log")
-
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)    // 调用其他类的方法
         methodBuilder.addStatement("\$T.out.println(\$S)", System.class, "$bundleClassName")    // 打印
-
-        // methodBuilder.addStatement("\$T.\$L(\$S, \$S)", log1, "d","TAG","${ConstantKey.targetPath}")
-
     }
 
     static generateRandomMethods2(MethodSpec.Builder methodBuilder, String str, ClassName fullName , Boolean isLoad, log){
