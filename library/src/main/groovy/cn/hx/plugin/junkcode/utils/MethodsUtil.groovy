@@ -16,7 +16,6 @@ class MethodsUtil {
             RandomUtil.removeRandomValue()
         }
 
-
         if ( ConstantKey.classStr == "" || ConstantKey.packageName == "" || ConstantKey.simpleName == "" || ConstantKey.packageName == "cn.hx.plugin.junkcode.utils") {
             ConstantKey.packageName = "cn.hx.plugin.junkcode.utils"
             ConstantKey.simpleName = "Utils"
@@ -24,9 +23,9 @@ class MethodsUtil {
         }
 
         def log = "android.util.Log"
-        switch (random.nextInt(7)) {
+        switch (0) {
             case 0:
-                generateRandomMethods6(methodBuilder, str, fullName, isLoad, log)
+                generateRandomMethods0(methodBuilder, str, fullName, isLoad, log)
 //                generateRandomMethods6(methodBuilder, str, fullName, isLoad, classObj)
                 break
             case 1:
@@ -59,6 +58,21 @@ class MethodsUtil {
     }
     
     
+    static generateRandomMethods0(MethodSpec.Builder methodBuilder, String str, ClassName fullName, Boolean isLoad, log){
+        methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+        def log1 = ClassName.get("android.util", "Log")
+        def bundleClassName = ClassName.get("${ConstantKey.packageName}", "${ConstantKey.simpleName}")
+        def str1 = ClassName.get("cn.hx.plugin.junkcode.demo", "R")
+        methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
+        methodBuilder.addStatement("\$T.out.println(\$S)", System.class, "$bundleClassName")    // 打印
+        methodBuilder.addStatement("\$T.out.println(\$S)", System.class, "${ConstantKey.classObj}")    // 打印
+        // 调用android项目中的字符串
+//        methodBuilder.addStatement("\$T.out.println(\$T.string.yes)", System.class, ClassName.get("cn.hx.plugin.junkcode.demo", "R"))
+//         methodBuilder.addStatement("\$T.\$L(\$S, \$S)", log1, "d","TAG","")
+        methodBuilder.addStatement("\$T.d(\$S, String.valueOf(\$T.\$L))", log1, "TAG", str1, "string.yes")  // 打印日志
+    }
+
+
     static generateRandomMethods(MethodSpec.Builder methodBuilder, String str, ClassName fullName, Boolean isLoad, log){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
         def log1 = ClassName.get("android.util", "Log")
@@ -66,12 +80,12 @@ class MethodsUtil {
         def str1 = ClassName.get("cn.hx.plugin.junkcode.demo", "R")
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         methodBuilder.addStatement("\$T.out.println(\$S)", System.class, "$bundleClassName")    // 打印
+        methodBuilder.addStatement("\$T.out.println(\$S)", System.class, "${ConstantKey.classObj}")    // 打印
         // 调用android项目中的字符串
 //        methodBuilder.addStatement("\$T.out.println(\$T.string.yes)", System.class, ClassName.get("cn.hx.plugin.junkcode.demo", "R"))
 //         methodBuilder.addStatement("\$T.\$L(\$S, \$S)", log1, "d","TAG","")
         methodBuilder.addStatement("\$T.d(\$S, String.valueOf(\$T.\$L))", log1, "TAG", str1, "string.yes")  // 打印日志
     }
-
 
 
 

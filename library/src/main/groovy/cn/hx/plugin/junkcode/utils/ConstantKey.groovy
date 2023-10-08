@@ -18,6 +18,7 @@ class ConstantKey {
 
 
     static List<String> stringList = new ArrayList<>()
+
 //    static List<String> stringNameList = new ArrayList<>()
 
     static List<String> otherClassNameList = new ArrayList<>()
@@ -34,7 +35,6 @@ class ConstantKey {
     static String packageName = ""
     static String simpleName = ""
     static String classStr = ""
-    static String isExists = ""
     static String fullPath = ""
     static String allActivityList = ""
     static List<String> targetPath = new ArrayList<>()

@@ -76,8 +76,8 @@ class JunkUtil {
         if (fullName == ClassName.get(Utils.class)) {
             str = "logg"
         }
-//        MethodsUtil.generateR(methodBuilder, str, fullName, isLoad, ConstantKey.otherAllPathMap)
-        MethodTemplate.allTemplate(methodBuilder)
+        MethodsUtil.generateR(methodBuilder, str, fullName, isLoad, ConstantKey.otherAllPathMap)
+//        MethodTemplate.allTemplate(methodBuilder)
     }
 
 
@@ -112,6 +112,11 @@ class JunkUtil {
                 generateLayout(resDir, layoutName, config)
             }
 
+            def key = ClassName.get(packageName, className)
+            if (!ConstantKey.classObj.containsKey(key)) {   // 如果没有该key，则创建一个新的列表
+                ConstantKey.classObj.put(key, new ArrayList<ClassName>())
+            }
+
             // 编写内容
             if (!config.excludeActivityJavaFile) {
                 // todo: 保存activity的类名
@@ -125,9 +130,6 @@ class JunkUtil {
                 } else {
                     // 下一个方法，对之前的数据进行清理
                     ConstantKey.stringList.clear()
-
-
-
                     // todo: 这里不使用gradle中指定的数目，而是进行随机，从而达到每个类下的方法数目不定
                     def methods = RandomUtil.randomLength(12)
                     for (int j = 0; j < methods; j++) {
@@ -146,10 +148,7 @@ class JunkUtil {
 
 
                         // todo:添加类对象，以及类方法，注意：需要优化的地方（还没有对带参数的方法做处理，所以目前只适合生成无参方法）
-                        def key = ClassName.get(packageName, className)
-                        if (!ConstantKey.classObj.containsKey(key)) {   // 如果没有该key，则创建一个新的列表
-                            ConstantKey.classObj.put(key, new ArrayList<ClassName>())
-                        }
+
                         ConstantKey.classObj.get(key).add(methodName)
 
                         if (config.methodGenerator) {
@@ -205,86 +204,87 @@ class JunkUtil {
 
     // 生成其他类文件
     static void generateJava(File javaDir, String packageName, JunkCodeConfig config) {
-        ConstantKey.otherPackageNameList.add(0, packageName)
-        for (int i = 0; i < config.otherCountPerPackage; i++) {
-            def className
-            if (config.classNameCreator) {
-                def classNameBuilder = new StringBuilder()
-                config.classNameCreator.execute(new Tuple2(i, classNameBuilder))
-                className = classNameBuilder.toString()
-            } else {
-                className = generateName(i).capitalize()
-            }
-            def typeBuilder = TypeSpec.classBuilder(className)
-            if (!ConstantKey.targetPath.contains("$i、$packageName.$className")) {
-                ConstantKey.targetPath.add(i, "$i、$packageName.$className")
-            }
-            ConstantKey.otherClassNameList.add(0, className)
-            if (config.typeGenerator) {
-                config.typeGenerator.execute(typeBuilder)
-            } else {
-                typeBuilder.addModifiers(Modifier.PUBLIC)
-//                otherClassMethodsNameList.clear()
-                // todo：函数方法
-                def methods = RandomUtil.randomLength(12)
-                for (int j = 0; j < methods; j++) {
-//                for (int j = 0; j < config.methodCountPerClass; j++) {
-                    def methodName
-                    if (config.methodNameCreator) {
-                        def methodNameBuilder = new StringBuilder()
-                        config.methodNameCreator.execute(new Tuple2(j, methodNameBuilder))
-                        methodName = methodNameBuilder.toString()
-                    } else {
-//                        methodName = generateRandomMethodsName(j)
-                        methodName = generateName(j)
-                    }
-                    def methodBuilder = MethodSpec.methodBuilder(methodName)
-
-                    // todo:添加类对象，以及类方法，注意：需要优化的地方（还没有对带参数的方法做处理，所以目前只适合生成无参方法）
-                    def key = ClassName.get(packageName, className)
-                    if (!ConstantKey.classObj.containsKey(key)) {   // 如果没有该key，则创建一个新的列表
-                        ConstantKey.classObj.put(key, new ArrayList<ClassName>())
-                    }
-                    ConstantKey.classObj.get(key).add(methodName)
-
-
-                    if (config.methodGenerator) {
-                        config.methodGenerator.execute(methodBuilder)
-                    } else {
-                        generateMethods(methodBuilder, true)
-                    }
-                    typeBuilder.addMethod(methodBuilder.build())
-
-                    // 只添加没有参数的方法，且将新添加的数据放在首位
-                    if (methodBuilder.build().parameters.size() == 0) {
-                        ConstantKey.otherClassMethodsNameList.add(0,methodBuilder.build().name)
-//                        otherClassMethodsAccessMap.put(className, methodBuilder.build().name)
-
-                        if (ConstantKey.otherClassMethodsAccessMap.containsKey(className)) {
-                            ConstantKey.otherClassMethodsAccessMap.get(className).add(methodBuilder.build().name)
-                        } else {
-                            List<String> values = new ArrayList<String>()
-                            values.add(methodBuilder.build().name)
-                            ConstantKey.otherClassMethodsAccessMap.put(className, values)
-                        }
-
-
-                        def allPath = "${ConstantKey.otherPackageNameList.get(0)}.${ConstantKey.otherClassNameList.get(0)}"
-                        if (ConstantKey.otherAllPathMap.containsKey(allPath)) {
-                            ConstantKey.otherAllPathMap.get(allPath).add(methodBuilder.build().name)
-                        } else {
+        return
+//        ConstantKey.otherPackageNameList.add(0, packageName)
+//        for (int i = 0; i < config.otherCountPerPackage; i++) {
+//            def className
+//            if (config.classNameCreator) {
+//                def classNameBuilder = new StringBuilder()
+//                config.classNameCreator.execute(new Tuple2(i, classNameBuilder))
+//                className = classNameBuilder.toString()
+//            } else {
+//                className = generateName(i).capitalize()
+//            }
+//            def typeBuilder = TypeSpec.classBuilder(className)
+//            if (!ConstantKey.targetPath.contains("$i、$packageName.$className")) {
+//                ConstantKey.targetPath.add(i, "$i、$packageName.$className")
+//            }
+//            ConstantKey.otherClassNameList.add(0, className)
+//            if (config.typeGenerator) {
+//                config.typeGenerator.execute(typeBuilder)
+//            } else {
+//                typeBuilder.addModifiers(Modifier.PUBLIC)
+////                otherClassMethodsNameList.clear()
+//                // todo：函数方法
+//                def methods = RandomUtil.randomLength(12)
+//                for (int j = 0; j < methods; j++) {
+////                for (int j = 0; j < config.methodCountPerClass; j++) {
+//                    def methodName
+//                    if (config.methodNameCreator) {
+//                        def methodNameBuilder = new StringBuilder()
+//                        config.methodNameCreator.execute(new Tuple2(j, methodNameBuilder))
+//                        methodName = methodNameBuilder.toString()
+//                    } else {
+////                        methodName = generateRandomMethodsName(j)
+//                        methodName = generateName(j)
+//                    }
+//                    def methodBuilder = MethodSpec.methodBuilder(methodName)
+//
+//                    // todo:添加类对象，以及类方法，注意：需要优化的地方（还没有对带参数的方法做处理，所以目前只适合生成无参方法）
+//                    def key = ClassName.get(packageName, className)
+//                    if (!ConstantKey.classObj.containsKey(key)) {   // 如果没有该key，则创建一个新的列表
+//                        ConstantKey.classObj.put(key, new ArrayList<ClassName>())
+//                    }
+//                    ConstantKey.classObj.get(key).add(methodName)
+//
+//
+//                    if (config.methodGenerator) {
+//                        config.methodGenerator.execute(methodBuilder)
+//                    } else {
+//                        generateMethods(methodBuilder, true)
+//                    }
+//                    typeBuilder.addMethod(methodBuilder.build())
+//
+//                    // 只添加没有参数的方法，且将新添加的数据放在首位
+//                    if (methodBuilder.build().parameters.size() == 0) {
+//                        ConstantKey.otherClassMethodsNameList.add(0,methodBuilder.build().name)
+////                        otherClassMethodsAccessMap.put(className, methodBuilder.build().name)
+//
+//                        if (ConstantKey.otherClassMethodsAccessMap.containsKey(className)) {
+//                            ConstantKey.otherClassMethodsAccessMap.get(className).add(methodBuilder.build().name)
+//                        } else {
 //                            List<String> values = new ArrayList<String>()
-                            List<String> values = ConstantKey.otherAllPathMap.getOrDefault(allPath, new ArrayList<>())
-                            values.add(methodBuilder.build().name)
-                            ConstantKey.otherAllPathMap.put(allPath.toString(), values)
-                        }
-                    }
-//                    otherClassMethodsNameList.removeLast()
-                }
-            }
-            def javaFile = JavaFile.builder(packageName, typeBuilder.build()).build()
-            writeJavaToFile(javaDir, javaFile)
-        }
+//                            values.add(methodBuilder.build().name)
+//                            ConstantKey.otherClassMethodsAccessMap.put(className, values)
+//                        }
+//
+//
+//                        def allPath = "${ConstantKey.otherPackageNameList.get(0)}.${ConstantKey.otherClassNameList.get(0)}"
+//                        if (ConstantKey.otherAllPathMap.containsKey(allPath)) {
+//                            ConstantKey.otherAllPathMap.get(allPath).add(methodBuilder.build().name)
+//                        } else {
+////                            List<String> values = new ArrayList<String>()
+//                            List<String> values = ConstantKey.otherAllPathMap.getOrDefault(allPath, new ArrayList<>())
+//                            values.add(methodBuilder.build().name)
+//                            ConstantKey.otherAllPathMap.put(allPath.toString(), values)
+//                        }
+//                    }
+////                    otherClassMethodsNameList.removeLast()
+//                }
+//            }
+//            def javaFile = JavaFile.builder(packageName, typeBuilder.build()).build()
+//            writeJavaToFile(javaDir, javaFile)
+//        }
     }
 
 
