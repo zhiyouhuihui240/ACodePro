@@ -23,26 +23,26 @@ class MethodsUtil {
             ConstantKey.classStr = "logg"
         }
 
-
+        def log = "android.util.Log"
         switch (random.nextInt(7)) {
             case 0:
-                generateRandomMethods6(methodBuilder, str, fullName, isLoad)
+                generateRandomMethods6(methodBuilder, str, fullName, isLoad, log)
 //                generateRandomMethods6(methodBuilder, str, fullName, isLoad, classObj)
                 break
             case 1:
-                generateRandomMethods5(methodBuilder, str, fullName, isLoad)
+                generateRandomMethods5(methodBuilder, str, fullName, isLoad, log)
 //                generateRandomMethods5(methodBuilder, str, fullName, isLoad, classObj)
                 break
             case 2:
-                generateRandomMethods4(methodBuilder, str, fullName, isLoad)
+                generateRandomMethods4(methodBuilder, str, fullName, isLoad, log)
 //                generateRandomMethods4(methodBuilder, str, fullName, isLoad, classObj)
                 break
             case 3:
-                generateRandomMethods3(methodBuilder, str, fullName, isLoad)
+                generateRandomMethods3(methodBuilder, str, fullName, isLoad, log)
 //                generateRandomMethods3(methodBuilder, str, fullName, isLoad, classObj)
                 break
             case 4:
-                generateRandomMethods2(methodBuilder, str, fullName, isLoad)
+                generateRandomMethods2(methodBuilder, str, fullName, isLoad, log)
 //                generateRandomMethods2(methodBuilder, str, fullName, isLoad, classObj)
                 break
             case 5:
@@ -50,78 +50,91 @@ class MethodsUtil {
 //                generateRandomMethods1(methodBuilder, str, fullName, isLoad, otherAllPathMap, classObj)
                 break
             case 6:
-                generateRandomMethods(methodBuilder, str, fullName, isLoad)
+                generateRandomMethods(methodBuilder, str, fullName, isLoad, log)
                 break
             default:
-                generateRandomMethods(methodBuilder, str, fullName, isLoad)
+                generateRandomMethods(methodBuilder, str, fullName, isLoad, log)
 //                generateRandomMethods8(methodBuilder, str, fullName, isLoad, classObj)
         }
     }
     
     
-    static generateRandomMethods(MethodSpec.Builder methodBuilder, String str, ClassName fullName, Boolean isLoad){
+    static generateRandomMethods(MethodSpec.Builder methodBuilder, String str, ClassName fullName, Boolean isLoad, log){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
         def bundleClassName = ClassName.get("${ConstantKey.packageName}", "${ConstantKey.simpleName}")
-
+        def log1 = ClassName.get("android.util", "Log")
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
-//        methodBuilder.addStatement("${ConstantKey.fullPath}")
-        
+        methodBuilder.addStatement("\$T.out.println(\$S)", System.class, "$bundleClassName")
+
+        // methodBuilder.addStatement("\$T.\$L(\$S, \$S)", log1, "d","TAG","${ConstantKey.targetPath}")
     }
-    
+
     static generateRandomMethods1(MethodSpec.Builder methodBuilder, String str, ClassName fullName , Boolean isLoad, HashMap<String, List<String>> otherAllPathMap){
 //    static generateRandomMethods1(MethodSpec.Builder methodBuilder, String str, ClassName fullName , Boolean isLoad, HashMap<String, List<String>> otherAllPathMap, Map.Entry<ClassName, String> classObj){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
         def bundleClassName = ClassName.get("${ConstantKey.packageName}", "${ConstantKey.simpleName}")
-        methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
-        
-        
+        def log1 = ClassName.get("android.util", "Log")
+
+        methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)    // 调用其他类的方法
+        methodBuilder.addStatement("\$T.out.println(\$S)", System.class, "$bundleClassName")    // 打印
+
+        // methodBuilder.addStatement("\$T.\$L(\$S, \$S)", log1, "d","TAG","${ConstantKey.targetPath}")
+
     }
-    
-    static generateRandomMethods2(MethodSpec.Builder methodBuilder, String str, ClassName fullName , Boolean isLoad){
+
+    static generateRandomMethods2(MethodSpec.Builder methodBuilder, String str, ClassName fullName , Boolean isLoad, log){
 //    static generateRandomMethods2(MethodSpec.Builder methodBuilder, String str, ClassName fullName , Boolean isLoad, Map.Entry<ClassName, String> classObj){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
         def bundleClassName = ClassName.get("${ConstantKey.packageName}", "${ConstantKey.simpleName}")
+        def log1 = ClassName.get("android.util", "Log")
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
-        
-        
+        methodBuilder.addStatement("\$T.out.println(\$S)", System.class, "$bundleClassName")
+
+        // methodBuilder.addStatement("\$T.\$L(\$S, \$S)", log1, "d","TAG","${ConstantKey.targetPath}")
         methodBuilder.returns(Date.class)
         methodBuilder.addStatement("return new \$T()", Date.class)
     }
 
-    static generateRandomMethods3(MethodSpec.Builder methodBuilder, String str, ClassName fullName, Boolean isLoad){
+    static generateRandomMethods3(MethodSpec.Builder methodBuilder, String str, ClassName fullName, Boolean isLoad, log){
 //    static generateRandomMethods3(MethodSpec.Builder methodBuilder, String str, ClassName fullName, Boolean isLoad, Map.Entry<ClassName, String> classObj){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
         def bundleClassName = ClassName.get("${ConstantKey.packageName}", "${ConstantKey.simpleName}")
+        def log1 = ClassName.get("android.util", "Log")
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
-        
-        
+        methodBuilder.addStatement("\$T.out.println(\$S)", System.class, "$bundleClassName")
+
+        // methodBuilder.addStatement("\$T.\$L(\$S, \$S)", log1, "d","TAG","${ConstantKey.targetPath}")
         methodBuilder.returns(Date.class)
         methodBuilder.addStatement("return new \$T()", Date.class)
     }
 
-    static generateRandomMethods4(MethodSpec.Builder methodBuilder, String str, ClassName fullName, Boolean isLoad){
+    static generateRandomMethods4(MethodSpec.Builder methodBuilder, String str, ClassName fullName, Boolean isLoad, log){
 //    static generateRandomMethods4(MethodSpec.Builder methodBuilder, String str, ClassName fullName, Boolean isLoad,  Map.Entry<ClassName, String> classObj){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC).beginControlFlow("try")
                 .addStatement("throw new Exception(\$S)", "Failed")
                 .nextControlFlow("catch (\$T e)", Exception.class)
         def bundleClassName = ClassName.get("${ConstantKey.packageName}", "${ConstantKey.simpleName}")
+        def log1 = ClassName.get("android.util", "Log")
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
-        
-        
+        methodBuilder.addStatement("\$T.out.println(\$S)", System.class, "$bundleClassName")
+
+        // methodBuilder.addStatement("\$T.\$L(\$S, \$S)", log1, "d","TAG","${ConstantKey.targetPath}")
         methodBuilder.endControlFlow()
     }
 
-    static generateRandomMethods5(MethodSpec.Builder methodBuilder, String str, ClassName fullName , Boolean isLoad){
+    static generateRandomMethods5(MethodSpec.Builder methodBuilder, String str, ClassName fullName , Boolean isLoad, log){
 //    static generateRandomMethods5(MethodSpec.Builder methodBuilder, String str, ClassName fullName , Boolean isLoad,  Map.Entry<ClassName, String> classObj){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
         def bundleClassName = ClassName.get("${ConstantKey.packageName}", "${ConstantKey.simpleName}")
+        def log1 = ClassName.get("android.util", "Log")
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
-        
-        
+        methodBuilder.addStatement("\$T.out.println(\$S)", System.class, "$bundleClassName")
+
+        // methodBuilder.addStatement("\$T.\$L(\$S, \$S)", log1, "d","TAG","${ConstantKey.targetPath}")
         methodBuilder.addCode("" + "int total = 0;\n" + "for (int i = 0; i < 10; i++) {\n" + "  total += i;\n" + "}\n")
     }
 
-    static generateRandomMethods6(MethodSpec.Builder methodBuilder, String str, ClassName fullName , Boolean isLoad){
+    static generateRandomMethods6(MethodSpec.Builder methodBuilder, String str, ClassName fullName , Boolean isLoad, log){
 //    static generateRandomMethods6(MethodSpec.Builder methodBuilder, String str, ClassName fullName , Boolean isLoad,  Map.Entry<ClassName, String> classObj){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                 .addStatement("long now = \$T.currentTimeMillis()", System.class)
@@ -132,26 +145,28 @@ class MethodsUtil {
                 .nextControlFlow("else")
                 .addStatement("\$T.out.println(\$S)", System.class, "Ok, time still moving forward")
         def bundleClassName = ClassName.get("${ConstantKey.packageName}", "${ConstantKey.simpleName}")
+        def log1 = ClassName.get("android.util", "Log")
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
-        
-        
+        methodBuilder.addStatement("\$T.out.println(\$S)", System.class, "$bundleClassName")
+
+        // methodBuilder.addStatement("\$T.\$L(\$S, \$S)", log1, "d","TAG","${ConstantKey.targetPath}")
         methodBuilder.endControlFlow()
     }
 
-    static generateRandomMethods7(MethodSpec.Builder methodBuilder, String str, ClassName fullName , Boolean isLoad){
+    static generateRandomMethods7(MethodSpec.Builder methodBuilder, String str, ClassName fullName , Boolean isLoad, log){
 //    static generateRandomMethods7(MethodSpec.Builder methodBuilder, String str, ClassName fullName , Boolean isLoad,  Map.Entry<ClassName, String> classObj){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
         def bundleClassName = ClassName.get("${ConstantKey.packageName}", "${ConstantKey.simpleName}")
+        def log1 = ClassName.get("android.util", "Log")
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
-        
-        
+        // methodBuilder.addStatement("\$T.\$L(\$S, \$S)", log1, "d","TAG","${ConstantKey.targetPath}")
         methodBuilder.returns(void.class)
         methodBuilder.addParameter(String[].class, "args")
         methodBuilder.addStatement("\$T.out.println(\$S)", System.class, "Hello")
     }
 
     // for 循环
-    static generateRandomMethods8(MethodSpec.Builder methodBuilder, String str, ClassName fullName , Boolean isLoad){
+    static generateRandomMethods8(MethodSpec.Builder methodBuilder, String str, ClassName fullName , Boolean isLoad, log){
 //    static generateRandomMethods8(MethodSpec.Builder methodBuilder, String str, ClassName fullName , Boolean isLoad,  Map.Entry<ClassName, String> classObj){
         def randomNum = RandomUtil.generateRandomNum()
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)

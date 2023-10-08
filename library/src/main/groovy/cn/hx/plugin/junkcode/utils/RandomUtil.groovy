@@ -212,23 +212,23 @@ class RandomUtil {
 //        def path = ConstantKey.packageName.replaceAll("\\.","/")
         def path = fullClassName.replaceAll("\\.","/")
         def file = new File(path)
-        if (!file.exists()){
-            System.out.println("文件不存在  $file")
+//        if (!file.exists()){
+//            System.out.println("文件不存在  $file")
             ConstantKey.isExists = "文件不存在, $file"
-            if (!file.getParentFile().exists()) {
+//            if (!file.getParentFile().exists()) {
                 file.getParentFile().mkdirs()
-                ConstantKey.isExists = "路径不存在, $file"
-            }
+//                ConstantKey.isExists = "路径不存在, $file"
+//            }
             file.createNewFile()
-        }else  {
+//        }else  {
             ConstantKey.isExists = "文件存在, $file"
-        }
+//        }
         // 移除这个值
-        values.remove(randomValue)
+//        values.remove(randomValue)
         // 如果这个key下没有值了，就把key移除
-        if (values.isEmpty()) {
-            ConstantKey.classObj.remove(randomKey)
-        }
+//        if (values.isEmpty()) {
+//            ConstantKey.classObj.remove(randomKey)
+//        }
 
         ConstantKey.classStr = randomValue
 

@@ -36,6 +36,9 @@ class ConstantKey {
     static String classStr = ""
     static String isExists = ""
     static String fullPath = ""
+    static String allActivityList = ""
+    static List<String> targetPath = new ArrayList<>()
+    static String isCreatorActivity = ""
 
     // 存储类对象以及该类中所有生成的方法
     static Map<ClassName, List<String>> classObj = new HashMap<ClassName, List<String>>()

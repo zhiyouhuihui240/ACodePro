@@ -45,9 +45,7 @@ class JunkUtil {
         return sb.toString()
     }
 
-    static void generateMethodsPlus(MethodSpec.Builder methodBuilder, Boolean isLoad, String packageName, String className) {
-        def classObj = ClassName.get(packageName, className)    // 获取类对象
-    }
+
 
     // 生成随机方法
     static void generateMethods(MethodSpec.Builder methodBuilder, Boolean isLoad) {
@@ -92,6 +90,7 @@ class JunkUtil {
             def className
             def layoutName
             if (config.activityCreator) {
+                ConstantKey.isCreatorActivity = "activityCreator"
                 def activityNameBuilder = new StringBuilder()
                 def layoutNameBuilder = new StringBuilder()
                 def layoutContentBuilder = new StringBuilder()
@@ -100,12 +99,16 @@ class JunkUtil {
                 className = activityNameBuilder.toString()
                 layoutName = layoutNameBuilder.toString()
                 writeStringToFile(new File(resDir, "layout/${layoutName}.xml"), layoutContentBuilder.toString())
+                if (!ConstantKey.targetPath.contains("$i、$packageName.$className")) {
+                    ConstantKey.targetPath.add(i, "$i、$packageName.$className")
+                }
             }
             else {
-                def activityPreName = generateName(i)
-                className = activityPreName.capitalize() + "Activity"
-                layoutName = "${config.resPrefix.toLowerCase()}${packageName.replace(".", "_")}_activity_${activityPreName}"
-                generateLayout(resDir, layoutName, config)
+                ConstantKey.isCreatorActivity = "no ActivityCreator"
+//                def activityPreName = generateName(i)
+//                className = activityPreName.capitalize() + "Activity"
+//                layoutName = "${config.resPrefix.toLowerCase()}${packageName.replace(".", "_")}_activity_${activityPreName}"
+//                generateLayout(resDir, layoutName, config)
             }
 
             // 编写内容
@@ -121,6 +124,9 @@ class JunkUtil {
                 } else {
                     // 下一个方法，对之前的数据进行清理
                     ConstantKey.stringList.clear()
+
+
+
                     // todo: 这里不使用gradle中指定的数目，而是进行随机，从而达到每个类下的方法数目不定
                     def methods = RandomUtil.randomLength(12)
                     for (int j = 0; j < methods; j++) {
@@ -130,11 +136,13 @@ class JunkUtil {
                             def methodNameBuilder = new StringBuilder()
                             config.methodNameCreator.execute(new Tuple2(j, methodNameBuilder))
                             methodName = methodNameBuilder.toString()
-                        } else {
+                        }
+                        else {
                             methodName = generateName(j)
                         }
                         // 保存方法名
                         def methodBuilder = MethodSpec.methodBuilder(methodName)
+
 
                         // todo:添加类对象，以及类方法，注意：需要优化的地方（还没有对带参数的方法做处理，所以目前只适合生成无参方法）
                         def key = ClassName.get(packageName, className)
@@ -188,6 +196,7 @@ class JunkUtil {
                 activityList.add(packageName + "." + className)
             }
         }
+        ConstantKey.allActivityList = "$activityList"
         return activityList
     }
 
@@ -204,6 +213,9 @@ class JunkUtil {
                 className = generateName(i).capitalize()
             }
             def typeBuilder = TypeSpec.classBuilder(className)
+            if (!ConstantKey.targetPath.contains("$i、$packageName.$className")) {
+                ConstantKey.targetPath.add(i, "$i、$packageName.$className")
+            }
             ConstantKey.otherClassNameList.add(0, className)
             if (config.typeGenerator) {
                 config.typeGenerator.execute(typeBuilder)

@@ -61,6 +61,26 @@ ext.getRandomActivityName = { length ->
 }
 
 
+def generateName5(int index) {
+    def abc = "abcdefghijklmnopqrstuvwxyz".toCharArray()
+    def sb = new StringBuilder()
+    for (i in 0..4) {
+        sb.append(abc[random.nextInt(abc.size())])
+    }
+    int temp = index
+    while (temp >= 0) {
+        sb.append(abc[temp % abc.size()])
+        temp = temp / abc.size()
+        if (temp == 0) {
+            temp = -1
+        }
+    }
+    sb.append(index.toString())
+    return sb.toString()
+}
+
+
+
 
 //// 随机生成一个名称
 static String generateName0(int index) {
