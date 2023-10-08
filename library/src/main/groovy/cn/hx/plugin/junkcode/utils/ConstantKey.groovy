@@ -44,4 +44,8 @@ class ConstantKey {
     static Map<ClassName, List<String>> classObj = new HashMap<ClassName, List<String>>()
 
 
+    // 获取 随机生成的layout内容
+    static String layoutContentString = ""
+
+
 }

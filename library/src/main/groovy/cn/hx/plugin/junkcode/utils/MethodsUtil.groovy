@@ -67,7 +67,7 @@ class MethodsUtil {
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         methodBuilder.addStatement("\$T.out.println(\$S)", System.class, "$bundleClassName")    // 打印
         // 调用android项目中的字符串
-        methodBuilder.addStatement("\$T.out.println(\$T.string.yes)", System.class, ClassName.get("cn.hx.plugin.junkcode.demo", "R"))
+//        methodBuilder.addStatement("\$T.out.println(\$T.string.yes)", System.class, ClassName.get("cn.hx.plugin.junkcode.demo", "R"))
 //         methodBuilder.addStatement("\$T.\$L(\$S, \$S)", log1, "d","TAG","")
         methodBuilder.addStatement("\$T.d(\$S, String.valueOf(\$T.\$L))", log1, "TAG", str1, "string.yes")  // 打印日志
     }
@@ -93,8 +93,8 @@ class MethodsUtil {
         methodBuilder.addStatement("\$T.out.println(\$S)", System.class, "$bundleClassName")
 
         // methodBuilder.addStatement("\$T.\$L(\$S, \$S)", log1, "d","TAG","${ConstantKey.targetPath}")
-        methodBuilder.returns(Date.class)
-        methodBuilder.addStatement("return new \$T()", Date.class)
+//        methodBuilder.returns(Date.class)
+//        methodBuilder.addStatement("return new \$T()", Date.class)
     }
 
     static generateRandomMethods3(MethodSpec.Builder methodBuilder, String str, ClassName fullName, Boolean isLoad, log){
@@ -106,8 +106,8 @@ class MethodsUtil {
         methodBuilder.addStatement("\$T.out.println(\$S)", System.class, "$bundleClassName")
 
         // methodBuilder.addStatement("\$T.\$L(\$S, \$S)", log1, "d","TAG","${ConstantKey.targetPath}")
-        methodBuilder.returns(Date.class)
-        methodBuilder.addStatement("return new \$T()", Date.class)
+//        methodBuilder.returns(Date.class)
+//        methodBuilder.addStatement("return new \$T()", Date.class)
     }
 
     static generateRandomMethods4(MethodSpec.Builder methodBuilder, String str, ClassName fullName, Boolean isLoad, log){
@@ -131,9 +131,8 @@ class MethodsUtil {
         def log1 = ClassName.get("android.util", "Log")
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         methodBuilder.addStatement("\$T.out.println(\$S)", System.class, "$bundleClassName")
-
         // methodBuilder.addStatement("\$T.\$L(\$S, \$S)", log1, "d","TAG","${ConstantKey.targetPath}")
-        methodBuilder.addCode("" + "int total = 0;\n" + "for (int i = 0; i < 10; i++) {\n" + "  total += i;\n" + "}\n")
+        methodBuilder.addCode("" + "int tewfs = 0;\n" + "for (int i = 0; i < 10; i++) {\n" + "  tewfs += i;\n" + "}\n")
     }
 
     static generateRandomMethods6(MethodSpec.Builder methodBuilder, String str, ClassName fullName , Boolean isLoad, log){

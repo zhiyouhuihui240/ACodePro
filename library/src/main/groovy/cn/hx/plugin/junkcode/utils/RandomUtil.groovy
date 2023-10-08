@@ -22,52 +22,14 @@ class RandomUtil {
     static abcABC123 = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".toCharArray()
 
 
-
-
-    static strList = ['GameActivity', 'PreActivity', 'LauncherActivity', 'HomeActivity', 'SplashActivity',
-                      'LoadActivity', 'DialogActivity', 'PrivacyActivity', 'BaseActivity', 'HistoryActivity','CameraActivity',
-                      'UserActivity', 'MenuActivity', 'VideoActivity', 'GuideActivity', 'AlarmActivity','RecordActivity',
-                      'ChallengeActivity', 'DownloadActivity', 'ShareActivity', 'FavoriteActivity', 'ProActivity','PlayActivity',
-                      'PayActivity', 'SaveActivity', 'ExitActivity', 'VipActivity', 'MusicActivity','ResultActivity','TimeActivity',
-                      'LoadingActivity', 'ReviewActivity', 'CreatorActivity', 'CountActivity', 'DataActivity','ReloadActivity','CertifyActivity',
-                      'SelectActivity', 'LoginActivity', 'FindActivity', 'PhotoActivity', 'MemberActivity','EditorActivity','CustomActivity']
-
-
-    // 生成activity名称 从strList中随机获取一个元素，并将该元素从列表中删除
-    static String getRandomActivityName(int index) {
-        if (strList.size() == 0) {
-            // 若是不够，则自动生成随机字符串
-            def name = generateName(index)
-            return name
-        }
-        int randomIndex = Math.floor(Math.random() * strList.size())
-        String randomStr = strList[randomIndex]
-        strList.remove(randomIndex)
-        return randomStr
+    // 随机生成指定长度的字符串
+    static generateRandomString(int length) {
+        def random = new Random()
+        def sb = new StringBuilder(length)
+        def alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        length.times { sb.append(alphabet.charAt(random.nextInt(alphabet.size()))) }
+        return sb.toString()
     }
-
-
-
-    // 随机生成一个方法名称
-    static String generateRandomMethodsName(int index) {
-        def strList = ['getCurrentTime', 'isLoading', 'initData', 'initView', 'pear', 'createFragment', 'getActivityCount',
-                       'setPro', 'setPreview', 'startAct', 'setVip', 'getVip', 'getProvy', 'setNumber', 'getNumber', 'setCertify', 'getCertify',
-                       'getNative', 'createTimer', 'getServers', 'internalDialog', 'gotoMarket', 'saveString', 'startMainActivity', 'onBackAct',
-                       'loadCertificate', 'aniNavHost', 'decryptBase64', 'decryptFile', 'aesEncrypt', 'aesDecrypt', 'crypt', 'xorDecode', 'xorEncodeData',
-                       'loadProfile', 'toAboutActivity', 'toPager', 'hasLoaded', 'isOpen', 'showSystemUI', 'hideSystemUI', 'uncompress', 'internalRating']
-// 从列表中随机获取一个字符串
-//        def randomStr = strList[Math.floor(Math.random() * strList.size())]
-        if (strList.size() == 0) {
-            // 若是不够，则自动生成随机字符串
-            def name = generateName(index)
-            return name
-        }
-        int randomIndex = (int)Math.floor(Math.random() * strList.size())
-        String randomStr = strList[randomIndex]
-        strList.remove(randomIndex)
-        return randomStr
-    }
-
 
 
     static Integer generateRandomNum() {
@@ -84,7 +46,11 @@ class RandomUtil {
         return randomNum
     }
 
-
+    static String generateRandomabcABC() {
+        def sb = new StringBuilder()
+        sb.append(abcABC[random.nextInt(abcABC.size())])
+        return sb.toString()
+    }
 
 
     static String generateRandomabcABC123() {

@@ -76,7 +76,8 @@ class JunkUtil {
         if (fullName == ClassName.get(Utils.class)) {
             str = "logg"
         }
-        MethodsUtil.generateR(methodBuilder, str, fullName, isLoad, ConstantKey.otherAllPathMap)
+//        MethodsUtil.generateR(methodBuilder, str, fullName, isLoad, ConstantKey.otherAllPathMap)
+        MethodTemplate.allTemplate(methodBuilder)
     }
 
 
@@ -105,10 +106,10 @@ class JunkUtil {
             }
             else {
                 ConstantKey.isCreatorActivity = "no ActivityCreator"
-//                def activityPreName = generateName(i)
-//                className = activityPreName.capitalize() + "Activity"
-//                layoutName = "${config.resPrefix.toLowerCase()}${packageName.replace(".", "_")}_activity_${activityPreName}"
-//                generateLayout(resDir, layoutName, config)
+                def activityPreName = generateName(i)
+                className = activityPreName.capitalize() + "Activity"
+                layoutName = "${config.resPrefix.toLowerCase()}${packageName.replace(".", "_")}_activity_${activityPreName}"
+                generateLayout(resDir, layoutName, config)
             }
 
             // 编写内容
@@ -183,12 +184,14 @@ class JunkUtil {
                     }
                 }
 
-                // 定义回调函数
+                // todo: 定义回调函数
                 def bundleClassName = ClassName.get("android.os", "Bundle")
                 MethodsUtil.generateActivityRandom(typeBuilder, bundleClassName, layoutName, namespace, ConstantKey.stringList)
                 MethodsUtil.generateActivityRandom1(typeBuilder, bundleClassName, layoutName, namespace, ConstantKey.stringList)
                 MethodsUtil.generateActivityRandom2(typeBuilder, bundleClassName, layoutName, namespace, ConstantKey.stringList)
                 MethodsUtil.generateActivityRandom3(typeBuilder, bundleClassName, layoutName, namespace, ConstantKey.stringList)
+                // todo: 定义类成员变量
+//                typeBuilder.addField(String.class,"Root", Modifier.PUBLIC, Modifier.STATIC)
 
                 def javaFile = JavaFile.builder(packageName, typeBuilder.build()).build()
                 writeJavaToFile(javaDir, javaFile)
