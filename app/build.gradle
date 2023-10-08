@@ -26,7 +26,6 @@ task getName1{
 }
 
 
-
 static String generateName(int index) {
 //    return generateName5(index)
     def random = new Random()
@@ -47,16 +46,12 @@ static String generateName(int index) {
     return sb.toString()
 }
 
-
-
 static String generateActivityName(int index) {
         def name = ActivityNameGenerator.generateActivityName(index)
         println "Activity Name: ${name}" // 输出随机生成的Activity名称
     return name
 
 }
-
-
 
 class ActivityNameGenerator {
     static List<String> strList = [
@@ -104,9 +99,6 @@ class ActivityNameGenerator {
         return sb.toString()
     }
 }
-
-
-
 
 // 定义生成随机字符串的函数
 static def randomString(int length) {
