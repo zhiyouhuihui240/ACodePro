@@ -3,6 +3,7 @@ package cn.hx.plugin.junkcode.utils
 import com.squareup.javapoet.ClassName
 
 import java.security.SecureRandom
+import java.text.SimpleDateFormat
 
 
 class RandomUtil {
@@ -59,6 +60,19 @@ class RandomUtil {
         return sb.toString()
     }
 
+
+    // 返回随机日期，其数据格式为：2023-10-09
+    static getRandomDate() {
+        // 设置日期格式
+        def format = new SimpleDateFormat("yyyy-MM-dd")
+        // 创建Calendar实例并设置为1970年1月1日
+        def calendar = Calendar.getInstance()
+        calendar.set(1970, Calendar.JANUARY, 1)
+        // 生成1到当前时间的随机天数并增加到Calendar中
+        def randomDays = (int) (Math.random() * (System.currentTimeMillis() / (24 * 60 * 60 * 1000)))
+        calendar.add(Calendar.DATE, randomDays)
+        return format.format(calendar.getTime())
+    }
 
 
 
@@ -175,20 +189,6 @@ class RandomUtil {
         ConstantKey.packageName = fullClassName.substring(0, fullClassName.lastIndexOf("."))
         ConstantKey.simpleName = fullClassName.substring(fullClassName.lastIndexOf(".") + 1)
         ConstantKey.fullPath = fullClassName
-//        def path = ConstantKey.packageName.replaceAll("\\.","/")
-//        def path = fullClassName.replaceAll("\\.","/")
-//        def file = new File(path)
-//        if (!file.exists()){
-//            System.out.println("文件不存在  $file")
-//            ConstantKey.isExists = "文件不存在, $file"
-////            if (!file.getParentFile().exists()) {
-//                file.getParentFile().mkdirs()
-////                ConstantKey.isExists = "路径不存在, $file"
-////            }
-//            file.createNewFile()
-////        }else  {
-//            ConstantKey.isExists = "文件存在, $file"
-//        }
         // 移除这个值
 //        values.remove(randomValue)
         // 如果这个key下没有值了，就把key移除

@@ -19,12 +19,6 @@ class JunkUtil {
 
     static abc = "abcdefghijklmnopqrstuvwxyz".toCharArray()
     static color = "0123456789abcdef".toCharArray()
-//    static List<String> otherClassNameList = new ArrayList<>()
-//    static List<String> otherPackageNameList = new ArrayList<>()
-//    static List<String> otherClassMethodsNameList = new ArrayList<>()
-//    static Map<String, List<String>> otherClassMethodsAccessMap = new HashMap<String, List<String>>()
-//    // 包名 + 类名，方法名
-//    static Map<String, List<String>> otherAllPathMap = new HashMap<String, List<String>>()
 
 
     // 随机生成一个名称
@@ -44,7 +38,6 @@ class JunkUtil {
         sb.append(index.toString())
         return sb.toString()
     }
-
 
 
     // 生成随机方法
@@ -81,13 +74,13 @@ class JunkUtil {
     }
 
 
-
     // 生成activity
     static List<String> generateActivity(File javaDir, File resDir, String namespace, String packageName, JunkCodeConfig config) {
         ConstantKey.otherPackageNameList.add(0, packageName)
         def activityList = new ArrayList()
         // gradle 中指定生成多少个 activity
         for (int i = 0; i < config.activityCountPerPackage; i++) {
+
             def className
             def layoutName
             if (config.activityCreator) {
@@ -111,7 +104,7 @@ class JunkUtil {
                 layoutName = "${config.resPrefix.toLowerCase()}${packageName.replace(".", "_")}_activity_${activityPreName}"
                 generateLayout(resDir, layoutName, config)
             }
-
+            // todo: 存在问题，仍然存在数据不正确的情况，保存一些不存在的数据
             def key = ClassName.get(packageName, className)
             if (!ConstantKey.classObj.containsKey(key)) {   // 如果没有该key，则创建一个新的列表
                 ConstantKey.classObj.put(key, new ArrayList<ClassName>())
@@ -148,7 +141,6 @@ class JunkUtil {
 
 
                         // todo:添加类对象，以及类方法，注意：需要优化的地方（还没有对带参数的方法做处理，所以目前只适合生成无参方法）
-
                         ConstantKey.classObj.get(key).add(methodName)
 
                         if (config.methodGenerator) {
@@ -182,7 +174,6 @@ class JunkUtil {
                         }
                     }
                 }
-
                 // todo: 定义回调函数
                 def bundleClassName = ClassName.get("android.os", "Bundle")
                 MethodsUtil.generateActivityRandom(typeBuilder, bundleClassName, layoutName, namespace, ConstantKey.stringList)
@@ -206,6 +197,7 @@ class JunkUtil {
     static void generateJava(File javaDir, String packageName, JunkCodeConfig config) {
         ConstantKey.otherPackageNameList.add(0, packageName)
         for (int i = 0; i < config.otherCountPerPackage; i++) {
+
             def className
             if (config.classNameCreator) {
                 def classNameBuilder = new StringBuilder()
@@ -224,6 +216,7 @@ class JunkUtil {
                 ConstantKey.targetPath.add(i, "$i、$packageName.$className")
             }
             ConstantKey.otherClassNameList.add(0, className)
+
             if (config.typeGenerator) {
                 config.typeGenerator.execute(typeBuilder)
             } else {
@@ -266,7 +259,6 @@ class JunkUtil {
                             values.add(methodBuilder.build().name)
                             ConstantKey.otherClassMethodsAccessMap.put(className, values)
                         }
-
 
                         def allPath = "${ConstantKey.otherPackageNameList.get(0)}.${ConstantKey.otherClassNameList.get(0)}"
                         if (ConstantKey.otherAllPathMap.containsKey(allPath)) {
@@ -402,7 +394,6 @@ class JunkUtil {
     }
 
 
-
     // 生成AndroidManifest.xml, todo: 顺序打乱, 读取 manifest文件,然后以数组的形式来将顺序打乱
     static void generateManifest(File manifestFile, List<String> activityList) {
         StringBuilder sb = new StringBuilder()
@@ -418,7 +409,6 @@ class JunkUtil {
         sb.append("</manifest>")
         writeStringToFile(manifestFile, sb.toString())
     }
-
 
     /**
      * 生成proguard-rules.pro

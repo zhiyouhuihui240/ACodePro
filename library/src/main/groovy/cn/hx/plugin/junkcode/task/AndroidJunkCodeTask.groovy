@@ -1,6 +1,7 @@
 package cn.hx.plugin.junkcode.task
 
 import cn.hx.plugin.junkcode.ext.JunkCodeConfig
+import cn.hx.plugin.junkcode.utils.ConstantKey
 import cn.hx.plugin.junkcode.utils.JunkUtil
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.*
@@ -36,10 +37,13 @@ abstract class AndroidJunkCodeTask extends DefaultTask {
         javaOutDir.deleteDir()
         resOutDir.deleteDir()
         //自定义生成java逻辑
+
+        ConstantKey.classObj.clear()
         if (config.javaGenerator) {
             config.javaGenerator.execute(javaOutDir)
         } else {
             for (int i = 0; i < config.packageCount; i++) {
+
                 String packageName
                 if (config.packageCreator) {
                     def packageNameBuilder = new StringBuffer()

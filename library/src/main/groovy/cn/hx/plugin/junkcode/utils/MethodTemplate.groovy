@@ -18,15 +18,12 @@ import java.util.regex.Pattern
  */
 class MethodTemplate {
 
-
     static random = new Random()
 
     static allTemplate(MethodSpec.Builder methodBuilder){
         if ( ConstantKey.otherClassNameList.size() > 3) {
             RandomUtil.removeRandomValue()
         }
-
-
         if ( ConstantKey.classStr == "" || ConstantKey.packageName == "" || ConstantKey.simpleName == "" || ConstantKey.packageName == "cn.hx.plugin.junkcode.utils") {
             ConstantKey.packageName = "cn.hx.plugin.junkcode.utils"
             ConstantKey.simpleName = "Utils"
@@ -120,20 +117,31 @@ class MethodTemplate {
                 break
             default:
                 template(methodBuilder, bundleClassName)
-
         }
-
     }
 
-    static template0(MethodSpec.Builder methodBuilder, bundleClassName){
+    static generateRandomMethods0(MethodSpec.Builder methodBuilder, ClassName bundleClassName){
+        methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+        def log1 = ClassName.get("android.util", "Log")
+        def str1 = ClassName.get("cn.hx.plugin.junkcode.demo", "R")
+        methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
+
+//        methodBuilder.addStatement("\$T.out.println(\$S)", System.class, "$bundleClassName")    // 打印
+//        methodBuilder.addStatement("\$T.out.println(\$S)", System.class, "${ConstantKey.classObj}")    // 打印
+        // 调用android项目中的字符串
+//        methodBuilder.addStatement("\$T.out.println(\$T.string.yes)", System.class, ClassName.get("cn.hx.plugin.junkcode.demo", "R"))
+//        methodBuilder.addStatement("\$T.d(\$S, String.valueOf(\$T.\$L))", log1, "TAG", str1, "string.yes")  // 打印日志
+    }
+
+    static template0(MethodSpec.Builder methodBuilder, ClassName bundleClassName){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
-        methodBuilder.addStatement("double sum = 0")
-        methodBuilder.addStatement("int count = 0")
+        methodBuilder.addStatement("double sum = ${RandomUtil.generateRandomNum()}")
+        methodBuilder.addStatement("int count = ${RandomUtil.generateRandomNum()}")
         methodBuilder.beginControlFlow("while (true)")
         methodBuilder.addStatement("\$T scanner = new \$T(\$T.in)",Scanner.class, Scanner.class, System)
         methodBuilder.addStatement("int guess = scanner.nextInt()")
-        methodBuilder.beginControlFlow("if (guess == -1)")
+        methodBuilder.beginControlFlow("if (guess == ${RandomUtil.generateRandomNum()})")
         methodBuilder.addStatement("break")
         methodBuilder.endControlFlow();
         methodBuilder.addStatement("sum += guess")
@@ -142,7 +150,7 @@ class MethodTemplate {
         methodBuilder.beginControlFlow("if (count == 0)")
         methodBuilder.endControlFlow()
     }
-    static template1(MethodSpec.Builder methodBuilder, bundleClassName){
+    static template1(MethodSpec.Builder methodBuilder, ClassName bundleClassName){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)// 添加方法体
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         methodBuilder.beginControlFlow("for (int i = 5; i >= 1; i--)")
@@ -152,7 +160,7 @@ class MethodTemplate {
 //        methodBuilder.addStatement("System.out.println()");
         methodBuilder.endControlFlow();
       }
-    static template2(MethodSpec.Builder methodBuilder, bundleClassName){
+    static template2(MethodSpec.Builder methodBuilder, ClassName bundleClassName){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)// 添加方法体
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         methodBuilder.addStatement("int answer = (int) (Math.random() * 100) + 1");
@@ -168,7 +176,7 @@ class MethodTemplate {
         methodBuilder.endControlFlow();
 //        methodBuilder.addStatement("System.out.println(\$S)", "Guess number game finished!");
     }
-    static template3(MethodSpec.Builder methodBuilder, bundleClassName){
+    static template3(MethodSpec.Builder methodBuilder, ClassName bundleClassName){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         methodBuilder.addStatement("String str = \$S", "hello world");
@@ -180,7 +188,7 @@ class MethodTemplate {
         methodBuilder.endControlFlow();
         methodBuilder.endControlFlow();
     }
-    static template4(MethodSpec.Builder methodBuilder, bundleClassName){
+    static template4(MethodSpec.Builder methodBuilder, ClassName bundleClassName){
         def dataObj = ClassName.get("java.util","Date")
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)// 添加方法体
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
@@ -202,7 +210,7 @@ class MethodTemplate {
         methodBuilder.endControlFlow();
         methodBuilder.addStatement("return false");
     }
-    static template5(MethodSpec.Builder methodBuilder, bundleClassName){
+    static template5(MethodSpec.Builder methodBuilder, ClassName bundleClassName){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)// 添加方法体
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         methodBuilder.returns(List.class)
@@ -213,11 +221,10 @@ class MethodTemplate {
         methodBuilder.addStatement("list.add(\$S)", "AAA");
         methodBuilder.addStatement("list.add(\$S)", "DDD");
         methodBuilder.addStatement("\$T set = new \$T<\$T>(list)", Set.class, HashSet.class, String.class);
-        methodBuilder.addStatement("\$T result = new \$T(set)", List.class, ArrayList.class);
-        // 添加方法结束语句
+        methodBuilder.addStatement("\$T result = new \$T(set)", List.class, ArrayList.class)
         methodBuilder.addStatement("return result");
     }
-    static template6(MethodSpec.Builder methodBuilder, bundleClassName){
+    static template6(MethodSpec.Builder methodBuilder, ClassName bundleClassName){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)// 添加方法体
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         methodBuilder.addStatement("int[][] matrix = new int[][]{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}");
@@ -230,7 +237,7 @@ class MethodTemplate {
         methodBuilder.endControlFlow();
         methodBuilder.endControlFlow();
     }
-    static template7(MethodSpec.Builder methodBuilder, bundleClassName){
+    static template7(MethodSpec.Builder methodBuilder, ClassName bundleClassName){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         methodBuilder.returns(Boolean.class)
@@ -240,7 +247,7 @@ class MethodTemplate {
         methodBuilder.addStatement("\$T m = p.matcher(input)", Matcher.class);
         methodBuilder.addStatement("return m.matches()");
     }
-    static template8(MethodSpec.Builder methodBuilder, bundleClassName){
+    static template8(MethodSpec.Builder methodBuilder, ClassName bundleClassName){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)// 添加方法体
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         methodBuilder.returns(Integer.class)
@@ -252,7 +259,7 @@ class MethodTemplate {
         methodBuilder.addStatement("System.out.println(\$S + result)", "Factorial calculated: ");
         methodBuilder.addStatement("return result");
     }
-    static template9(MethodSpec.Builder methodBuilder, bundleClassName){    // 添加方法体
+    static template9(MethodSpec.Builder methodBuilder, ClassName bundleClassName){    // 添加方法体
         TypeName map = ParameterizedTypeName.get(Map.class, String.class, Integer.class); // 指定Map的键值类型
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
@@ -263,7 +270,7 @@ class MethodTemplate {
         methodBuilder.addStatement("map.put(\"test1\", 2)")
         methodBuilder.addStatement("return map")
     }
-    static template10(MethodSpec.Builder methodBuilder, bundleClassName){
+    static template10(MethodSpec.Builder methodBuilder, ClassName bundleClassName){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)// 添加方法体
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         methodBuilder.returns(String.class)
@@ -277,7 +284,7 @@ class MethodTemplate {
         methodBuilder.addStatement("System.out.println(\$S + result)", "Encrypted message: ");
         methodBuilder.addStatement("return result");
     }
-    static template11(MethodSpec.Builder methodBuilder, bundleClassName){
+    static template11(MethodSpec.Builder methodBuilder, ClassName bundleClassName){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)// 添加方法体
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         methodBuilder.returns(Integer.class)
@@ -292,7 +299,7 @@ class MethodTemplate {
         methodBuilder.addStatement("System.out.println(\$S + max)", "Max value found: ");
         methodBuilder.addStatement("return max");
     }
-    static template12(MethodSpec.Builder methodBuilder, bundleClassName){
+    static template12(MethodSpec.Builder methodBuilder, ClassName bundleClassName){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)// 添加方法体
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         methodBuilder.returns(String.class)
@@ -303,7 +310,7 @@ class MethodTemplate {
         methodBuilder.addStatement("System.out.println(\$S + result)", "Concatenated string: ");
         methodBuilder.addStatement("return result");
     }
-    static template13(MethodSpec.Builder methodBuilder, bundleClassName){
+    static template13(MethodSpec.Builder methodBuilder, ClassName bundleClassName){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)// 添加方法体
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         methodBuilder.returns(Boolean.class)
@@ -319,7 +326,7 @@ class MethodTemplate {
         methodBuilder.addStatement("System.out.println(\$S)", "Number is prime!");
         methodBuilder.addStatement("return true");
     }
-    static template14(MethodSpec.Builder methodBuilder, bundleClassName){
+    static template14(MethodSpec.Builder methodBuilder, ClassName bundleClassName){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)// 添加方法体
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         methodBuilder.addStatement("int[] arr = new int[] {3, 1, 4, 2, 5}");
@@ -333,7 +340,7 @@ class MethodTemplate {
         methodBuilder.endControlFlow();
         methodBuilder.endControlFlow();
     }
-    static template15(MethodSpec.Builder methodBuilder, bundleClassName){
+    static template15(MethodSpec.Builder methodBuilder, ClassName bundleClassName){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)// 添加方法体
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         methodBuilder.returns(Boolean.class)
@@ -355,7 +362,7 @@ class MethodTemplate {
         methodBuilder.endControlFlow();
         methodBuilder.addStatement("return true");
     }
-    static template16(MethodSpec.Builder methodBuilder, bundleClassName){
+    static template16(MethodSpec.Builder methodBuilder, ClassName bundleClassName){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)// 添加方法体
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         methodBuilder.addStatement("int n = 5");
@@ -364,7 +371,7 @@ class MethodTemplate {
         methodBuilder.addStatement("fact *= i");
         methodBuilder.endControlFlow();
     }
-    static template17(MethodSpec.Builder methodBuilder, bundleClassName){
+    static template17(MethodSpec.Builder methodBuilder, ClassName bundleClassName){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)// 添加方法体
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         methodBuilder.returns(Integer.class)
@@ -378,7 +385,7 @@ class MethodTemplate {
         methodBuilder.endControlFlow();
         methodBuilder.addStatement("return curr");
     }
-    static template18(MethodSpec.Builder methodBuilder, bundleClassName){
+    static template18(MethodSpec.Builder methodBuilder, ClassName bundleClassName){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         methodBuilder.returns(Double.class)
@@ -386,7 +393,7 @@ class MethodTemplate {
         methodBuilder.addStatement("double area = Math.PI * radius * radius");
         methodBuilder.addStatement("return area");
     }
-    static template19(MethodSpec.Builder methodBuilder, bundleClassName){
+    static template19(MethodSpec.Builder methodBuilder, ClassName bundleClassName){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         methodBuilder.returns(Integer.class)
@@ -395,7 +402,7 @@ class MethodTemplate {
         methodBuilder.addStatement("int area = length * width");
         methodBuilder.addStatement("return area");
     }
-    static template20(MethodSpec.Builder methodBuilder, bundleClassName){
+    static template20(MethodSpec.Builder methodBuilder, ClassName bundleClassName){
         def randomStr = RandomUtil.generateRandomabcABC()
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         def stack = ClassName.get("java.util", "Stack")
@@ -411,7 +418,7 @@ class MethodTemplate {
         methodBuilder.addStatement("System.out.println(result)");
         methodBuilder.addStatement("return result");
     }
-    static template21(MethodSpec.Builder methodBuilder, bundleClassName){
+    static template21(MethodSpec.Builder methodBuilder, ClassName bundleClassName){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         methodBuilder.returns(Double.class)
@@ -421,14 +428,14 @@ class MethodTemplate {
         methodBuilder.addStatement("double average = total / numbers.length");
         methodBuilder.addStatement("return average");
     }
-    static template22(MethodSpec.Builder methodBuilder, bundleClassName){
+    static template22(MethodSpec.Builder methodBuilder, ClassName bundleClassName){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         // 添加方法体
         methodBuilder.addStatement("int[] numbers = {5, 3, 1, 4, 2}");
         methodBuilder.addStatement("\$T.sort(numbers)", Arrays );
     }
-    static template23(MethodSpec.Builder methodBuilder, bundleClassName){
+    static template23(MethodSpec.Builder methodBuilder, ClassName bundleClassName){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         methodBuilder.returns(String.class)
@@ -445,7 +452,7 @@ class MethodTemplate {
         methodBuilder.addStatement("String reversedString = new String(charArray)");
         methodBuilder.addStatement("return reversedString");
     }
-    static template24(MethodSpec.Builder methodBuilder, bundleClassName){
+    static template24(MethodSpec.Builder methodBuilder, ClassName bundleClassName){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         methodBuilder.returns(String.class)
@@ -460,7 +467,7 @@ class MethodTemplate {
         methodBuilder.addStatement("System.out.println(replacedString)");
         methodBuilder.addStatement("return replacedString");
     }
-    static template25(MethodSpec.Builder methodBuilder, bundleClassName){
+    static template25(MethodSpec.Builder methodBuilder, ClassName bundleClassName){
         def n = RandomUtil.randomLength(32)
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)// 添加方法体
@@ -483,7 +490,7 @@ class MethodTemplate {
         // 添加方法结束语句
         methodBuilder.addStatement("return c");
     }
-    static template26(MethodSpec.Builder methodBuilder, bundleClassName){
+    static template26(MethodSpec.Builder methodBuilder, ClassName bundleClassName){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)// 添加方法体
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         methodBuilder.addStatement("int time = 0");
@@ -497,7 +504,7 @@ class MethodTemplate {
                 .addStatement("time++")
                 .endControlFlow();
     }
-    static template27(MethodSpec.Builder methodBuilder, bundleClassName){
+    static template27(MethodSpec.Builder methodBuilder, ClassName bundleClassName){
         // java.util.Stack
         def randomStr = "${RandomUtil.generateRandomString(12)}"
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
@@ -537,7 +544,7 @@ class MethodTemplate {
                 .endControlFlow()
                 .endControlFlow()
     }
-    static template(MethodSpec.Builder methodBuilder, bundleClassName){
+    static template(MethodSpec.Builder methodBuilder, ClassName bundleClassName){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         methodBuilder.returns(Boolean.class)
