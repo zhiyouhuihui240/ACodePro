@@ -1,13 +1,11 @@
 package cn.hx.plugin.junkcode.utils
 
 import com.squareup.javapoet.ClassName
+import com.squareup.javapoet.MethodSpec
 import com.squareup.javapoet.TypeSpec
 
 import javax.lang.model.element.Modifier
 import java.security.SecureRandom
-import java.text.SimpleDateFormat
-
-
 class RandomUtil {
 
     /**
@@ -26,6 +24,84 @@ class RandomUtil {
 
 
 
+
+    // 获取该类中随机的变量，不做删除处理，这样可以对该变量进行多次赋值
+    // 同时，需要进行判断该变量的类型
+    static String randomVariableName(MethodSpec.Builder methodBuilder) {
+        // 随机获取一个键
+        def variableName =  ConstantKey.classVariableTypeName.keySet().toArray()[random.nextInt(ConstantKey.classVariableTypeName.size())]
+        // 根据键获取对应的值
+        def variableType = ConstantKey.classVariableTypeName.get(variableName)
+        // todo: 对类变量进行赋值,调用
+        assignValue (methodBuilder, variableName.toString(), variableType.toString())
+    }
+
+
+    static assignValue(MethodSpec.Builder methodBuilder,String variableName, String variableType) {
+        switch (variableType) {
+            case 'TextView':
+                break
+            case 'ImageView':
+                break
+            case 'Button':
+                break
+            case 'ConstraintLayout':
+                break
+            case 'TableLayout':
+                break
+            case 'View':
+                break
+            case 'NestedScrollView':
+                break
+            case 'LinearLayout':
+                break
+            case 'RelativeLayout':
+                break
+            case 'RadioButton':
+                break
+            case 'FrameLayout':
+                break
+            case 'CardView':
+                break
+            case 'RecyclerView':
+                break
+            case 'ViewPager2':
+                break
+            case 'String':
+            case 'Str':
+            case 'string':
+            case 'str':
+                methodBuilder.addStatement("$variableName = \"${stringRandomLength(3,56)}\"")
+                break
+            case 'Int':
+                case 'int':
+                methodBuilder.addStatement("$variableName = ${randomLength(3,1000000)}")
+                break
+
+            case 'Double':
+                case 'double':
+                methodBuilder.addStatement("$variableName = ${randomLength(3,1000000)}d")
+                break
+            case 'Float':
+                methodBuilder.addStatement("$variableName = ${randomLength(3,1000000)}f")
+                break
+//            case 'Byte':
+//                methodBuilder.addStatement("$variableName = ${randomLength(3,1000000)}")
+//                break
+//            case 'Short':
+//                methodBuilder.addStatement("$variableName = ${randomLength(3,1000000)}")
+//                break
+            case 'Long':
+                methodBuilder.addStatement("$variableName = ${randomLength(3,1000000)}L")
+                break
+            case 'Boolean':
+            case 'boolean':
+                methodBuilder.addStatement("$variableName = ${randomBoolean()}")
+                break
+            default:
+                methodBuilder.addStatement("$variableName = \"${stringRandomLength(3,56)}\"")
+        }
+    }
 
 
 
@@ -91,6 +167,11 @@ class RandomUtil {
         return randomNum
     }
 
+    // 返回true or false
+    static Boolean randomBoolean() {
+        return Math.random() < 0.5
+    }
+
     static String generateRandomabcABC() {
         def sb = new StringBuilder()
         sb.append(abcABC[random.nextInt(abcABC.size())])
@@ -103,25 +184,6 @@ class RandomUtil {
         sb.append(abcABC123[random.nextInt(abcABC123.size())])
         return sb.toString()
     }
-
-
-    // 返回随机日期，其数据格式为：2023-10-09
-    static getRandomDate() {
-        // 设置日期格式
-        def format = new SimpleDateFormat("yyyy-MM-dd")
-        // 创建Calendar实例并设置为1970年1月1日
-        def calendar = Calendar.getInstance()
-        calendar.set(1970, Calendar.JANUARY, 1)
-        // 生成1到当前时间的随机天数并增加到Calendar中
-        def randomDays = (int) (Math.random() * (System.currentTimeMillis() / (24 * 60 * 60 * 1000)))
-        calendar.add(Calendar.DATE, randomDays)
-//        return format.format(calendar.getTime())// 返回默认值
-        if (calendar != null) {
-            return format.format(calendar.getTime())
-        }
-        return "1970-01-01" // 返回预设的默认值
-    }
-
 
 
     static String getRandomMethod(stringList){
@@ -248,7 +310,6 @@ class RandomUtil {
 
         return [randomKey, randomValue] as Map.Entry<ClassName, String>
     }
-
 
 
 

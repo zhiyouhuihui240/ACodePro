@@ -73,7 +73,7 @@ apply plugin: 'groovy'
 // todo：下面进行本地部署，当修改完内容之后，更新下版本，然后运行一下 下面那个 task，再更新gradle文件里面的版本号即可
 //apply plugin: 'maven-publish'
 //group = 'com.example'
-//def update = '5.5.5'
+//def update = '5.9.5'
 //version = update
 //publishing {
 //    publications {
@@ -89,7 +89,7 @@ apply plugin: 'groovy'
 //task publishToMavenLocals {
 //    dependsOn publishMavenJavaPublicationToMavenLocal
 //}
-//
+
 
 /**
  todo： 下面是发布到远程仓库所需要的配置，把上面的内容注释掉，下面的内容取消注释就可以了

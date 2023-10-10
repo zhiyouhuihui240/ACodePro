@@ -54,6 +54,8 @@ class ConstantKey {
 
     // 类成员变量信息
     static List<String> classNumVariableName = new ArrayList<>()
+    // 只需要变量名和类型
+    static Map<String, String> classVariableTypeName = new HashMap<String, String>()
 
 
 

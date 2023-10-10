@@ -75,6 +75,7 @@ class JunkUtil {
 
     // 生成activity
     static List<String> generateActivity(File javaDir, File resDir, String namespace, String packageName, JunkCodeConfig config) {
+
         ConstantKey.otherPackageNameList.add(0, packageName)
         def activityList = new ArrayList()
         // gradle 中指定生成多少个 activity
@@ -82,6 +83,7 @@ class JunkUtil {
         def itemLayoutRandom = RandomUtil.randomLength(2,7)
         def fragmentLayoutRandom = RandomUtil.randomLength(2,10)
         for (int i = 0; i < config.activityCountPerPackage; i++) {
+            ConstantKey.classVariableTypeName.clear()
             def className
             def layoutName
             if (config.activityCreator) {
@@ -124,14 +126,14 @@ class JunkUtil {
                 // todo: 保存activity的类名
                 ConstantKey.otherClassNameList.add(0, className)
                 def typeBuilder = TypeSpec.classBuilder(className)  // 创建一个类
-                // todo:   activity的继承父类更改为AppCompatActivity
+                // todo: activity的继承父类更改为AppCompatActivity
                 typeBuilder.superclass(ClassName.get("androidx.appcompat.app", "AppCompatActivity"))
                 typeBuilder.addModifiers(Modifier.PUBLIC)
-                // todo: 添加类成员变量
+                // todo: 添加类成员变量, 数量随机
 //                ClassNumVariable.generateClassNumVariable(typeBuilder)
                 def randomGenerateVariableTypeCount = RandomUtil.randomLength(22)
                 for (int ii = 0; ii < randomGenerateVariableTypeCount; ii++) {
-                    ClassNumVariable.generateVariableType(typeBuilder)
+                    typeBuilder = ClassNumVariable.generateVariableType(typeBuilder)
                 }
                 typeBuilder.build()
                 if (config.typeGenerator) {
@@ -214,7 +216,7 @@ class JunkUtil {
     static void generateJava(File javaDir, String packageName, JunkCodeConfig config) {
         ConstantKey.otherPackageNameList.add(0, packageName)
         for (int i = 0; i < config.otherCountPerPackage; i++) {
-
+            ConstantKey.classVariableTypeName.clear()
             def className
             if (config.classNameCreator) {
                 def classNameBuilder = new StringBuilder()
@@ -241,8 +243,12 @@ class JunkUtil {
                 // todo: 添加类成员变量
 //                ClassNumVariable.generateClassNumVariable(typeBuilder)
                 def randomGenerateVariableTypeCount = RandomUtil.randomLength(22)
+                def index = RandomUtil.randomLength(2,9)
                 for (int ii = 0; ii < randomGenerateVariableTypeCount; ii++) {
-                    ClassNumVariable.generateVariableType(typeBuilder)
+                    typeBuilder = ClassNumVariable.generateVariableType(typeBuilder)
+                    if (ii % index == 0) {
+                        typeBuilder = ClassNumVariable.initVariable(typeBuilder)
+                    }
                 }
                 typeBuilder.build()
 //                otherClassMethodsNameList.clear()
