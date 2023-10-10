@@ -49,6 +49,11 @@ class ConstantKey {
 
 
     // 打印各种信息
+    static logDrawable = ""
+
+
+    // 类成员变量信息
+    static List<String> classNumVariableName = new ArrayList<>()
 
 
 

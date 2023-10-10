@@ -120,24 +120,16 @@ class MethodTemplate {
         }
     }
 
-    static generateRandomMethods0(MethodSpec.Builder methodBuilder, ClassName bundleClassName){
-        methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-        def log1 = ClassName.get("android.util", "Log")
-        def str1 = ClassName.get("cn.hx.plugin.junkcode.demo", "R")
-        methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
-
-//        methodBuilder.addStatement("\$T.out.println(\$S)", System.class, "$bundleClassName")    // 打印
-//        methodBuilder.addStatement("\$T.out.println(\$S)", System.class, "${ConstantKey.classObj}")    // 打印
-        // 调用android项目中的字符串
-//        methodBuilder.addStatement("\$T.out.println(\$T.string.yes)", System.class, ClassName.get("cn.hx.plugin.junkcode.demo", "R"))
-//        methodBuilder.addStatement("\$T.d(\$S, String.valueOf(\$T.\$L))", log1, "TAG", str1, "string.yes")  // 打印日志
-    }
-
     static template0(MethodSpec.Builder methodBuilder, ClassName bundleClassName){
+        // 从变量中随机获取一个，获取完之后删除掉
+        def randomElement = ConstantKey.classNumVariableName[(int)(Math.random() * { ConstantKey.classNumVariableName }.size())]
+
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         methodBuilder.addStatement("double sum = ${RandomUtil.generateRandomNum()}")
         methodBuilder.addStatement("int count = ${RandomUtil.generateRandomNum()}")
+
+
         methodBuilder.beginControlFlow("while (true)")
         methodBuilder.addStatement("\$T scanner = new \$T(\$T.in)",Scanner.class, Scanner.class, System)
         methodBuilder.addStatement("int guess = scanner.nextInt()")
@@ -153,11 +145,9 @@ class MethodTemplate {
     static template1(MethodSpec.Builder methodBuilder, ClassName bundleClassName){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)// 添加方法体
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
-        methodBuilder.beginControlFlow("for (int i = 5; i >= 1; i--)")
+        methodBuilder.beginControlFlow("for (int i = ${RandomUtil.generateRandomNum()}; i >= 1; i--)")
         methodBuilder.beginControlFlow("for (int j = 1; j <= i; j++)")
-//        methodBuilder.addStatement("System.out.print(\$S)", "*");
         methodBuilder.endControlFlow();
-//        methodBuilder.addStatement("System.out.println()");
         methodBuilder.endControlFlow();
       }
     static template2(MethodSpec.Builder methodBuilder, ClassName bundleClassName){
@@ -168,18 +158,16 @@ class MethodTemplate {
         methodBuilder.addStatement("\$T scanner = new \$T(\$T.in)",Scanner.class, Scanner.class, System)
         methodBuilder.addStatement("int guess = scanner.nextInt()")
         methodBuilder.beginControlFlow("if (guess == answer)")
-//        methodBuilder.addStatement("System.out.println(\$S + answer)", "Congratulations! The answer is ");
         methodBuilder.addStatement("break");
         methodBuilder.endControlFlow();
-        methodBuilder.addStatement("String hint = guess < answer ? \$S : \$S", "too low", "too high");
-//        methodBuilder.addStatement("System.out.println(hint)");
+        methodBuilder.addStatement("String hint = guess < answer ? \$S : \$S", "${RandomUtil.generateRandomabcABC123()}", "${RandomUtil.generateRandomabcABC123()}")
         methodBuilder.endControlFlow();
-//        methodBuilder.addStatement("System.out.println(\$S)", "Guess number game finished!");
     }
     static template3(MethodSpec.Builder methodBuilder, ClassName bundleClassName){
+        def num = RandomUtil.randomLength(56)
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
-        methodBuilder.addStatement("String str = \$S", "hello world");
+        methodBuilder.addStatement("String str = \$S", "${RandomUtil.generateRandomString(num)}");
         methodBuilder.addStatement("String result = \$S", "");
         methodBuilder.beginControlFlow("for (int i = 0; i < str.length(); i++)");
         methodBuilder.addStatement("char ch = str.charAt(i)");
@@ -188,38 +176,49 @@ class MethodTemplate {
         methodBuilder.endControlFlow();
         methodBuilder.endControlFlow();
     }
+
     static template4(MethodSpec.Builder methodBuilder, ClassName bundleClassName){
         def dataObj = ClassName.get("java.util","Date")
+        // 1970-01-01
+        def a = RandomUtil.randomLength(1,8)
+        def b = RandomUtil.generateRandomNum()
+        def c = RandomUtil.generateRandomNum()
+        def d = RandomUtil.generateRandomNum()
+        def f = RandomUtil.generateRandomNum()
+        def g = RandomUtil.generateRandomNum()
+        def h = RandomUtil.generateRandomNum()
+        def i = RandomUtil.generateRandomNum()
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)// 添加方法体
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         methodBuilder.returns(Boolean.class)
         methodBuilder.addStatement("\$T df = \$T.getInstance()", DateFormat.class, DateFormat.class);
-        methodBuilder.addStatement("String dateStr = \$S", "2021-10-03")
-        methodBuilder.addStatement("\$T date = null", dataObj);
-        methodBuilder.beginControlFlow("try");
-        methodBuilder.addStatement("date = df.parse(dateStr)");
+        methodBuilder.addStatement("String dateStr = \"$a$b$c$d-$f$g-$h$i\"")
+        methodBuilder.addStatement("\$T date = null", dataObj)
+        methodBuilder.beginControlFlow("try")
+        methodBuilder.addStatement("date = df.parse(dateStr)")
         methodBuilder.endControlFlow();
-        methodBuilder.beginControlFlow("catch (\$T e)", ParseException.class);
+        methodBuilder.beginControlFlow("catch (\$T e)", ParseException.class)
         methodBuilder.addStatement("e.printStackTrace()");
         methodBuilder.endControlFlow();
         methodBuilder.addStatement("int dayOfWeek = date.getDay()");
-
-        // 添加方法结束语句
         methodBuilder.beginControlFlow("if (dayOfWeek == 0 || dayOfWeek == 6)");
         methodBuilder.addStatement("return true");
         methodBuilder.endControlFlow();
         methodBuilder.addStatement("return false");
     }
     static template5(MethodSpec.Builder methodBuilder, ClassName bundleClassName){
+        def a = RandomUtil.randomLength(24)
+        def b = RandomUtil.randomLength(24)
+        def c = RandomUtil.randomLength(24)
+        def d = RandomUtil.randomLength(24)
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)// 添加方法体
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         methodBuilder.returns(List.class)
         methodBuilder.addStatement("\$T list = new \$T<\$T>()", List.class, ArrayList.class, String.class);
-        methodBuilder.addStatement("list.add(\$S)", "AAA");
-        methodBuilder.addStatement("list.add(\$S)", "BBB");
-        methodBuilder.addStatement("list.add(\$S)", "CCC");
-        methodBuilder.addStatement("list.add(\$S)", "AAA");
-        methodBuilder.addStatement("list.add(\$S)", "DDD");
+        methodBuilder.addStatement("list.add(\$S)", "${RandomUtil.generateRandomString(a)}");
+        methodBuilder.addStatement("list.add(\$S)", "${RandomUtil.generateRandomString(b)}");
+        methodBuilder.addStatement("list.add(\$S)", "${RandomUtil.generateRandomString(c)}");
+        methodBuilder.addStatement("list.add(\$S)", "${RandomUtil.generateRandomString(d)}");
         methodBuilder.addStatement("\$T set = new \$T<\$T>(list)", Set.class, HashSet.class, String.class);
         methodBuilder.addStatement("\$T result = new \$T(set)", List.class, ArrayList.class)
         methodBuilder.addStatement("return result");
@@ -227,7 +226,9 @@ class MethodTemplate {
     static template6(MethodSpec.Builder methodBuilder, ClassName bundleClassName){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)// 添加方法体
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
-        methodBuilder.addStatement("int[][] matrix = new int[][]{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}");
+        methodBuilder.addStatement("int[][] matrix = new int[][]{{${RandomUtil.randomLength(56)}, ${RandomUtil.randomLength(56)}," +
+                " ${RandomUtil.randomLength(56)}}, {${RandomUtil.randomLength(56)}, ${RandomUtil.randomLength(56)}," +
+                " ${RandomUtil.randomLength(56)}}, {${RandomUtil.randomLength(56)}, ${RandomUtil.randomLength(56)}, ${RandomUtil.randomLength(56)}}}");
         methodBuilder.addStatement("int n = matrix.length");
         methodBuilder.beginControlFlow("for (int i = 0; i < n; i++)");
         methodBuilder.beginControlFlow("for (int j = i + 1; j < n; j++)");
@@ -238,11 +239,19 @@ class MethodTemplate {
         methodBuilder.endControlFlow();
     }
     static template7(MethodSpec.Builder methodBuilder, ClassName bundleClassName){
+        def a = RandomUtil.randomLength(1,8)
+        def b = RandomUtil.generateRandomNum()
+        def c = RandomUtil.generateRandomNum()
+        def d = RandomUtil.generateRandomNum()
+        def f = RandomUtil.generateRandomNum()
+        def g = RandomUtil.generateRandomNum()
+        def h = RandomUtil.generateRandomNum()
+        def i = RandomUtil.generateRandomNum()
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         methodBuilder.returns(Boolean.class)
         methodBuilder.addStatement("String pattern = \$S", "\\d{3}-\\d{2}-\\d{4}");
-        methodBuilder.addStatement("String input = \$S", "123-45-6789");
+        methodBuilder.addStatement("String input = \$S", "$b$c$d-$a$f-$h$i$g");
         methodBuilder.addStatement("\$T p = \$T.compile(pattern)", Pattern.class, Pattern.class);
         methodBuilder.addStatement("\$T m = p.matcher(input)", Matcher.class);
         methodBuilder.addStatement("return m.matches()");
@@ -251,70 +260,66 @@ class MethodTemplate {
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)// 添加方法体
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         methodBuilder.returns(Integer.class)
-        methodBuilder.addStatement("int n = 5");
-        methodBuilder.addStatement("int result = 1");
+        methodBuilder.addStatement("int n = ${RandomUtil.randomLength(66)}");
+        methodBuilder.addStatement("int result = ${RandomUtil.randomLength(88)}");
         methodBuilder.beginControlFlow("for (int i = 1; i <= n; i++)");
         methodBuilder.addStatement("result *= i");
         methodBuilder.endControlFlow()
-        methodBuilder.addStatement("System.out.println(\$S + result)", "Factorial calculated: ");
         methodBuilder.addStatement("return result");
     }
     static template9(MethodSpec.Builder methodBuilder, ClassName bundleClassName){    // 添加方法体
-        TypeName map = ParameterizedTypeName.get(Map.class, String.class, Integer.class); // 指定Map的键值类型
+        TypeName map = ParameterizedTypeName.get(Map.class, String.class, Integer.class) // 指定Map的键值类型
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
                 .returns(map)
 //                .addCode("Map<String, Integer> map = new HashMap<>();\nmap.put(\"test1\", 1);\nmap.put(\"test2\", 2);\nreturn map;")
         methodBuilder.addStatement("Map<String, Integer> map = new \$T<>()", HashMap)
-        methodBuilder.addStatement("map.put(\"test1\", 1)")
-        methodBuilder.addStatement("map.put(\"test1\", 2)")
+        methodBuilder.addStatement("map.put(\"${RandomUtil.stringRandomLength(3,25)}\", ${RandomUtil.randomLength(1000)})")
+        methodBuilder.addStatement("map.put(\"${RandomUtil.stringRandomLength(5,35)}\", ${RandomUtil.randomLength(5000)})")
         methodBuilder.addStatement("return map")
     }
     static template10(MethodSpec.Builder methodBuilder, ClassName bundleClassName){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)// 添加方法体
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         methodBuilder.returns(String.class)
-        methodBuilder.addStatement("String plaintext = \$S", "hello world");
+        methodBuilder.addStatement("String plaintext = \$S", "${RandomUtil.stringRandomLength(8,64)}");
         methodBuilder.addStatement("String result = \$S", "");
         methodBuilder.beginControlFlow("for (int i = 0; i < plaintext.length(); i++)");
         methodBuilder.addStatement("char ch = plaintext.charAt(i)");
         methodBuilder.addStatement("int code = (int) ch + 1");
         methodBuilder.addStatement("result += (char) code");
         methodBuilder.endControlFlow()
-        methodBuilder.addStatement("System.out.println(\$S + result)", "Encrypted message: ");
         methodBuilder.addStatement("return result");
     }
     static template11(MethodSpec.Builder methodBuilder, ClassName bundleClassName){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)// 添加方法体
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         methodBuilder.returns(Integer.class)
-        methodBuilder.addStatement("int[] arr = new int[] {3, 1, 4, 2, 5}");
+        methodBuilder.addStatement("int[] arr = new int[] {${RandomUtil.generateRandomNum()}, ${RandomUtil.generateRandomNum()}, " +
+                "${RandomUtil.generateRandomNum()}, ${RandomUtil.generateRandomNum()}, ${RandomUtil.generateRandomNum()}}");
         methodBuilder.addStatement("int max = arr[0]");
         methodBuilder.beginControlFlow("for (int i = 1; i < arr.length; i++)");
         methodBuilder.beginControlFlow("if (arr[i] > max)");
         methodBuilder.addStatement("max = arr[i]");
         methodBuilder.endControlFlow();
         methodBuilder.endControlFlow();
-        // 添加方法结束语句
-        methodBuilder.addStatement("System.out.println(\$S + max)", "Max value found: ");
-        methodBuilder.addStatement("return max");
+        methodBuilder.addStatement("return max")
     }
     static template12(MethodSpec.Builder methodBuilder, ClassName bundleClassName){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)// 添加方法体
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         methodBuilder.returns(String.class)
-        methodBuilder.addStatement("String result = \$S", "");
+        methodBuilder.addStatement("String result = \$S", "\"${RandomUtil.stringRandomLength(6,25)}\"");
         methodBuilder.beginControlFlow("for (int i = 1; i <= 5; i++)");
-        methodBuilder.addStatement("result += \$S + i", "num");
+        methodBuilder.addStatement("result += \$S + i", "\"${RandomUtil.stringRandomLength(3,12)}\"");
         methodBuilder.endControlFlow();
-        methodBuilder.addStatement("System.out.println(\$S + result)", "Concatenated string: ");
         methodBuilder.addStatement("return result");
     }
     static template13(MethodSpec.Builder methodBuilder, ClassName bundleClassName){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)// 添加方法体
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         methodBuilder.returns(Boolean.class)
-        methodBuilder.addStatement("int n = 11");
+        methodBuilder.addStatement("int n = ${RandomUtil.randomLength(1000)}");
         methodBuilder.beginControlFlow("if (n <= 1)");
         methodBuilder.addStatement("return false");
         methodBuilder.endControlFlow();
@@ -323,13 +328,13 @@ class MethodTemplate {
         methodBuilder.addStatement("return false");
         methodBuilder.endControlFlow();
         methodBuilder.endControlFlow();
-        methodBuilder.addStatement("System.out.println(\$S)", "Number is prime!");
         methodBuilder.addStatement("return true");
     }
     static template14(MethodSpec.Builder methodBuilder, ClassName bundleClassName){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)// 添加方法体
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
-        methodBuilder.addStatement("int[] arr = new int[] {3, 1, 4, 2, 5}");
+        methodBuilder.addStatement("int[] arr = new int[] {${RandomUtil.randomLength(100)}, ${RandomUtil.randomLength(100)}, " +
+                "${RandomUtil.randomLength(100)}, ${RandomUtil.randomLength(100)}, ${RandomUtil.randomLength(100)}}");
         methodBuilder.beginControlFlow("for (int i = 0; i < arr.length - 1; i++)");
         methodBuilder.beginControlFlow("for (int j = 0; j < arr.length - i - 1; j++)");
         methodBuilder.beginControlFlow("if (arr[j] > arr[j+1])");
@@ -344,8 +349,10 @@ class MethodTemplate {
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)// 添加方法体
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         methodBuilder.returns(Boolean.class)
-        methodBuilder.addStatement("int[] arr = new int[] {1, 2, 3, 4, 5, 6, 7, 8}");
-        methodBuilder.addStatement("int target = 5");
+        methodBuilder.addStatement("int[] arr = new int[] {${RandomUtil.randomLength(100)}, ${RandomUtil.randomLength(100)}" +
+                ", ${RandomUtil.randomLength(100)}, ${RandomUtil.randomLength(100)}, ${RandomUtil.randomLength(100)}, " +
+                "${RandomUtil.randomLength(100)}, ${RandomUtil.randomLength(100)}, ${RandomUtil.randomLength(100)}}");
+        methodBuilder.addStatement("int target = ${RandomUtil.randomLength(100)}");
         methodBuilder.addStatement("int left = 0");
         methodBuilder.addStatement("int right = arr.length - 1");
         methodBuilder.beginControlFlow("while (left <= right)");
@@ -365,8 +372,8 @@ class MethodTemplate {
     static template16(MethodSpec.Builder methodBuilder, ClassName bundleClassName){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)// 添加方法体
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
-        methodBuilder.addStatement("int n = 5");
-        methodBuilder.addStatement("int fact = 1");
+        methodBuilder.addStatement("int n = ${RandomUtil.randomLength(100)}");
+        methodBuilder.addStatement("int fact = ${RandomUtil.randomLength(100)}");
         methodBuilder.beginControlFlow("for (int i = 1; i <= n; i++)");
         methodBuilder.addStatement("fact *= i");
         methodBuilder.endControlFlow();
@@ -375,7 +382,7 @@ class MethodTemplate {
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)// 添加方法体
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         methodBuilder.returns(Integer.class)
-        methodBuilder.addStatement("int n = 5");
+        methodBuilder.addStatement("int n = ${RandomUtil.randomLength(100)}");
         methodBuilder.addStatement("int prev = 0");
         methodBuilder.addStatement("int curr = 1");
         methodBuilder.beginControlFlow("for (int i = 2; i <= n; i++)");
@@ -389,7 +396,7 @@ class MethodTemplate {
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         methodBuilder.returns(Double.class)
-        methodBuilder.addStatement("double radius = 5.0");
+        methodBuilder.addStatement("double radius = ${RandomUtil.randomLength(100)}");
         methodBuilder.addStatement("double area = Math.PI * radius * radius");
         methodBuilder.addStatement("return area");
     }
@@ -397,11 +404,12 @@ class MethodTemplate {
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         methodBuilder.returns(Integer.class)
-        methodBuilder.addStatement("int length = 5");
-        methodBuilder.addStatement("int width = 3");
+        methodBuilder.addStatement("int length = ${RandomUtil.randomLength(100)}");
+        methodBuilder.addStatement("int width = ${RandomUtil.randomLength(100)}");
         methodBuilder.addStatement("int area = length * width");
         methodBuilder.addStatement("return area");
     }
+    // todo: 剩余需要随机生成数据的方法
     static template20(MethodSpec.Builder methodBuilder, ClassName bundleClassName){
         def randomStr = RandomUtil.generateRandomabcABC()
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)

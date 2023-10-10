@@ -18,7 +18,6 @@ class JunkUtil {
     static random = new Random()
 
     static abc = "abcdefghijklmnopqrstuvwxyz".toCharArray()
-    static color = "0123456789abcdef".toCharArray()
 
 
     // 随机生成一个名称
@@ -79,8 +78,10 @@ class JunkUtil {
         ConstantKey.otherPackageNameList.add(0, packageName)
         def activityList = new ArrayList()
         // gradle 中指定生成多少个 activity
+        def layoutRandom = RandomUtil.randomLength(3,8)
+        def itemLayoutRandom = RandomUtil.randomLength(2,7)
+        def fragmentLayoutRandom = RandomUtil.randomLength(2,10)
         for (int i = 0; i < config.activityCountPerPackage; i++) {
-
             def className
             def layoutName
             if (config.activityCreator) {
@@ -92,19 +93,27 @@ class JunkUtil {
                 config.activityCreator.execute(new Tuple4(i, activityNameBuilder, layoutNameBuilder, layoutContentBuilder))
                 className = activityNameBuilder.toString()
                 layoutName = layoutNameBuilder.toString()
-                writeStringToFile(new File(resDir, "layout/${layoutName}.xml"), layoutContentBuilder.toString())
+                writeStringToFile(new File(resDir, "layout/activity_${layoutName}.xml"), layoutContentBuilder.toString())
                 if (!ConstantKey.targetPath.contains("$i、$packageName.$className")) {
                     ConstantKey.targetPath.add(i, "$i、$packageName.$className")
                 }
+                if (i % layoutRandom == 0) {
+                    generateLayout(resDir, layoutName, config, "item")
+                }
+                if (i % itemLayoutRandom == 0) {
+                    generateLayout(resDir, layoutName, config, "custom")
+                }
+                if (i % fragmentLayoutRandom == 0) {
+                    generateLayout(resDir, layoutName, config, "fragment")
+                }
             }
             else {
-                ConstantKey.isCreatorActivity = "no ActivityCreator"
-                def activityPreName = generateName(i)
-                className = activityPreName.capitalize() + "Activity"
-                layoutName = "${config.resPrefix.toLowerCase()}${packageName.replace(".", "_")}_activity_${activityPreName}"
-                generateLayout(resDir, layoutName, config)
+//                ConstantKey.isCreatorActivity = "no ActivityCreator"
+//                def activityPreName = generateName(i)
+//                className = activityPreName.capitalize() + "Activity"
+//                layoutName = "${config.resPrefix.toLowerCase()}${packageName.replace(".", "_")}_activity_${activityPreName}"
+//                generateLayout(resDir, layoutName, config)
             }
-            // todo: 存在问题，仍然存在数据不正确的情况，保存一些不存在的数据
             def key = ClassName.get(packageName, className)
             if (!ConstantKey.classObj.containsKey(key)) {   // 如果没有该key，则创建一个新的列表
                 ConstantKey.classObj.put(key, new ArrayList<ClassName>())
@@ -118,6 +127,13 @@ class JunkUtil {
                 // todo:   activity的继承父类更改为AppCompatActivity
                 typeBuilder.superclass(ClassName.get("androidx.appcompat.app", "AppCompatActivity"))
                 typeBuilder.addModifiers(Modifier.PUBLIC)
+                // todo: 添加类成员变量
+//                ClassNumVariable.generateClassNumVariable(typeBuilder)
+                def randomGenerateVariableTypeCount = RandomUtil.randomLength(22)
+                for (int ii = 0; ii < randomGenerateVariableTypeCount; ii++) {
+                    ClassNumVariable.generateVariableType(typeBuilder)
+                }
+                typeBuilder.build()
                 if (config.typeGenerator) {
                     config.typeGenerator.execute(typeBuilder)
                 } else {
@@ -176,10 +192,11 @@ class JunkUtil {
                 }
                 // todo: 定义回调函数
                 def bundleClassName = ClassName.get("android.os", "Bundle")
-                MethodsUtil.generateActivityRandom(typeBuilder, bundleClassName, layoutName, namespace, ConstantKey.stringList)
-                MethodsUtil.generateActivityRandom1(typeBuilder, bundleClassName, layoutName, namespace, ConstantKey.stringList)
-                MethodsUtil.generateActivityRandom2(typeBuilder, bundleClassName, layoutName, namespace, ConstantKey.stringList)
-                MethodsUtil.generateActivityRandom3(typeBuilder, bundleClassName, layoutName, namespace, ConstantKey.stringList)
+                def activityLayoutName = "activity_${layoutName}"
+                MethodsUtil.generateActivityRandom(typeBuilder, bundleClassName, activityLayoutName, namespace, ConstantKey.stringList)
+                MethodsUtil.generateActivityRandom1(typeBuilder, bundleClassName, activityLayoutName, namespace, ConstantKey.stringList)
+                MethodsUtil.generateActivityRandom2(typeBuilder, bundleClassName, activityLayoutName, namespace, ConstantKey.stringList)
+                MethodsUtil.generateActivityRandom3(typeBuilder, bundleClassName, activityLayoutName, namespace, ConstantKey.stringList)
                 // todo: 定义类成员变量
 //                typeBuilder.addField(String.class,"Root", Modifier.PUBLIC, Modifier.STATIC)
 
@@ -221,6 +238,13 @@ class JunkUtil {
                 config.typeGenerator.execute(typeBuilder)
             } else {
                 typeBuilder.addModifiers(Modifier.PUBLIC)
+                // todo: 添加类成员变量
+//                ClassNumVariable.generateClassNumVariable(typeBuilder)
+                def randomGenerateVariableTypeCount = RandomUtil.randomLength(22)
+                for (int ii = 0; ii < randomGenerateVariableTypeCount; ii++) {
+                    ClassNumVariable.generateVariableType(typeBuilder)
+                }
+                typeBuilder.build()
 //                otherClassMethodsNameList.clear()
                 // todo：函数方法
                 def methods = RandomUtil.randomLength(12)
@@ -280,14 +304,27 @@ class JunkUtil {
 
 
     // 生成 layout 文件
-    static void generateLayout(File resDir, String layoutName, JunkCodeConfig config) {
-        def layoutFile = new File(resDir, "layout/${layoutName}.xml")
+    static void generateLayout(File resDir, String layoutName, JunkCodeConfig config, String type) {
+        def layoutFile
+        switch (type) {
+            case "item":
+                layoutFile = new File(resDir, "layout/item_${layoutName}.xml")
+                break
+            case "custom":
+                layoutFile = new File(resDir, "layout/custom_${layoutName}.xml")
+                break
+            case "fragment":
+                layoutFile = new File(resDir, "layout/fragment_${layoutName}.xml")
+                break
+            default:
+                layoutFile = new File(resDir, "layout/fragment_${layoutName}.xml")
+        }
         if (config.layoutGenerator) {
             def contentBuilder = new StringBuilder()
             config.layoutGenerator.execute(contentBuilder)
             writeStringToFile(layoutFile, contentBuilder.toString())
         } else {
-            def layoutStr = String.format(ResTemplate.LAYOUT_TEMPLATE, generateId())
+            def layoutStr = String.format(ResTemplate.LAYOUT_TEMPLATE, RandomUtil.generateId())
             writeStringToFile(layoutFile, layoutStr)
         }
     }
@@ -304,6 +341,8 @@ class JunkUtil {
                 writeStringToFile(new File(resDir, "drawable/${drawableName}.xml"), contentBuilder.toString())
             }
         } else if (config.drawableCreator) {
+            // todo
+            def tod = RandomUtil.randomLength(6,25)
             def fileNameBuilder = new StringBuilder()
             def contentBuilder = new StringBuilder()
             for (int i = 0; i < config.drawableCount; i++) {
@@ -311,35 +350,21 @@ class JunkUtil {
                 contentBuilder.setLength(0)
                 config.drawableCreator.execute(new Tuple3(i, fileNameBuilder, contentBuilder))
                 def drawableName = fileNameBuilder.toString()
-                writeStringToFile(new File(resDir, "drawable/${drawableName}.xml"), contentBuilder.toString())
+//                if (i % tod == 0) {
+                    // todo：.9图不能生成，原因待
+//                    writeStringToFile(new File(resDir, "drawable/${drawableName}nine.xml"), String.format(ResTemplate.DRAWABLE, RandomUtil.generateColor()))
+//                } else  {
+                    writeStringToFile(new File(resDir, "drawable/${drawableName}.xml"), contentBuilder.toString())
+//                }
             }
         } else {
             for (int i = 0; i < config.drawableCount; i++) {
                 def drawableName = "${config.resPrefix.toLowerCase()}${generateName(i)}"
-                writeStringToFile(new File(resDir, "drawable/${drawableName}.xml"), String.format(ResTemplate.DRAWABLE, generateColor()))
+                writeStringToFile(new File(resDir, "drawable/${drawableName}.xml"), String.format(ResTemplate.DRAWABLE, RandomUtil.generateColor()))
             }
         }
     }
 
-
-    // 生成颜色代码
-    static String generateColor() {
-        def sb = new StringBuilder()
-        sb.append("#")
-        for (i in 0..5) {
-            sb.append(color[random.nextInt(color.size())])
-        }
-        return sb.toString()
-    }
-
-    // 生成id代码
-    static String generateId() {
-        def sb = new StringBuilder()
-        for (i in 0..5) {
-            sb.append(abc[random.nextInt(abc.size())])
-        }
-        return sb.toString()
-    }
 
     // 生成 strings.xml
     static void generateStringsFile(File resDir, JunkCodeConfig config) {
@@ -367,11 +392,7 @@ class JunkUtil {
         writeStringToFile(stringFile, contentBuilder.toString())
     }
 
-    /**
-     * 生成keep.xml
-     * @param resDir
-     * @param config
-     */
+    // 生成keep.xml
     static void generateKeep(File resDir, JunkCodeConfig config) {
         def keepName
         def keepContent
@@ -400,21 +421,24 @@ class JunkUtil {
         sb.append("<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\">\n")
 //        sb.append("<uses-permission android:name=\"android.permission.INTERNET\" />\n")
         sb.append("    <application>\n")
+        def ser = RandomUtil.randomLength(3,6)
+        def meta = RandomUtil.randomLength(3,10)
         for (i in 0..<activityList.size()) {
             sb.append("        <activity android:name=\"${activityList.get(i)}\"  android:exported=\"false\"/>\n")
+            if (i % ser ==0 ) {
                 sb.append("        <service android:name=\"${RandomUtil.generateServiceName(i)}\"  android:exported=\"false\"/>\n")
-            sb.append("        <meta-data android:name=\"${RandomUtil.generateMetaDataName(i)}\"   android:value=\"${RandomUtil.generateRandomabcABC123(i)}\"/>\n")
+            }
+            if (i% meta == 0) {
+                sb.append("        <meta-data android:name=\"${RandomUtil.generateMetaDataName(i)}\"   android:value=\"${RandomUtil.generateRandomabcABC123(i)}\"/>\n")
+            }
         }
         sb.append("    </application>\n")
         sb.append("</manifest>")
         writeStringToFile(manifestFile, sb.toString())
     }
 
-    /**
-     * 生成proguard-rules.pro
-     * @param manifestFile
-     * @param activityList
-     */
+
+    // 生成proguard-rules.pro
     static void generateProguard(File proguardFile, List<String> packageList) {
         StringBuilder sb = new StringBuilder()
         for (i in 0..<packageList.size()) {
@@ -423,11 +447,8 @@ class JunkUtil {
         writeStringToFile(proguardFile, sb.toString())
     }
 
-    /**
-     * java写入文件
-     * @param javaDir
-     * @param javaFile
-     */
+
+    // java 写入文件
     static void writeJavaToFile(File javaDir, JavaFile javaFile) {
         def outputDirectory = javaDir.toPath()
         if (!javaFile.packageName.isEmpty()) {
@@ -440,11 +461,8 @@ class JunkUtil {
         writeStringToFile(outputPath.toFile(), javaFile.toString())
     }
 
-    /**
-     * 字符串写入文件
-     * @param file
-     * @param data
-     */
+
+    // 字符串写入文件
     static void writeStringToFile(File file, String data) {
         if (!file.getParentFile().exists()) {
             file.getParentFile().mkdirs()

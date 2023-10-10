@@ -43,7 +43,7 @@ abstract class AndroidJunkCodeTask extends DefaultTask {
             config.javaGenerator.execute(javaOutDir)
         } else {
             for (int i = 0; i < config.packageCount; i++) {
-
+                ConstantKey.classNumVariableName.clear()
                 String packageName
                 if (config.packageCreator) {
                     def packageNameBuilder = new StringBuffer()
@@ -56,6 +56,8 @@ abstract class AndroidJunkCodeTask extends DefaultTask {
                         packageName = config.packageBase + "." + JunkUtil.generateName(i)
                     }
                 }
+                // todo：每个路径下，会生成多个类，目前只有 Activity类和普通类型
+                // 生成 Activity类文件，(Java代码输出目录，资源输出目录，命名空间，应用程序包名，配置文件)
                 def list = JunkUtil.generateActivity(javaOutDir, resOutDir, namespace, packageName, config)
                 activityList.addAll(list)
                 JunkUtil.generateJava(javaOutDir, packageName, config)

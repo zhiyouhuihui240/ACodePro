@@ -8,5 +8,11 @@ class AppApplication : Application() {
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)
         MultiDex.install(this)
+        context = this
+    }
+
+
+    companion object{
+        lateinit var context: Context
     }
 }

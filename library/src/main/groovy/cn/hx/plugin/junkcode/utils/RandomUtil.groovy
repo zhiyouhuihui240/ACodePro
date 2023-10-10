@@ -1,7 +1,9 @@
 package cn.hx.plugin.junkcode.utils
 
 import com.squareup.javapoet.ClassName
+import com.squareup.javapoet.TypeSpec
 
+import javax.lang.model.element.Modifier
 import java.security.SecureRandom
 import java.text.SimpleDateFormat
 
@@ -23,11 +25,46 @@ class RandomUtil {
     static abcABC123 = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".toCharArray()
 
 
+
+
+
+
+    // 生成id代码
+    static String generateId() {
+        def sb = new StringBuilder()
+        for (i in 0..5) {
+            sb.append(abc[random.nextInt(abc.size())])
+        }
+        return sb.toString()
+    }
+
+    // 生成颜色代码
+    static String generateColor() {
+        def sb = new StringBuilder()
+        sb.append("#")
+        for (i in 0..5) {
+            sb.append(color[random.nextInt(color.size())])
+        }
+        return sb.toString()
+    }
+
+
     // 随机生成指定长度的字符串
     static generateRandomString(int length) {
         def random = new Random()
         def sb = new StringBuilder(length)
         def alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        length.times { sb.append(alphabet.charAt(random.nextInt(alphabet.size()))) }
+        return sb.toString()
+    }
+
+
+    // 生成指定长度范围内的随机字符串
+    static stringRandomLength(int minLength, int maxLength) {
+        def random = new Random()
+        def sb = new StringBuilder(maxLength)
+        def alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        def length = random.nextInt(maxLength - minLength + 1) + minLength
         length.times { sb.append(alphabet.charAt(random.nextInt(alphabet.size()))) }
         return sb.toString()
     }
@@ -44,6 +81,13 @@ class RandomUtil {
     static Integer randomLength(int length) {
         SecureRandom secureRandom = new SecureRandom()
         int randomNum = secureRandom.nextInt(length) + 3
+        return randomNum
+    }
+
+    // 返回 plus-length之间的随机数
+    static Integer randomLength(int plus, int length) {
+        SecureRandom secureRandom = new SecureRandom()
+        int randomNum = secureRandom.nextInt(length) + plus
         return randomNum
     }
 
@@ -71,7 +115,11 @@ class RandomUtil {
         // 生成1到当前时间的随机天数并增加到Calendar中
         def randomDays = (int) (Math.random() * (System.currentTimeMillis() / (24 * 60 * 60 * 1000)))
         calendar.add(Calendar.DATE, randomDays)
-        return format.format(calendar.getTime())
+//        return format.format(calendar.getTime())// 返回默认值
+        if (calendar != null) {
+            return format.format(calendar.getTime())
+        }
+        return "1970-01-01" // 返回预设的默认值
     }
 
 
