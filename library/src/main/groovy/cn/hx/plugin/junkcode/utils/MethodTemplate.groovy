@@ -122,8 +122,6 @@ class MethodTemplate {
 
     static template0(MethodSpec.Builder methodBuilder, ClassName bundleClassName){
         // 从变量中随机获取一个，获取完之后删除掉
-        def randomElement = ConstantKey.classNumVariableName[(int)(Math.random() * { ConstantKey.classNumVariableName }.size())]
-
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         methodBuilder.addStatement("double sum = ${RandomUtil.generateRandomNum()}")
