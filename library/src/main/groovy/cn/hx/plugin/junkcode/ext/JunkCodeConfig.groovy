@@ -40,6 +40,10 @@ class JunkCodeConfig {
     @Internal
     Action<StringBuilder> drawableGenerator = null
 
+
+    @Internal
+    Action<Tuple2<Integer, StringBuilder>> layoutCreator = null
+
     @Internal
     Action<Tuple2<Integer, StringBuilder>> packageCreator = null
 

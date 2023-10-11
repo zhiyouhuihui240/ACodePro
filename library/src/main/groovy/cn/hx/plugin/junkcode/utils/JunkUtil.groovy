@@ -72,13 +72,13 @@ class JunkUtil {
                     ConstantKey.targetPath.add(i, "$i、$packageName.$className")
                 }
                 if (i % layoutRandom == 0) {
-                    generateLayout(resDir, layoutName, config, "item")
+                    generateLayout(resDir, layoutName, config, "item",i)
                 }
                 if (i % itemLayoutRandom == 0) {
-                    generateLayout(resDir, layoutName, config, "custom")
+                    generateLayout(resDir, layoutName, config, "custom", i)
                 }
                 if (i % fragmentLayoutRandom == 0) {
-                    generateLayout(resDir, layoutName, config, "fragment")
+                    generateLayout(resDir, layoutName, config, "fragment", i)
                 }
             }
             else {
@@ -117,7 +117,7 @@ class JunkUtil {
                     }
                 }
                 MethodsUtil.generateInterfaceMethods(interfaceBuilder) // 修改：创建接口方法
-                MethodsUtil.generateStaticExtMethods(typeBuilder) // 修改：创建接口方法
+                MethodsUtil.generateStaticExtMethods(typeBuilder)
                 typeBuilder.addType(interfaceBuilder.build()) // 修改：添加接口到类中
                 typeBuilder.build()
 
@@ -298,7 +298,7 @@ class JunkUtil {
 
 
     // 生成 layout 文件
-    static void generateLayout(File resDir, String layoutName, JunkCodeConfig config, String type) {
+    static void generateLayout(File resDir, String layoutName, JunkCodeConfig config, String type, Integer index) {
         def layoutFile
         switch (type) {
             case "item":
@@ -313,9 +313,11 @@ class JunkUtil {
             default:
                 layoutFile = new File(resDir, "layout/fragment_${layoutName}.xml")
         }
-        if (config.layoutGenerator) {
+        if (config.layoutCreator) {
             def contentBuilder = new StringBuilder()
-            config.layoutGenerator.execute(contentBuilder)
+            contentBuilder.setLength(0)
+            config.layoutCreator.execute(new Tuple2(index,contentBuilder))
+//            config.layoutGenerator.execute(contentBuilder)
             writeStringToFile(layoutFile, contentBuilder.toString())
         } else {
             def layoutStr = String.format(ResTemplate.LAYOUT_TEMPLATE, RandomUtil.generateId())

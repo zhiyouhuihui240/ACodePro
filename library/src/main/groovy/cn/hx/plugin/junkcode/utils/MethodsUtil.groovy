@@ -9,11 +9,6 @@ import com.squareup.javapoet.TypeSpec
 import com.squareup.javapoet.TypeVariableName
 
 import javax.lang.model.element.Modifier
-import javax.lang.model.type.TypeMirror
-import java.lang.reflect.InvocationHandler
-import java.lang.reflect.Method
-import java.lang.reflect.Type
-import java.util.function.Consumer
 
 class MethodsUtil {
 
