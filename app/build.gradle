@@ -11,7 +11,6 @@ import java.security.SecureRandom
 apply plugin: 'kotlin-kapt'
 
 
-
 apply from: 'random.gradle'
 
 //def randomFile = rootProject.file('app/random.gradle')
@@ -23,7 +22,6 @@ task getName1{
         println "Romdd $name"
     }
 }
-
 
 static String generateName(int index) {
 //    return generateName5(index)
@@ -44,6 +42,7 @@ static String generateName(int index) {
     sb.append(index.toString())
     return sb.toString()
 }
+
 
 static String generateActivityName(int index) {
         def name = ActivityNameGenerator.generateActivityName(index)
@@ -1811,7 +1810,7 @@ android:state_focused="true" />
 //            }
 
 
-            layoutGenerator
+
 
 
         }
@@ -1852,6 +1851,9 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        debug {
+            minifyEnabled true
+        }
     }
 
 
@@ -1884,6 +1886,6 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:4.10.0'
 
 
-//    implementation 'com.example:mylib:5.9.5'
+//    implementation 'com.example:mylib:6.1.6'
 
 }

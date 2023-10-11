@@ -41,34 +41,6 @@ class JunkUtil {
 
     // 生成随机方法
     static void generateMethods(MethodSpec.Builder methodBuilder, Boolean isLoad) {
-        def str = "logg"
-        def fullName = "cn.hx.plugin.junkcode.utils.Utils"
-        List values = new ArrayList<>()
-        if (ConstantKey.otherPackageNameList.size() > 1 && ConstantKey.otherClassNameList.size() > 1) {
-            // todo: ClassName.get() 可以导入尚未存在的类
-            fullName = ClassName.get("${ConstantKey.otherPackageNameList.get(1)}", "${ConstantKey.otherClassNameList.get(1)}")
-            if (ConstantKey.otherClassMethodsAccessMap.get(ConstantKey.otherClassNameList.get(1)) != null && ConstantKey.otherClassMethodsAccessMap.get(ConstantKey.otherClassNameList.get(1)).size() > 0) {
-//            if (otherClassMethodsAccessMap.get(otherClassNameList.first())!= null && otherClassMethodsAccessMap.get(otherClassNameList.first()).size() >0) {
-                values = ConstantKey.otherClassMethodsAccessMap.get(ConstantKey.otherClassNameList.get(1))
-                if (values != null && !values.isEmpty() && values.size() > 0) {
-                    String firstValue = values.get(0)
-                    values.remove(0)
-                    str = firstValue
-                } else {
-                    String firstValue = values.get(0)
-                    str = firstValue
-                }
-            }
-        } else {
-            fullName = ClassName.get(Utils.class)
-        }
-        if (str == "logg") {
-            fullName = ClassName.get(Utils.class)
-        }
-        if (fullName == ClassName.get(Utils.class)) {
-            str = "logg"
-        }
-//        MethodsUtil.generateR(methodBuilder, str, fullName, isLoad, ConstantKey.otherAllPathMap)
         MethodTemplate.allTemplate(methodBuilder)
     }
 
@@ -129,20 +101,36 @@ class JunkUtil {
                 // todo: activity的继承父类更改为AppCompatActivity
                 typeBuilder.superclass(ClassName.get("androidx.appcompat.app", "AppCompatActivity"))
                 typeBuilder.addModifiers(Modifier.PUBLIC)
+
+                // todo: 定义接口
+                def interfaceBuilder = TypeSpec.interfaceBuilder(className + "Interface") // 修改：创建接口
+                interfaceBuilder.addModifiers(Modifier.PUBLIC) // 修改：添加接口修饰符
                 // todo: 添加类成员变量, 数量随机
 //                ClassNumVariable.generateClassNumVariable(typeBuilder)
-                def randomGenerateVariableTypeCount = RandomUtil.randomLength(22)
+                def index = RandomUtil.randomLength(2,9)
+                def randomGenerateVariableTypeCount = RandomUtil.randomLength(3,22)
                 for (int ii = 0; ii < randomGenerateVariableTypeCount; ii++) {
+                    // todo: 添加初始化变量
                     typeBuilder = ClassNumVariable.generateVariableType(typeBuilder)
+                    if (ii % index == 0) {
+                        typeBuilder = ClassNumVariable.initVariable(typeBuilder)
+                    }
                 }
+                MethodsUtil.generateInterfaceMethods(interfaceBuilder) // 修改：创建接口方法
+                MethodsUtil.generateStaticExtMethods(typeBuilder) // 修改：创建接口方法
+                typeBuilder.addType(interfaceBuilder.build()) // 修改：添加接口到类中
                 typeBuilder.build()
+
+
+
+
                 if (config.typeGenerator) {
                     config.typeGenerator.execute(typeBuilder)
                 } else {
                     // 下一个方法，对之前的数据进行清理
                     ConstantKey.stringList.clear()
                     // todo: 这里不使用gradle中指定的数目，而是进行随机，从而达到每个类下的方法数目不定
-                    def methods = RandomUtil.randomLength(12)
+                    def methods = RandomUtil.randomLength(3,12)
                     for (int j = 0; j < methods; j++) {
 //                    for (int j = 0; j < config.methodCountPerClass; j++) {
                         def methodName
@@ -242,7 +230,7 @@ class JunkUtil {
                 typeBuilder.addModifiers(Modifier.PUBLIC)
                 // todo: 添加类成员变量
 //                ClassNumVariable.generateClassNumVariable(typeBuilder)
-                def randomGenerateVariableTypeCount = RandomUtil.randomLength(22)
+                def randomGenerateVariableTypeCount = RandomUtil.randomLength(3,22)
                 def index = RandomUtil.randomLength(2,9)
                 for (int ii = 0; ii < randomGenerateVariableTypeCount; ii++) {
                     typeBuilder = ClassNumVariable.generateVariableType(typeBuilder)
@@ -253,7 +241,7 @@ class JunkUtil {
                 typeBuilder.build()
 //                otherClassMethodsNameList.clear()
                 // todo：函数方法
-                def methods = RandomUtil.randomLength(12)
+                def methods = RandomUtil.randomLength(3,12)
                 for (int j = 0; j < methods; j++) {
 //                for (int j = 0; j < config.methodCountPerClass; j++) {
                     def methodName

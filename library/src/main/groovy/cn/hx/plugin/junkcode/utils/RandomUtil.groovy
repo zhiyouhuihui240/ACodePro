@@ -125,16 +125,6 @@ class RandomUtil {
     }
 
 
-    // 随机生成指定长度的字符串
-    static generateRandomString(int length) {
-        def random = new Random()
-        def sb = new StringBuilder(length)
-        def alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        length.times { sb.append(alphabet.charAt(random.nextInt(alphabet.size()))) }
-        return sb.toString()
-    }
-
-
     // 生成指定长度范围内的随机字符串
     static stringRandomLength(int minLength, int maxLength) {
         def random = new Random()
@@ -153,13 +143,6 @@ class RandomUtil {
     }
 
 
-// 返回 3-length之间的随机数
-    static Integer randomLength(int length) {
-        SecureRandom secureRandom = new SecureRandom()
-        int randomNum = secureRandom.nextInt(length) + 3
-        return randomNum
-    }
-
     // 返回 plus-length之间的随机数
     static Integer randomLength(int plus, int length) {
         SecureRandom secureRandom = new SecureRandom()
@@ -172,13 +155,7 @@ class RandomUtil {
         return Math.random() < 0.5
     }
 
-    static String generateRandomabcABC() {
-        def sb = new StringBuilder()
-        sb.append(abcABC[random.nextInt(abcABC.size())])
-        return sb.toString()
-    }
-
-
+    //
     static String generateRandomabcABC123() {
         def sb = new StringBuilder()
         sb.append(abcABC123[random.nextInt(abcABC123.size())])
@@ -197,7 +174,7 @@ class RandomUtil {
 
 
     // 随机生成一个Service名称,类名和包名
-    static public String generateServiceName(int index) {
+    static String generateServiceName(int index) {
         def a =generateRandomStr(index)
         def b =generateRandomStr(index)
         def c =generateRandomStr(index)
@@ -206,7 +183,7 @@ class RandomUtil {
 
 
     // 随机生成一个Meta-data名称,类名和包名
-    static public String generateMetaDataName(int index) {
+    static String generateMetaDataName(int index) {
         def a =generateRandomStr(index)
         def b =generateRandomStr(index)
         def c =generateRandomStr(index)
@@ -276,7 +253,6 @@ class RandomUtil {
                 default:
                     isSDK = false
             }
-
         }
         return isSDK
     }
@@ -294,7 +270,6 @@ class RandomUtil {
         // 从这个key对应的value集合中随机获取一个value
         List<String> values = ConstantKey.classObj.get(randomKey)
         String randomValue = ConstantKey.classObj.get(randomKey).get(new Random().nextInt(values.size()))
-
         def fullClassName = "$randomKey"
         ConstantKey.packageName = fullClassName.substring(0, fullClassName.lastIndexOf("."))
         ConstantKey.simpleName = fullClassName.substring(fullClassName.lastIndexOf(".") + 1)
@@ -305,9 +280,7 @@ class RandomUtil {
 //        if (values.isEmpty()) {
 //            ConstantKey.classObj.remove(randomKey)
 //        }
-
         ConstantKey.classStr = randomValue
-
         return [randomKey, randomValue] as Map.Entry<ClassName, String>
     }
 

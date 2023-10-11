@@ -63,8 +63,8 @@ abstract class AndroidJunkCodeTask extends DefaultTask {
                 JunkUtil.generateJava(javaOutDir, packageName, config)
                 packageList.add(packageName)
             }
-            //生成混淆文件
-            JunkUtil.generateProguard(proguardOutFile, packageList)
+            // todo: 生成混淆文件
+//            JunkUtil.generateProguard(proguardOutFile, packageList)
         }
         if (config.resGenerator) {//自定义生成res逻辑
             config.resGenerator.execute(resOutDir)

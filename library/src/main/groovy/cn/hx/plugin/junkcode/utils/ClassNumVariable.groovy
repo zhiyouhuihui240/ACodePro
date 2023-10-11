@@ -22,7 +22,7 @@ class ClassNumVariable {
                    'String','Str','string','str',
                    'Double','double',
                    'Float','Long','Boolean','boolean']
-    // todo: 随机生成变量类型，并对变量进行初始化
+    // todo: 随机生成类成员变量
     static TypeSpec.Builder generateVariableType(TypeSpec.Builder typeBuilder){
         def className
         def randomElement = type[(int)(Math.random() * type.size())]

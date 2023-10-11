@@ -19,7 +19,7 @@ import org.w3c.dom.Text
 
 class MainActivity : AppCompatActivity() {
 
-    private val tx =  TextView(this)
+
 
     private val text: TextView ?= null
 
@@ -31,9 +31,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         // 每个activity都会有一个window，window.decorView则是在activity布局之上的布局
-        (window.decorView as ViewGroup).addView(tx)
-        tx.text = "123132165464"
-
 
         text?.findViewById<TextView>(R.id.tv_1)
         text?.text = "123165"
