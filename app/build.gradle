@@ -102,6 +102,14 @@ static def randomLength(int length) {
     return randomNum
 }
 
+
+// 生成指定范围内的整数
+static def randomLength(int min, int max) {
+    SecureRandom secureRandom = new SecureRandom()
+    int randomNum = secureRandom.nextInt(max) + min
+    return randomNum
+}
+
 static def randomInt(int length) {
 // 首先定义一个随机数生成器
     SecureRandom secureRandom = new SecureRandom()
@@ -133,8 +141,7 @@ if (PLUGIN_ENABLE.toBoolean()) {
 //            packageBase = "com.vds.fk.ui"  //生成java类根包名
 //            packageCount = 10 //生成包数量
 //            packageCount = 3 //生成包数量
-            packageCount = randomLength(10) //生成包数量
-
+            packageCount = randomLength(5,12) //生成包数量
 //            activityCountPerPackage = 3 //每个包下生成Activity类数量
             excludeActivityJavaFile = false // 是否将生成的activity写入到AndroidManifest.xml文件中
             //是否排除生成Activity的Java文件,默认false(layout和写入AndroidManifest.xml还会执行)，主要用于处理类似神策全埋点编译过慢问题
@@ -823,7 +830,8 @@ if (PLUGIN_ENABLE.toBoolean()) {
                 layoutContentBuilder.append(randomLayout)
             }
 
-            // 自定义生成layout
+            // 自定义生成一些没有被引用的layout
+            /*
             layoutCreator = { tuple ->
                 def contentBuilder = tuple.second
                 def randomLayout = ""
@@ -1421,6 +1429,7 @@ if (PLUGIN_ENABLE.toBoolean()) {
                 contentBuilder.append(randomLayout)
             }
 
+             */
 
             //自定义生成类名（Activity除外）
             classNameCreator = { tuple2 ->
@@ -2592,9 +2601,10 @@ android:state_focused="true" />
 //
 
             //自定义方法实现（方法名已经实现随机，其它自己实现随机）
-            //MethodSpec.Builder用法请参考(https://github.com/square/javapoet)
+//            MethodSpec.Builder用法请参考(https://github.com/square/javapoet)
 //            methodGenerator = { methodBuilder ->
 ////                methodBuilder.addCode("" + "int total = 0;\n" + "for (int i = 0; i < 50000; i++) {\n" + "  total += i;\n" + "}\n")
+//
 //            }
 
 
@@ -2672,6 +2682,6 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:4.10.0'
 
 
-    implementation 'com.example:mylib:6.1.9'
+//    implementation 'com.example:mylib:7.3.1'
 
 }

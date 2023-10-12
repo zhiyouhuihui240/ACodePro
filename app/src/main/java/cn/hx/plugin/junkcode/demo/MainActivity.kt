@@ -20,7 +20,6 @@ import org.w3c.dom.Text
 class MainActivity : AppCompatActivity() {
 
 
-
     private val text: TextView ?= null
 
 
@@ -41,6 +40,7 @@ class MainActivity : AppCompatActivity() {
     fun aaa(){
 
     }
+
 }
 
 

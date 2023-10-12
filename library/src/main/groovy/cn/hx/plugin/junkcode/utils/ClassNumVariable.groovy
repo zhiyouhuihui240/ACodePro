@@ -2,9 +2,7 @@ package cn.hx.plugin.junkcode.utils
 
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.FieldSpec
-import com.squareup.javapoet.MethodSpec
 import com.squareup.javapoet.TypeSpec
-import org.omg.PortableInterceptor.INACTIVE
 
 import javax.lang.model.element.Modifier
 
@@ -15,20 +13,32 @@ import javax.lang.model.element.Modifier
  */
 class ClassNumVariable {
 
+    // 规范变量类型
+    static canonicalType = ['TextView', 'ImageView', 'Button', 'ConstraintLayout','TableLayout','View',
+                            'NestedScrollView','LinearLayout','RelativeLayout','RadioButton','FrameLayout','CardView',
+                            'RecyclerView','ViewPager2',
+                            'int','String','boolean','float','double']
+
+
+    // 不规范变量类型，原因：加大某些类型的比重
     static type = ['TextView', 'ImageView', 'Button', 'ConstraintLayout','TableLayout','View',
                    'NestedScrollView','LinearLayout','RelativeLayout','RadioButton','FrameLayout','CardView',
                    'RecyclerView','ViewPager2',
                    'Int','int',
                    'String','Str','string','str',
                    'Double','double',
-                   'Float','Long','Boolean','boolean']
+                   'Float','Long','Boolean','boolean'
+//            'List','ArrayList','HashMap','HashSet'
+    ]
     // todo: 随机生成类成员变量
     static TypeSpec.Builder generateVariableType(TypeSpec.Builder typeBuilder){
         def className
-        def randomElement = type[(int)(Math.random() * type.size())]
+        def randomElement =  RandomUtil.randomVariableType()
+//        def randomElement = type[(int)(Math.random() * type.size())]
         def lowerCase = randomElement.substring(0, 1).toLowerCase() + randomElement.substring(1) // 将首字母转为小写
-        def variableName = "$lowerCase${RandomUtil.stringRandomLength(2,8)}"
+        def variableName = "$lowerCase${RandomUtil.stringRandomChar(2,8)}"
         ConstantKey.classNumVariableName.add(0,variableName)
+        // randomElement(String) variableName(boolean)
         ConstantKey.classVariableTypeName.put(variableName, randomElement)
 
         switch (randomElement) {
@@ -123,17 +133,25 @@ class ClassNumVariable {
                 LongRandom(typeBuilder,  variableName, randomElement)
                 break
             case 'Boolean':
-                case 'boolean':
-//                className = ClassName.get("kotlin",randomElement)
+            case 'boolean':
                 BooleanRandom(typeBuilder,  variableName, randomElement)
                 break
+//            case 'List':
+//                case 'ArrayList':
+//                ListRandom(typeBuilder,  variableName, randomElement)
+//                break
+//            case 'HashMap':
+//                HashMapRandom(typeBuilder,  variableName, randomElement)
+//                break
+//            case 'HashSet':
+//                HashSetRandom(typeBuilder,  variableName, randomElement)
+//                break
             default:
 //                className = ClassName.get("kotlin","String")
                 StringRandom(typeBuilder,  variableName, randomElement)
         }
         return typeBuilder
     }
-
 
 
     static textViewRandom(TypeSpec.Builder typeBuilder, className, variableName, randomElement){
@@ -255,6 +273,42 @@ class ClassNumVariable {
 
 
 
+    static ListRandom(TypeSpec.Builder typeBuilder, variableName, randomElement){
+        def randomName = RandomUtil.stringRandomChar(3,15)
+        FieldSpec randomField = FieldSpec.builder(List.class, randomName)
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                .initializer("new \$T()", ArrayList.class)
+                .build()
+//        typeBuilder.addField(className, "$variableName",  Modifier.PRIVATE, Modifier.STATIC)
+//                .addStatement("\$T<String> list = new \$T<>()", List.class, ArrayList.class)
+//                .addStatement("\$T<String> set = new \$T<>()", Set.class, HashSet.class)
+        typeBuilder.addField(randomField)
+    }
+
+
+    static HashSetRandom(TypeSpec.Builder typeBuilder, variableName, randomElement){
+        def randomName = RandomUtil.stringRandomChar(3,15)
+        FieldSpec randomField = FieldSpec.builder(HashSet.class, randomName)
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                .initializer("new \$T()", HashSet.class)
+                .build()
+        typeBuilder.addField(randomField)
+    }
+
+
+    static HashMapRandom(TypeSpec.Builder typeBuilder, variableName, randomElement){
+        def randomName = RandomUtil.stringRandomChar(3,15)
+        FieldSpec randomField = FieldSpec.builder(HashMap.class, randomName)
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                .initializer("new \$T()", HashMap.class)
+                .build()
+        typeBuilder.addField(randomField)
+    }
+
+
+
+
+
     // todo: 创建一个新的变量，并且进行初始化
     static TypeSpec.Builder initVariable(TypeSpec.Builder typeBuilder){
         def randomElement = type[(int)(Math.random() * type.size())]
@@ -317,11 +371,12 @@ class ClassNumVariable {
     }
 
 
+
     static initStringVariable(TypeSpec.Builder typeBuilder, String randomElement){
-        def randomName = RandomUtil.stringRandomLength(3,15)
+        def randomName = RandomUtil.stringRandomChar(3,15)
         FieldSpec randomField = FieldSpec.builder(String.class, randomName)
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-                .initializer("\$S", RandomUtil.stringRandomLength(2,55))
+                .initializer("\$S", RandomUtil.stringRandomChar(2,55))
                 .build()
         ConstantKey.classVariableTypeName.put(randomName, randomElement)
         typeBuilder.addField(randomField)
@@ -329,37 +384,37 @@ class ClassNumVariable {
 
 
     static initIntVariable(TypeSpec.Builder typeBuilder, String randomElement){
-        def randomName = RandomUtil.stringRandomLength(3,15)
+        def randomName = RandomUtil.stringRandomChar(3,15)
         FieldSpec randomField = FieldSpec.builder(Integer.class, randomName)
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-                .initializer("\$L", RandomUtil.randomLength(2,10035))
+                .initializer("\$L", RandomUtil.intRandomNumber(2,10035))
 //                .initializer("\$S + \$L", "${RandomUtil.generateRandomabcABC123()}", 5.0d)
                 .build()
         ConstantKey.classVariableTypeName.put(randomName, randomElement)
         typeBuilder.addField(randomField)
     }
     static initDoubleVariable(TypeSpec.Builder typeBuilder, String randomElement){
-        def randomName = RandomUtil.stringRandomLength(3,15)
+        def randomName = RandomUtil.stringRandomChar(3,15)
         FieldSpec randomField = FieldSpec.builder(Double.class, randomName)
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-                .initializer("\$Ld", RandomUtil.randomLength(2,10035))
+                .initializer("\$Ld", RandomUtil.intRandomNumber(2,10035))
 //                .initializer("\$S + \$L", "${RandomUtil.generateRandomabcABC123()}", 5.0d)
                 .build()
         ConstantKey.classVariableTypeName.put(randomName, randomElement)
         typeBuilder.addField(randomField)
     }
     static initFloatVariable(TypeSpec.Builder typeBuilder, String randomElement){
-        def randomName = RandomUtil.stringRandomLength(3,15)
+        def randomName = RandomUtil.stringRandomChar(3,15)
         FieldSpec randomField = FieldSpec.builder(Float.class, randomName)
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-                .initializer("\$Lf", RandomUtil.randomLength(2,10035))
+                .initializer("\$Lf", RandomUtil.intRandomNumber(2,10035))
 //                .initializer("\$S + \$L", "${RandomUtil.generateRandomabcABC123()}", 5.0d)
                 .build()
         ConstantKey.classVariableTypeName.put(randomName, randomElement)
         typeBuilder.addField(randomField)
     }
     static initBooleanVariable(TypeSpec.Builder typeBuilder, String randomElement){
-        def randomName = RandomUtil.stringRandomLength(3,15)
+        def randomName = RandomUtil.stringRandomChar(3,15)
         FieldSpec randomField = FieldSpec.builder(Boolean.class, randomName)
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                 .initializer("\$L", RandomUtil.randomBoolean())

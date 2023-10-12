@@ -14,35 +14,4 @@ public class Utils {
     }
 
 
-
-    static public String generateActivityName(){
-
-        return "f";
-    }
-
-
-    static public String generateLayoutName(){
-
-        return "f";
-    }
-
-
-
-
-
-    static public String generateStringName(){
-
-        return "f";
-    }
-
-
-
-
-
-
-
-
-
-
-
 }

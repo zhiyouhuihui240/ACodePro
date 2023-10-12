@@ -51,9 +51,9 @@ class JunkUtil {
         ConstantKey.otherPackageNameList.add(0, packageName)
         def activityList = new ArrayList()
         // gradle 中指定生成多少个 activity
-        def layoutRandom = RandomUtil.randomLength(3,8)
-        def itemLayoutRandom = RandomUtil.randomLength(2,7)
-        def fragmentLayoutRandom = RandomUtil.randomLength(2,10)
+        def layoutRandom = RandomUtil.intRandomNumber(3,8)
+        def itemLayoutRandom = RandomUtil.intRandomNumber(2,7)
+        def fragmentLayoutRandom = RandomUtil.intRandomNumber(2,10)
         for (int i = 0; i < config.activityCountPerPackage; i++) {
             ConstantKey.classVariableTypeName.clear()
             def className
@@ -102,25 +102,26 @@ class JunkUtil {
                 typeBuilder.superclass(ClassName.get("androidx.appcompat.app", "AppCompatActivity"))
                 typeBuilder.addModifiers(Modifier.PUBLIC)
 
-                // todo: 定义接口
-                def interfaceBuilder = TypeSpec.interfaceBuilder(className + "Interface") // 修改：创建接口
-                interfaceBuilder.addModifiers(Modifier.PUBLIC) // 修改：添加接口修饰符
                 // todo: 添加类成员变量, 数量随机
 //                ClassNumVariable.generateClassNumVariable(typeBuilder)
-                def index = RandomUtil.randomLength(2,9)
-                def randomGenerateVariableTypeCount = RandomUtil.randomLength(3,22)
+                def index = RandomUtil.intRandomNumber(2,9)
+                def randomGenerateVariableTypeCount = RandomUtil.intRandomNumber(3,22)
                 for (int ii = 0; ii < randomGenerateVariableTypeCount; ii++) {
                     // todo: 添加初始化变量
-                    typeBuilder = ClassNumVariable.generateVariableType(typeBuilder)
+                    ClassNumVariable.generateVariableType(typeBuilder)
                     if (ii % index == 0) {
-                        typeBuilder = ClassNumVariable.initVariable(typeBuilder)
+                        ClassNumVariable.initVariable(typeBuilder)
                     }
                 }
-                MethodsUtil.generateInterfaceMethods(interfaceBuilder) // 修改：创建接口方法
-                MethodsUtil.generateStaticExtMethods(typeBuilder)
-                typeBuilder.addType(interfaceBuilder.build()) // 修改：添加接口到类中
-                typeBuilder.build()
 
+                if (RandomUtil.randomBoolean()) {
+                    // todo: 定义接口
+                    def interfaceBuilder = TypeSpec.interfaceBuilder(className + "Interface") // 修改：创建接口
+                    interfaceBuilder.addModifiers(Modifier.PUBLIC) // 修改：添加接口修饰符
+                    MethodsUtil.generateInterfaceMethods(interfaceBuilder) // 修改：创建接口方法
+                    typeBuilder.addType(interfaceBuilder.build()) // 修改：添加接口到类中
+                }
+                typeBuilder.build()
 
 
 
@@ -130,7 +131,7 @@ class JunkUtil {
                     // 下一个方法，对之前的数据进行清理
                     ConstantKey.stringList.clear()
                     // todo: 这里不使用gradle中指定的数目，而是进行随机，从而达到每个类下的方法数目不定
-                    def methods = RandomUtil.randomLength(3,12)
+                    def methods = RandomUtil.intRandomNumber(3,12)
                     for (int j = 0; j < methods; j++) {
 //                    for (int j = 0; j < config.methodCountPerClass; j++) {
                         def methodName
@@ -230,8 +231,8 @@ class JunkUtil {
                 typeBuilder.addModifiers(Modifier.PUBLIC)
                 // todo: 添加类成员变量
 //                ClassNumVariable.generateClassNumVariable(typeBuilder)
-                def randomGenerateVariableTypeCount = RandomUtil.randomLength(3,22)
-                def index = RandomUtil.randomLength(2,9)
+                def randomGenerateVariableTypeCount = RandomUtil.intRandomNumber(3,22)
+                def index = RandomUtil.intRandomNumber(2,9)
                 for (int ii = 0; ii < randomGenerateVariableTypeCount; ii++) {
                     typeBuilder = ClassNumVariable.generateVariableType(typeBuilder)
                     if (ii % index == 0) {
@@ -241,7 +242,7 @@ class JunkUtil {
                 typeBuilder.build()
 //                otherClassMethodsNameList.clear()
                 // todo：函数方法
-                def methods = RandomUtil.randomLength(3,12)
+                def methods = RandomUtil.intRandomNumber(3,12)
                 for (int j = 0; j < methods; j++) {
 //                for (int j = 0; j < config.methodCountPerClass; j++) {
                     def methodName
@@ -338,7 +339,7 @@ class JunkUtil {
             }
         } else if (config.drawableCreator) {
             // todo
-            def tod = RandomUtil.randomLength(6,25)
+            def tod = RandomUtil.intRandomNumber(6,25)
             def fileNameBuilder = new StringBuilder()
             def contentBuilder = new StringBuilder()
             for (int i = 0; i < config.drawableCount; i++) {
@@ -417,8 +418,8 @@ class JunkUtil {
         sb.append("<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\">\n")
 //        sb.append("<uses-permission android:name=\"android.permission.INTERNET\" />\n")
         sb.append("    <application>\n")
-        def ser = RandomUtil.randomLength(3,6)
-        def meta = RandomUtil.randomLength(3,10)
+        def ser = RandomUtil.intRandomNumber(3,6)
+        def meta = RandomUtil.intRandomNumber(3,10)
         for (i in 0..<activityList.size()) {
             sb.append("        <activity android:name=\"${activityList.get(i)}\"  android:exported=\"false\"/>\n")
             if (i % ser ==0 ) {

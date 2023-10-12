@@ -1,12 +1,10 @@
 package cn.hx.plugin.junkcode.utils
 
 import com.squareup.javapoet.ClassName
-import com.squareup.javapoet.CodeBlock
 import com.squareup.javapoet.MethodSpec
 import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeName
 import com.squareup.javapoet.TypeSpec
-import com.squareup.javapoet.TypeVariableName
 
 import javax.lang.model.element.Modifier
 
@@ -16,16 +14,16 @@ class MethodsUtil {
     // 生成接口方法
     static  generateInterfaceMethods(TypeSpec.Builder interfaceBuilder){
         def list = ParameterizedTypeName.get(List.class, String.class)
-        def ran1 = RandomUtil.stringRandomLength(5,20)
+        def ran1 = RandomUtil.stringRandomChar(5,20)
         def abstractMethod1 = MethodSpec.methodBuilder(ran1)
                 .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
                 .build()
-        def ran2 = RandomUtil.stringRandomLength(5,20)
+        def ran2 = RandomUtil.stringRandomChar(5,20)
         def abstractMethod2 = MethodSpec.methodBuilder(ran2)
                 .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
                 .returns(list)
                 .build()
-        def ran3 = RandomUtil.stringRandomLength(5,20)
+        def ran3 = RandomUtil.stringRandomChar(5,20)
         def defaultMethod = MethodSpec.methodBuilder(ran3)
                 .addModifiers(Modifier.PUBLIC, Modifier.DEFAULT)
                 .returns(String.class)
@@ -37,35 +35,6 @@ class MethodsUtil {
                 .addMethod(abstractMethod2)
                 .addMethod(defaultMethod)
     }
-
-    // 生成一个类，其中包含一个静态方法和一个泛型方法：
-    static generateStaticExtMethods(TypeSpec.Builder typeBuilder) {
-        def staticMethod = MethodSpec.methodBuilder("staticMethod")
-                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-                .addParameter(TypeName.get(String.class), "message")
-                .returns(void.class)
-                .addStatement("\$T.out.println(message)", System.class)
-                .build();
-
-//        def T = TypeVariableName.get("T")
-//        def type = T.asType() ?: Object.class // 确保类型非空
-//        def castedType = TypeName.get(type)
-//        def consumer = ParameterizedTypeName.get(Consumer.class, castedType.box())
-//
-//        def genericMethodBuilder = MethodSpec.methodBuilder("genericMethod")
-//                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-//                .addTypeVariable(T)
-//                .addParameter(consumer, "function")
-//                .returns(void.class)
-//                .addStatement("function.accept(null)")
-//
-//        def genericMethod = genericMethodBuilder.build()
-
-        typeBuilder.addMethod(staticMethod)
-//                .addMethod(genericMethod)
-    }
-
-
 
 //  todo: 生成 Activity 的回调函数 --------------
 

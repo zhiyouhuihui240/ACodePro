@@ -2,9 +2,7 @@ package cn.hx.plugin.junkcode.utils
 
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.MethodSpec
-import com.squareup.javapoet.TypeSpec
 
-import javax.lang.model.element.Modifier
 import java.security.SecureRandom
 class RandomUtil {
 
@@ -15,13 +13,14 @@ class RandomUtil {
      */
     static random = new Random()
 
+
+
     static abc = "abcdefghijklmnopqrstuvwxyz".toCharArray()
     static color = "0123456789abcdef".toCharArray()
     static num = "0123456789".toCharArray()
     static ABC = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray()
     static abcABC = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray()
     static abcABC123 = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".toCharArray()
-
 
 
 
@@ -35,7 +34,6 @@ class RandomUtil {
         // todo: 对类变量进行赋值,调用
         assignValue (methodBuilder, variableName.toString(), variableType.toString())
     }
-
 
     static assignValue(MethodSpec.Builder methodBuilder,String variableName, String variableType) {
         switch (variableType) {
@@ -71,19 +69,19 @@ class RandomUtil {
             case 'Str':
             case 'string':
             case 'str':
-                methodBuilder.addStatement("$variableName = \"${stringRandomLength(3,56)}\"")
+                methodBuilder.addStatement("$variableName = \"${stringRandomChar(3,56)}\"")
                 break
             case 'Int':
                 case 'int':
-                methodBuilder.addStatement("$variableName = ${randomLength(3,1000000)}")
+                methodBuilder.addStatement("$variableName = ${intRandomNumber(3,1000000)}")
                 break
 
             case 'Double':
                 case 'double':
-                methodBuilder.addStatement("$variableName = ${randomLength(3,1000000)}d")
+                methodBuilder.addStatement("$variableName = ${intRandomNumber(3,1000000)}d")
                 break
             case 'Float':
-                methodBuilder.addStatement("$variableName = ${randomLength(3,1000000)}f")
+                methodBuilder.addStatement("$variableName = ${intRandomNumber(3,1000000)}f")
                 break
 //            case 'Byte':
 //                methodBuilder.addStatement("$variableName = ${randomLength(3,1000000)}")
@@ -92,18 +90,24 @@ class RandomUtil {
 //                methodBuilder.addStatement("$variableName = ${randomLength(3,1000000)}")
 //                break
             case 'Long':
-                methodBuilder.addStatement("$variableName = ${randomLength(3,1000000)}L")
+                methodBuilder.addStatement("$variableName = ${intRandomNumber(3,1000000)}L")
                 break
             case 'Boolean':
             case 'boolean':
                 methodBuilder.addStatement("$variableName = ${randomBoolean()}")
                 break
             default:
-                methodBuilder.addStatement("$variableName = \"${stringRandomLength(3,56)}\"")
+                methodBuilder.addStatement("$variableName = \"${stringRandomChar(3,56)}\"")
         }
     }
 
 
+
+
+    // 随机获取一个变量类型
+    static String randomVariableType(){
+        return ClassNumVariable.type[(int)(Math.random() * ClassNumVariable.type.size())]
+    }
 
     // 生成id代码
     static String generateId() {
@@ -125,15 +129,58 @@ class RandomUtil {
     }
 
 
+    static canonicalType = ['TextView', 'ImageView', 'Button', 'ConstraintLayout','TableLayout','View',
+                            'NestedScrollView','LinearLayout','RelativeLayout','RadioButton','FrameLayout','CardView',
+                            'RecyclerView','ViewPager2',
+                            'int','String','boolean','float','double']
+
     // 生成指定长度范围内的随机字符串
-    static stringRandomLength(int minLength, int maxLength) {
+    static String stringRandomChar123WithNumber(int minLength, int maxLength) {
+        def random = new Random()
+        def sb = new StringBuilder(maxLength + 10) // 10 is enough length for the random number
+        def alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        def length = random.nextInt(maxLength - minLength + 1) + minLength
+        length.times { sb.append(alphabet.charAt(random.nextInt(alphabet.size()))) }
+        // Add random number at the end
+        sb.append(intRandomNumber(0, 999999))
+        return sb.toString()
+    }
+
+
+
+    // 生成指定长度范围内的随机字符串, 同时对变量名避免与关键词同名
+    static String stringRandomChar(int minLength, int maxLength) {
         def random = new Random()
         def sb = new StringBuilder(maxLength)
         def alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
         def length = random.nextInt(maxLength - minLength + 1) + minLength
+        def canonicalType = ['TextView', 'ImageView', 'Button', 'ConstraintLayout','TableLayout','View',
+                             'NestedScrollView','LinearLayout','RelativeLayout','RadioButton','FrameLayout','CardView',
+                             'RecyclerView','ViewPager2',
+                             'Int','int',
+                             'String','Str','string','str',
+                             'Double','double',
+                             'Float','Long','Boolean','boolean',
+                             'List','ArrayList','HashMap','HashSet','If','For','While','Switch','Return','Do','New',
+                'Try','Byte','Case','Char','Else','Goto','Break','This','Void','Catch','Class','Const','Const',
+                'Final','Super','Throw','While','Import','Native','Public','Return','Static','Throws','Default','Extends',
+                'Finally','Package','Private','Abstract','Continue','Protected','Strictfp','Volatile','Interface','Transient',
+                'Implements','Instanceof','Synchronized']
+        boolean isNewString = false
+        while(!isNewString) {
+            sb.setLength(0)
+            length.times { sb.append(alphabet.charAt(random.nextInt(alphabet.size()))) }
+            String newString = sb.substring(0,1).toUpperCase() + sb.substring(1)
+            if(!canonicalType.contains(newString)) {
+                return sb.toString()
+            }
+            isNewString = false
+        }
+        sb.setLength(0)
         length.times { sb.append(alphabet.charAt(random.nextInt(alphabet.size()))) }
         return sb.toString()
     }
+
 
 
     static Integer generateRandomNum() {
@@ -143,10 +190,10 @@ class RandomUtil {
     }
 
 
-    // 返回 plus-length之间的随机数
-    static Integer randomLength(int plus, int length) {
+    // 返回 min-max 之间的随机数
+    static Integer intRandomNumber(int min, int max) {
         SecureRandom secureRandom = new SecureRandom()
-        int randomNum = secureRandom.nextInt(length) + plus
+        int randomNum = secureRandom.nextInt(max) + min
         return randomNum
     }
 
