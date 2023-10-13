@@ -39,45 +39,68 @@ class MethodsUtil {
 //  todo: 生成 Activity 的回调函数 --------------
 
     static generateActivityRandom(TypeSpec.Builder typeBuilder, ClassName bundleClassName,String layoutName, String namespace, List<String> stringList){
-
-        typeBuilder.addMethod(MethodSpec.methodBuilder("onCreate")
+//        typeBuilder.addMethod(MethodSpec.methodBuilder("onCreate")
+//            .addAnnotation(Override.class)
+//            .addModifiers(Modifier.PROTECTED)
+//            .addParameter(bundleClassName, "savedInstanceState")
+//            .addStatement("super.onCreate(savedInstanceState)")
+//            .addStatement("setContentView(\$T.layout.${layoutName})", ClassName.get(namespace, "R"))
+//            .build())
+        MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder("onCreate")
                 .addAnnotation(Override.class)
                 .addModifiers(Modifier.PROTECTED)
                 .addParameter(bundleClassName, "savedInstanceState")
                 .addStatement("super.onCreate(savedInstanceState)")
                 .addStatement("setContentView(\$T.layout.${layoutName})", ClassName.get(namespace, "R"))
-                .addStatement(RandomUtil.getRandomMethod(stringList))
-                .addStatement(RandomUtil.getRandomMethod(stringList))
-                .addStatement(RandomUtil.getRandomMethod(stringList))
-                .build())
+        typeBuilder = randomInvoke(methodBuilder, stringList, typeBuilder)
+        typeBuilder.addMethod(methodBuilder.build())
     }
 
-    static generateActivityRandom1(TypeSpec.Builder typeBuilder, ClassName bundleClassName,String layoutName, String namespace, List<String> stringList){
-        typeBuilder.addMethod(MethodSpec.methodBuilder("onResume")
+    static TypeSpec.Builder generateActivityRandom1(TypeSpec.Builder typeBuilder, ClassName bundleClassName, String layoutName, String namespace, List<String> stringList) {
+        MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder("onResume")
                 .addAnnotation(Override.class)
                 .addModifiers(Modifier.PROTECTED)
                 .addStatement("super.onResume()")
-                .addStatement(RandomUtil.getRandomMethod(stringList))
-                .addStatement(RandomUtil.getRandomMethod(stringList))
-                .build())
+        typeBuilder = randomInvoke(methodBuilder, stringList, typeBuilder)
+        typeBuilder.addMethod(methodBuilder.build())
+        return typeBuilder;
     }
+
 
     static generateActivityRandom2(TypeSpec.Builder typeBuilder, ClassName bundleClassName,String layoutName, String namespace, List<String> stringList){
         typeBuilder.addMethod(MethodSpec.methodBuilder("onDestroy")
-                .addAnnotation(Override.class)
-                .addModifiers(Modifier.PROTECTED)
-                .addStatement("super.onDestroy()")
-                .build())
+            .addAnnotation(Override.class)
+            .addModifiers(Modifier.PROTECTED)
+            .addStatement("super.onDestroy()").build())
     }
 
     static generateActivityRandom3(TypeSpec.Builder typeBuilder, ClassName bundleClassName,String layoutName, String namespace, List<String> stringList){
-        typeBuilder.addMethod(MethodSpec.methodBuilder("onBackPressed")
+        MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder("onBackPressed")
                 .addAnnotation(Override.class)
                 .addModifiers(Modifier.PUBLIC)
                 .addStatement("super.onBackPressed()")
-                .addStatement(RandomUtil.getRandomMethod(stringList))
-                .build())
+        typeBuilder = randomInvoke(methodBuilder, stringList, typeBuilder)
+        typeBuilder.addMethod(methodBuilder.build())
+        return typeBuilder
     }
 
+
+    static TypeSpec.Builder randomInvoke(MethodSpec.Builder methodBuilder, List<String> stringList, TypeSpec.Builder typeBuilder) {
+        int randomGenerateVariableTypeCount = RandomUtil.intRandomNumber(0,5)
+        for (int ii = 0; ii < randomGenerateVariableTypeCount; ii++) {
+            RandomMethods.methodsMinFragment(methodBuilder)
+        }
+        int randomInt = RandomUtil.intRandomNumber(1,5)
+        for (int ii = 0; ii < randomInt; ii++) {
+            methodBuilder.addStatement(RandomUtil.getRandomMethod(stringList))
+        }
+        def ran = RandomUtil.intRandomNumber(1,5)
+        // todo: 随机调用类成员变量
+        for (int i = 0; i<ran; i++){
+            RandomUtil.randomVariableName(methodBuilder)
+        }
+
+        return typeBuilder
+    }
 
 }

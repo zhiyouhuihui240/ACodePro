@@ -124,7 +124,6 @@ class JunkUtil {
                 typeBuilder.build()
 
 
-
                 if (config.typeGenerator) {
                     config.typeGenerator.execute(typeBuilder)
                 } else {

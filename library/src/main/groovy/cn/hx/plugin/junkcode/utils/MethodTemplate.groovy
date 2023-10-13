@@ -140,11 +140,13 @@ class MethodTemplate {
         methodBuilder.addStatement("int $ranStr3 = scanner.nextInt()")
         methodBuilder.beginControlFlow("if ($ranStr3 == ${RandomUtil.generateRandomNum()})")
         RandomMethods.methodsMinFragment(methodBuilder)
+        methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         methodBuilder.addStatement("break")
         methodBuilder.endControlFlow();
         RandomMethods.methodsMinFragment(methodBuilder)
         methodBuilder.addStatement("$ranStr += $ranStr3")
         methodBuilder.addStatement("$ranStr1++")
+        methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         methodBuilder.endControlFlow()
         methodBuilder.beginControlFlow("if ($ranStr1 == 0)")
         RandomMethods.methodsMinFragment(methodBuilder)
@@ -164,6 +166,7 @@ class MethodTemplate {
         RandomMethods.methodsMinFragment(methodBuilder)
         methodBuilder.beginControlFlow("for (int $ranStr1 = 1; $ranStr1 <= $ranStr; $ranStr1++)")
         RandomMethods.methodsMinFragment(methodBuilder)
+        methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         methodBuilder.endControlFlow();
         methodBuilder.endControlFlow();
       }
@@ -179,15 +182,18 @@ class MethodTemplate {
         methodBuilder.addStatement("int $ranStr = (int) (Math.random() * 100) + 1")
         RandomMethods.methodsMinFragment(methodBuilder)
         methodBuilder.beginControlFlow("while (true)")
+        methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         RandomMethods.methodsMinFragment(methodBuilder)
         methodBuilder.addStatement("\$T scanner = new \$T(\$T.in)",Scanner.class, Scanner.class, System.class)
         methodBuilder.addStatement("\$T $ranStr2 = ${RandomUtil.intRandomNumber(3,10000)}", int.class)
 //        methodBuilder.addStatement("int $ranStr2 = ranStr1.nextInt()")
         methodBuilder.beginControlFlow("if ($ranStr2 == $ranStr)")
         RandomMethods.methodsMinFragment(methodBuilder)
+        methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         methodBuilder.addStatement("break")
         methodBuilder.endControlFlow()
         RandomMethods.methodsMinFragment(methodBuilder)
+        methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         methodBuilder.addStatement("String hint = $ranStr2 < $ranStr ? \$S : \$S", "${RandomUtil.generateRandomabcABC123()}", "${RandomUtil.generateRandomabcABC123()}")
         methodBuilder.endControlFlow()
     }
@@ -208,10 +214,12 @@ class MethodTemplate {
         RandomMethods.methodsMinFragment(methodBuilder)
         methodBuilder.addStatement("char $ranStr3 = ranStr.charAt($ranStr2)")
         methodBuilder.beginControlFlow("if (str.indexOf($ranStr3) == -1)");
+        methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         RandomMethods.methodsMinFragment(methodBuilder)
         methodBuilder.addStatement("str += $ranStr3");
         methodBuilder.endControlFlow();
         RandomMethods.methodsMinFragment(methodBuilder)
+        methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         methodBuilder.endControlFlow();
     }
 
@@ -250,9 +258,11 @@ class MethodTemplate {
         methodBuilder.addStatement("int $ranStr3 = ranStr2.getDay()");
         RandomMethods.methodsMinFragment(methodBuilder)
         methodBuilder.beginControlFlow("if ($ranStr3 == 0 || $ranStr3 == 6)");
+        methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         RandomMethods.methodsMinFragment(methodBuilder)
         methodBuilder.addStatement("return true");
         methodBuilder.endControlFlow();
+        methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         methodBuilder.addStatement("return false");
     }
     static template5(MethodSpec.Builder methodBuilder, ClassName bundleClassName){
@@ -266,16 +276,22 @@ class MethodTemplate {
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
         methodBuilder.returns(List.class)
         methodBuilder.addStatement("\$T list = new \$T<\$T>()", List.class, ArrayList.class, String.class);
-        RandomMethods.methodsMinFragment(methodBuilder)
         methodBuilder.addStatement("list.add(\$S)", "${RandomUtil.stringRandomChar123WithNumber(2,16)}");
         methodBuilder.addStatement("list.add(\$S)", "${RandomUtil.stringRandomChar123WithNumber(2,32)}");
+        RandomMethods.methodsMinFragment(methodBuilder)
         methodBuilder.addStatement("list.add(\$S)", "${RandomUtil.stringRandomChar123WithNumber(2,48)}");
         methodBuilder.addStatement("list.add(\$S)", "${RandomUtil.stringRandomChar123WithNumber(2,56)}");
         RandomMethods.methodsMinFragment(methodBuilder)
-        methodBuilder.addStatement("\$T $ranStr = new \$T<\$T>(list)", Set.class, HashSet.class, String.class);
+        methodBuilder.addStatement("\$T $ranStr = new \$T<\$T>(list)", Set.class, HashSet.class, String.class)
         methodBuilder.addStatement("\$T $ranStr2 = new \$T($ranStr)", List.class, ArrayList.class)
-        methodBuilder.addStatement("return $ranStr2");
+        methodBuilder.addStatement("return $ranStr2")
     }
+
+
+
+
+
+
 
     static template6(MethodSpec.Builder methodBuilder, ClassName bundleClassName){
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)// 添加方法体

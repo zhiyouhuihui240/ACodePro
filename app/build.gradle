@@ -139,9 +139,9 @@ if (PLUGIN_ENABLE.toBoolean()) {
         def debugConfig =  {
 //注意：这里的release是变体名称，如果没有设置productFlavors就是buildType名称，如果有设置productFlavors就是flavor+buildType，例如（freeRelease、proRelease）
 //            packageBase = "com.vds.fk.ui"  //生成java类根包名
-//            packageCount = 10 //生成包数量
+            packageCount = 50 //生成包数量
 //            packageCount = 3 //生成包数量
-            packageCount = randomLength(5,12) //生成包数量
+//            packageCount = randomLength(8,20) //生成包数量
 //            activityCountPerPackage = 3 //每个包下生成Activity类数量
             excludeActivityJavaFile = false // 是否将生成的activity写入到AndroidManifest.xml文件中
             //是否排除生成Activity的Java文件,默认false(layout和写入AndroidManifest.xml还会执行)，主要用于处理类似神策全埋点编译过慢问题
@@ -152,7 +152,6 @@ if (PLUGIN_ENABLE.toBoolean()) {
             stringCount = 300  //生成string数量
 
             //自定义生成包名(设置此项后packageBase将无效)
-            //注意，要把生成的包名加入混淆文件
             packageCreator = { tuple2 ->
                 def isSDK = false
                 //StringBuilder: 生成包名格式xx.xx.xx
@@ -2648,6 +2647,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
+            // 开启混淆
             minifyEnabled true
         }
     }
@@ -2682,6 +2682,6 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:4.10.0'
 
 
-//    implementation 'com.example:mylib:7.3.1'
+//    implementation 'com.example:mylib:7.4.9'
 
 }

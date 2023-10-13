@@ -197,14 +197,14 @@ class RandomMethods {
             else { methodsSubFragment(methodBuilder) }
             // todo: 还可继续添加内容
          */
-        def sum = RandomUtil.stringRandomChar(3,6)
-        def count = RandomUtil.stringRandomChar(3,6)
-        def guess = RandomUtil.stringRandomChar(3,6)
+        def sum = RandomUtil.stringRandomChar123WithNumber(3,6)
+        def count = RandomUtil.stringRandomChar123WithNumber(3,6)
+        def guess = RandomUtil.stringRandomChar123WithNumber(3,6)
         // todo: 随机生成一些局部变量
         def ranNum = RandomUtil.intRandomNumber(0,6)
         def ranType = RandomUtil.randomVariableType()
         for (int i =0; i< ranNum; i++) {
-            methodBuilder.addStatement("$ranType ${RandomUtil.stringRandomChar(3,8)};")
+            methodBuilder.addStatement("$ranType ${RandomUtil.stringRandomChar123WithNumber(3,8)};")
         }
 
         methodBuilder.addStatement("double $sum = ${RandomUtil.generateRandomNum()}")
@@ -454,9 +454,9 @@ class RandomMethods {
     }
     // 最小化，完整的的片段
     static methodsMinFragment0(methodBuilder) {
-        def a = RandomUtil.stringRandomChar(3,8)
-        def b = RandomUtil.stringRandomChar(3,8)
-        def result = RandomUtil.stringRandomChar(3,8)
+        def a = RandomUtil.stringRandomChar123WithNumber(3,8)
+        def b = RandomUtil.stringRandomChar123WithNumber(3,8)
+        def result = RandomUtil.stringRandomChar123WithNumber(3,8)
         methodBuilder.addStatement("int $a = ${RandomUtil.intRandomNumber(1,10000)}")
         methodBuilder.addStatement("int $b = ${RandomUtil.intRandomNumber(1,10000)}")
         methodBuilder.addStatement("int $result = Math.min($a, $b)")
@@ -465,7 +465,7 @@ class RandomMethods {
     static methodsMinFragment1(methodBuilder) {
         def i = RandomUtil.intRandomNumber(10,10000)
         def ranInt = RandomUtil.intRandomNumber(2,8)
-        def ranStr = RandomUtil.stringRandomChar(2,8)
+        def ranStr = RandomUtil.stringRandomChar123WithNumber(2,8)
         methodBuilder.beginControlFlow("if ($i % $ranInt == 0)")
         // todo: 这里可以重新调用
         methodsMinFragment(methodBuilder)
@@ -480,17 +480,17 @@ class RandomMethods {
         methodBuilder.endControlFlow()
     }
     static methodsMinFragment2(methodBuilder) {
-        def s1 = RandomUtil.stringRandomChar(2,8)
-        def s2 = RandomUtil.stringRandomChar(2,8)
-        def s3 = RandomUtil.stringRandomChar(2,8)
-        methodBuilder.addStatement("\$T $s1 = \"${RandomUtil.stringRandomChar(2,55)} \"", String.class)
-        methodBuilder.addStatement("\$T $s2 = \"${RandomUtil.stringRandomChar(2,55)}\"", String.class)
+        def s1 = RandomUtil.stringRandomChar123WithNumber(2,8)
+        def s2 = RandomUtil.stringRandomChar123WithNumber(2,8)
+        def s3 = RandomUtil.stringRandomChar123WithNumber(2,8)
+        methodBuilder.addStatement("\$T $s1 = \"${RandomUtil.stringRandomChar123WithNumber(2,55)} \"", String.class)
+        methodBuilder.addStatement("\$T $s2 = \"${RandomUtil.stringRandomChar123WithNumber(2,55)}\"", String.class)
         methodBuilder.addStatement("\$T $s3 = \"$s1$s2\"", String.class)
     }
     static methodsMinFragment3(methodBuilder) {
         def ran = RandomUtil.intRandomNumber(5,100)
-        def ranStr1 = RandomUtil.stringRandomChar(3,8)
-        def ranStr = RandomUtil.stringRandomChar(3,8)
+        def ranStr1 = RandomUtil.stringRandomChar123WithNumber(3,8)
+        def ranStr = RandomUtil.stringRandomChar123WithNumber(3,8)
         methodBuilder.addStatement("\$T<\$T> sfdfsd = new \$T<\$T>()", ArrayList.class, Integer.class,ArrayList.class, Integer.class)
         methodBuilder.beginControlFlow("for (int $ranStr = 1; $ranStr <= $ran; $ranStr++)")
         methodBuilder.beginControlFlow("if ($ranStr % 2 == 0)")
@@ -509,22 +509,22 @@ class RandomMethods {
     }
     static methodsMinFragment4(methodBuilder) {
         def ran = RandomUtil.intRandomNumber(5,80)
-        def ranStr = RandomUtil.stringRandomChar(2,8)
-        def ranStr1 = RandomUtil.stringRandomChar(2,8)
+        def ranStr = RandomUtil.stringRandomChar123WithNumber(2,8)
+        def ranStr1 = RandomUtil.stringRandomChar123WithNumber(2,8)
         methodBuilder.addStatement("\$T $ranStr1 = Math.sin(2 * $ran) * Math.log10(${ran.toDouble()})", double.class)
         methodBuilder.addStatement("\$T $ranStr = Math.floor($ranStr1 * 100) / 100", double.class)
     }
     static methodsMinFragment5(methodBuilder) {
         def x = RandomUtil.intRandomNumber(5,10000)
         def y = RandomUtil.intRandomNumber(5,10000)
-        def sum = RandomUtil.stringRandomChar(2,6)
-        def ranStr = RandomUtil.stringRandomChar(3,6)
-        def ranStr1 = RandomUtil.stringRandomChar(3,6)
-        def product = RandomUtil.stringRandomChar(2,6)
+        def sum = RandomUtil.stringRandomChar123WithNumber(2,6)
+        def ranStr = RandomUtil.stringRandomChar123WithNumber(3,6)
+        def ranStr1 = RandomUtil.stringRandomChar123WithNumber(3,6)
+        def product = RandomUtil.stringRandomChar123WithNumber(2,6)
         methodBuilder.addStatement("\$T $ranStr = ${RandomUtil.intRandomNumber(0,120)}", int.class)
         methodBuilder.addStatement("\$T $ranStr1 = ${RandomUtil.intRandomNumber(0,20)}", int.class)
         methodBuilder.beginControlFlow("if ($ranStr <= 0 || $ranStr <= 0)")
-        methodBuilder.addStatement("throw new \$T(\"${RandomUtil.stringRandomChar(10,55)}\")", IllegalArgumentException.class)
+        methodBuilder.addStatement("throw new \$T(\"${RandomUtil.stringRandomChar123WithNumber(10,55)}\")", IllegalArgumentException.class)
         methodBuilder.endControlFlow()
         methodBuilder.addStatement("int $sum = $x + $y")
         methodBuilder.addStatement("int $product = $x * $y")
@@ -539,7 +539,7 @@ class RandomMethods {
     }
     static methodsMinFragment6(methodBuilder) {
         def i = RandomUtil.intRandomNumber(2,5000)
-        def ranStr = RandomUtil.stringRandomChar(2,8)
+        def ranStr = RandomUtil.stringRandomChar123WithNumber(2,8)
         methodBuilder.beginControlFlow("if ($i % 2 == 0)")
         // todo: 这里可以重新调用
         methodsMinFragment(methodBuilder)
@@ -556,7 +556,7 @@ class RandomMethods {
 
     static methodsMinFragment7(methodBuilder) {
         def ran = RandomUtil.intRandomNumber(2,10)
-        def sname = RandomUtil.stringRandomChar(3,8)
+        def sname = RandomUtil.stringRandomChar123WithNumber(3,8)
         ArrayList<Integer> arr = new ArrayList<Integer>()
         for (int i = 0; i<ran; i++) {
             arr.add(RandomUtil.intRandomNumber(1,5000))
@@ -569,8 +569,8 @@ class RandomMethods {
 
     // 反转字符串
     static methodsMinFragment8(methodBuilder) {
-        def ran = RandomUtil.stringRandomChar(2,24)
-        def ran1 = RandomUtil.stringRandomChar(2,55)
+        def ran = RandomUtil.stringRandomChar123WithNumber(2,24)
+        def ran1 = RandomUtil.stringRandomChar123WithNumber(2,55)
         methodBuilder.addStatement("\$T $ran = new StringBuilder(\"$ran1\").reverse().toString()", String.class)
     }
 
@@ -578,11 +578,11 @@ class RandomMethods {
     // 二分查找法
     static methodsMinFragment9(methodBuilder) {
         def ran = RandomUtil.intRandomNumber(2,10)
-        def left = RandomUtil.stringRandomChar(3,6)
-        def right = RandomUtil.stringRandomChar(3,6)
-        def mid = RandomUtil.stringRandomChar(3,6)
-        def key = RandomUtil.stringRandomChar(3,6)
-        def ranStr = RandomUtil.stringRandomChar(3,8)
+        def left = RandomUtil.stringRandomChar123WithNumber(3,6)
+        def right = RandomUtil.stringRandomChar123WithNumber(3,6)
+        def mid = RandomUtil.stringRandomChar123WithNumber(3,6)
+        def key = RandomUtil.stringRandomChar123WithNumber(3,6)
+        def ranStr = RandomUtil.stringRandomChar123WithNumber(3,8)
         methodBuilder.addStatement("\$T<\$T> serwefsd = new \$T<\$T>()", ArrayList.class, Integer.class, ArrayList.class, Integer.class)
         methodBuilder.addStatement("\$T $key = ${RandomUtil.intRandomNumber(2,6)}", int.class)
         methodBuilder.beginControlFlow("for(int $ranStr =0; $ranStr<$ran; $ranStr++)")
@@ -605,12 +605,12 @@ class RandomMethods {
 
     // 冒泡排序
     static methodsMinFragment10(methodBuilder) {
-        def sname = RandomUtil.stringRandomChar(3,8)
+        def sname = RandomUtil.stringRandomChar123WithNumber(3,8)
         def scope = RandomUtil.intRandomNumber(2,25)
-        def n = RandomUtil.stringRandomChar(2,9)
-        def temp = RandomUtil.stringRandomChar(2,9)
-        def ranStr = RandomUtil.stringRandomChar(2,9)
-        def ranStr1 = RandomUtil.stringRandomChar(2,9)
+        def n = RandomUtil.stringRandomChar123WithNumber(2,9)
+        def temp = RandomUtil.stringRandomChar123WithNumber(2,9)
+        def ranStr = RandomUtil.stringRandomChar123WithNumber(2,9)
+        def ranStr1 = RandomUtil.stringRandomChar123WithNumber(2,9)
         int[] arr = new int[scope]
         for (int i = 0; i< scope;i++){
             arr[i] = i
@@ -630,15 +630,15 @@ class RandomMethods {
 
 
     static methodsMinFragment11(methodBuilder) {
-        def ranStr = RandomUtil.stringRandomChar(3,8)
-        def ranStr1 = RandomUtil.stringRandomChar(3,8)
-        def ranStr2 = RandomUtil.stringRandomChar(1,4)
+        def ranStr = RandomUtil.stringRandomChar123WithNumber(3,8)
+        def ranStr1 = RandomUtil.stringRandomChar123WithNumber(3,8)
+        def ranStr2 = RandomUtil.stringRandomChar123WithNumber(1,4)
         def ranInt = RandomUtil.intRandomNumber(3,50)
         def ranInt1 = RandomUtil.intRandomNumber(3,50)
         methodBuilder.addStatement("\$T $ranStr1 = $ranInt1", int.class)
         methodBuilder.addStatement("\$T $ranStr = \"$ranInt1\"", String.class)
         methodBuilder.beginControlFlow("for(int $ranStr2=0; $ranStr2<$ranInt;$ranStr2++)")
-        methodBuilder.addStatement("$ranStr =\"${RandomUtil.stringRandomChar(3,55)}\"")
+        methodBuilder.addStatement("$ranStr =\"${RandomUtil.stringRandomChar123WithNumber(3,55)}\"")
         methodBuilder.addStatement("$ranStr1 += $ranInt")
         methodBuilder.endControlFlow()
     }
@@ -655,9 +655,9 @@ class RandomMethods {
 
     // int ，string
     static methodsMinFragment13(methodBuilder) {
-        def ranStr = RandomUtil.stringRandomChar(3,8)
-        def ranStr1 = RandomUtil.stringRandomChar(3,8)
-        methodBuilder.addStatement("\$T $ranStr = \"${RandomUtil.stringRandomChar(3,55)}\"", String.class)
+        def ranStr = RandomUtil.stringRandomChar123WithNumber(3,8)
+        def ranStr1 = RandomUtil.stringRandomChar123WithNumber(3,8)
+        methodBuilder.addStatement("\$T $ranStr = \"${RandomUtil.stringRandomChar123WithNumber(3,55)}\"", String.class)
         methodBuilder.addStatement("\$T $ranStr1 = ${RandomUtil.intRandomNumber(3,100000)}", int.class)
     }
 
@@ -674,13 +674,13 @@ class RandomMethods {
 
     // ArrayList
     static methodsMinFragment15(methodBuilder) {
-        def ranStr = RandomUtil.stringRandomChar(3,8)
+        def ranStr = RandomUtil.stringRandomChar123WithNumber(3,8)
         methodBuilder.addStatement("\$T $ranStr = new \$T()", List.class, ArrayList.class)
     }
 
     // 布尔值
     static methodsMinFragment16(methodBuilder) {
-        def ranStr = RandomUtil.stringRandomChar(3,8)
+        def ranStr = RandomUtil.stringRandomChar123WithNumber(3,8)
         def ranBoolean = RandomUtil.randomBoolean()
         methodBuilder.addStatement("\$T $ranStr = $ranBoolean", boolean.class)
     }
