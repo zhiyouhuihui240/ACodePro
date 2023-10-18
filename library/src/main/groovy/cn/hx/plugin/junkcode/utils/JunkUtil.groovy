@@ -434,7 +434,7 @@ class JunkUtil {
     }
 
 
-    // 生成proguard-rules.pro
+    // 生成proguard-rules.pro //
     static void generateProguard(File proguardFile, List<String> packageList) {
         StringBuilder sb = new StringBuilder()
         for (i in 0..<packageList.size()) {
