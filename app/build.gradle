@@ -2277,7 +2277,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:4.10.0'
 
 
-    implementation 'com.github.megatronking.stringfog:xor:1.1.0'
-//    implementation 'com.example:mylib:7.5.0'
+//    implementation 'com.github.megatronking.stringfog:xor:1.1.0'
+//    implementation 'com.example:mylib:7.5.1'
 
 }
