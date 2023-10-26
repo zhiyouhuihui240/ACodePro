@@ -354,10 +354,29 @@ class JunkUtil {
 //                }
             }
         } else {
+            def tod = RandomUtil.intRandomNumber(6,25)
+            def fileNameBuilder = new StringBuilder()
+            def contentBuilder = new StringBuilder()
             for (int i = 0; i < config.drawableCount; i++) {
+                fileNameBuilder.setLength(0)
+                contentBuilder.setLength(0)
+                config.drawableCreator.execute(new Tuple3(i, fileNameBuilder, contentBuilder))
+//                def drawableName = fileNameBuilder.toString()
+//                if (i % tod == 0) {
+                // todo：.9图不能生成，原因待
+//                    writeStringToFile(new File(resDir, "drawable/${drawableName}nine.xml"), String.format(ResTemplate.DRAWABLE, RandomUtil.generateColor()))
+//                } else  {
+
                 def drawableName = "${config.resPrefix.toLowerCase()}${generateName(i)}"
-                writeStringToFile(new File(resDir, "drawable/${drawableName}.xml"), String.format(ResTemplate.DRAWABLE, RandomUtil.generateColor()))
+                writeStringToFile(new File(resDir, "drawable/${drawableName}.xml"), contentBuilder.toString())
+//                }
             }
+
+
+//            for (int i = 0; i < config.drawableCount; i++) {
+//                def drawableName = "${config.resPrefix.toLowerCase()}${generateName(i)}"
+//                writeStringToFile(new File(resDir, "drawable/${drawableName}.xml"), String.format(ResTemplate.DRAWABLE, RandomUtil.generateColor()))
+//            }
         }
     }
 
