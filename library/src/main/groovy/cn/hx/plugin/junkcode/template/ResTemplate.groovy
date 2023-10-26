@@ -1,5 +1,7 @@
 package cn.hx.plugin.junkcode.template
 
+import java.security.SecureRandom
+
 class ResTemplate {
 
     static final def DRAWABLE = '''<vector xmlns:android="http://schemas.android.com/apk/res/android"
@@ -37,16 +39,856 @@ class ResTemplate {
         android:strokeColor="#00000000" />
 </vector>'''
 
-    static final def LAYOUT_TEMPLATE = '''<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tv_text_%s"
+
+    // 生成指定范围内的整数
+    static def randomLength(int min, int max) {
+        SecureRandom secureRandom = new SecureRandom()
+        int randomNum = secureRandom.nextInt(max) + min
+        return randomNum
+    }
+
+
+    static randomLayoutContent () {
+        def randomLayout = '''<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">'''
+        switch (randomLength(0, 10)) {
+            case 0:
+                randomLayout += '''
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_launcher"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="15sp"/>
+    </LinearLayout>'''
+                break
+            case 1:
+                randomLayout += '''
+    <androidx.viewpager2.widget.ViewPager2
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>'''
+                break
+            case 2:
+                randomLayout += '''
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="23sp"
+            android:textColor="@color/white"
+            android:textAlignment="center"/>
+        
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""/>
+        
+    </androidx.cardview.widget.CardView>
+'''
+                break
+            case 3:
+                randomLayout += '''
+    <androidx.constraintlayout.widget.Guideline
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center" />
-</LinearLayout>'''
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="20dp" />
+'''
+                break
+            case 4:
+                randomLayout += '''
+
+    <View
+        android:layout_width="2dp"
+        android:layout_height="5dp"
+        android:background="@color/white" />
+
+    
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/editor_os16"
+        app:layout_constraintEnd_toEndOf="parent" />
+'''
+                break
+            case 5:
+                randomLayout += '''
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <View
+            android:layout_width="2dp"
+            android:layout_height="5dp"
+            android:background="@color/white" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_launcher" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="15sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/editor_os17"/>
+
+            <View
+                android:layout_width="4dp"
+                android:layout_height="25dp"/>
+        </LinearLayout>
+    </LinearLayout>
+'''
+                break
+            case 6:
+                randomLayout += '''        
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/editor_os17"/>
+
+            <View
+                android:layout_width="4dp"
+                android:layout_height="25dp"/>
+        </LinearLayout>
+'''
+                break
+            case 7:
+                randomLayout += '''
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="10sp"/>
+            
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/editor_os15"/>
+        </LinearLayout>
+'''
+                break
+            case 8:
+                randomLayout += '''
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+       
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/editor_os16"/>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+'''
+                break
+            default:
+                randomLayout += '''
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/editor_os12"/>
+    </FrameLayout>
+'''
+        }
+
+
+        switch (randomLength(0, 10)) {
+            case 0:
+                randomLayout += '''
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_launcher"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="15sp"/>
+    </LinearLayout>'''
+                break
+            case 1:
+                randomLayout += '''
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/ic_launcher"
+        />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>'''
+                break
+            case 2:
+                randomLayout += '''
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="23sp"
+            android:textColor="@color/white"
+            android:textAlignment="center"/>
+        
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"/>
+        
+    </androidx.cardview.widget.CardView>
+'''
+                break
+            case 3:
+                randomLayout += '''
+
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:visibility="gone"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:visibility="gone"
+            android:textAlignment="center"
+            android:textSize="56sp"/>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="20dp" />
+'''
+                break
+            case 4:
+                randomLayout += '''
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"/>
+
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:textSize="45sp"/>
+
+ </FrameLayout>
+'''
+                break
+            case 5:
+                randomLayout += '''
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <View
+            android:layout_width="2dp"
+            android:layout_height="5dp"
+            android:background="@color/white" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_launcher" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="15sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/editor_os17"/>
+
+            <View
+                android:layout_width="4dp"
+                android:layout_height="25dp"/>
+        </LinearLayout>
+    </LinearLayout>
+'''
+                break
+            case 6:
+                randomLayout += '''        
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/editor_os17"/>
+
+            <View
+                android:layout_width="4dp"
+                android:layout_height="25dp"/>
+        </LinearLayout>
+'''
+                break
+            case 7:
+                randomLayout += '''
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="10sp"/>
+            
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/editor_os11"/>
+        </LinearLayout>
+'''
+                break
+            case 8:
+                randomLayout += '''
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+       
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/editor_os16"/>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+'''
+                break
+            case 9: '''
+    <androidx.constraintlayout.widget.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="20dp" />
+'''
+            default:
+                randomLayout += '''
+    
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="56sp"
+            android:visibility="gone" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_launcher"
+            android:visibility="gone" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="45sp"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+'''
+        }
+
+
+        switch (randomLength(0, 10)) {
+            case 0:
+                randomLayout += '''
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_launcher"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="15sp"/>
+    </LinearLayout>'''
+                break
+            case 1:
+                randomLayout += '''
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/ic_launcher"
+        />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>'''
+                break
+            case 2:
+                randomLayout += '''
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="23sp"
+            android:textColor="@color/white"
+            android:textAlignment="center"/>
+        
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"/>
+        
+    </androidx.cardview.widget.CardView>
+'''
+                break
+            case 3:
+                randomLayout += '''
+
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:visibility="gone"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:visibility="gone"
+            android:textAlignment="center"
+            android:textSize="56sp"/>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="20dp" />
+'''
+                break
+            case 4:
+                randomLayout += '''
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"/>
+
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:textSize="45sp"/>
+
+ </FrameLayout>
+'''
+                break
+            case 5:
+                randomLayout += '''
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <View
+            android:layout_width="2dp"
+            android:layout_height="5dp"
+            android:background="@color/white" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_launcher" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="15sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/editor_os17"/>
+
+            <View
+                android:layout_width="4dp"
+                android:layout_height="25dp"/>
+        </LinearLayout>
+    </LinearLayout>
+'''
+                break
+            case 6:
+                randomLayout += '''        
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/editor_os17"/>
+
+            <View
+                android:layout_width="4dp"
+                android:layout_height="25dp"/>
+        </LinearLayout>
+'''
+                break
+            case 7:
+                randomLayout += '''
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="10sp"/>
+            
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/editor_os11"/>
+        </LinearLayout>
+'''
+                break
+            case 8:
+                randomLayout += '''
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+       
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/editor_os16"/>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+'''
+                break
+            case 9: '''
+    <androidx.constraintlayout.widget.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="20dp" />
+'''
+            default:
+                randomLayout += '''
+    
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="56sp"
+            android:visibility="gone" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_launcher"
+            android:visibility="gone" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="45sp"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+'''
+        }
+
+
+        switch (randomLength(0, 10)) {
+            case 0:
+                randomLayout += '''
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:layout_gravity="center" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+    </androidx.constraintlayout.widget.ConstraintLayout>'''
+                break
+            case 1:
+                randomLayout += '''
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/editor_os16"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>'''
+                break
+            case 2:
+                randomLayout += '''
+    <androidx.constraintlayout.widget.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="45dp" />
+        
+    </androidx.constraintlayout.widget.ConstraintLayout>'''
+                break
+            case 3:
+                randomLayout += '''
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/editor_os12" />
+    </FrameLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>'''
+                break
+            case 4:
+                randomLayout += '''
+      
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_launcher" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/editor_os17"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>'''
+                break
+            case 5:
+                randomLayout += '''
+        
+    </androidx.constraintlayout.widget.ConstraintLayout>'''
+                break
+            case 6:
+                randomLayout += '''
+        <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>'''
+                break
+            case 7:
+                randomLayout += '''
+        
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@color/black"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>'''
+                break
+            case 8:
+                randomLayout += '''
+        
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="" />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/editor_os12" />
+    </FrameLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>'''
+                break
+            default:
+                randomLayout += '''
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/editor_os16"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+    </androidx.constraintlayout.widget.ConstraintLayout>'''
+        }
+        return randomLayout
+    }
 }

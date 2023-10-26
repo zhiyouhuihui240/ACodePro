@@ -320,7 +320,7 @@ class JunkUtil {
 //            config.layoutGenerator.execute(contentBuilder)
             writeStringToFile(layoutFile, contentBuilder.toString())
         } else {
-            def layoutStr = String.format(ResTemplate.LAYOUT_TEMPLATE, RandomUtil.generateId())
+            def layoutStr = String.format(ResTemplate.randomLayoutContent(), RandomUtil.generateId())
             writeStringToFile(layoutFile, layoutStr)
         }
     }

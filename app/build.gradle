@@ -1,6 +1,8 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
+apply plugin: 'stringfog'
+
 
 if (PLUGIN_ENABLE.toBoolean()) {
     apply plugin: 'android-junk-code'
@@ -24,10 +26,12 @@ task getName1{
 }
 
 
+import java.security.SecureRandom
+
 
 static String generateActivityName(int index) {
-        def name = ActivityNameGenerator.generateActivityName(index)
-        println "Activity Name: ${name}" // 输出随机生成的Activity名称
+    def name = ActivityNameGenerator.generateActivityName(index)
+    println "Activity Name: ${name}" // 输出随机生成的Activity名称
     return name
 
 }
@@ -48,7 +52,7 @@ class ActivityNameGenerator {
     static String generateActivityName(int index) {
         if (strList.size() == 0) {
             // 若不够，则自动生成随机字符串
-            def name = generateName(index)
+            def name = generateRandomString(3,8)
             return name
         }
         int randomIndex = (int)(Math.random() * strList.size())
@@ -58,106 +62,47 @@ class ActivityNameGenerator {
     }
 
 
-    static String generateName(int index) {
-//    return generateName3(index)
-        def random = new Random()
-        def abc = "abcdefghijklmnopqrstuvwxyz".toCharArray()
-        def sb = new StringBuilder()
-        for (i in 0..4) {
-            sb.append(abc[random.nextInt(abc.size())])
+// 生成指定长度范围内的随机字符串
+    static def generateRandomString(int min, int max) {
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+        Random rand = new Random()
+        int length = rand.nextInt(max - min + 1) + min
+
+        StringBuilder sb = new StringBuilder(length)
+        for(int i = 0; i < length; i++) {
+            int randIndex = rand.nextInt(characters.length())
+            sb.append(characters.charAt(randIndex))
         }
-        int temp = index
-        while (temp >= 0) {
-            sb.append(abc[temp % abc.size()])
-            temp = temp / abc.size()
-            if (temp == 0) {
-                temp = -1
-            }
-        }
-        sb.append(index.toString())
         return sb.toString()
     }
-}
-
-
-
-// 生成指定长度范围内的随机字符串
-static def generateRandomString(int min, int max) {
-    String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-    Random rand = new Random()
-    int length = rand.nextInt(max - min + 1) + min
-
-    StringBuilder sb = new StringBuilder(length)
-    for(int i = 0; i < length; i++) {
-        int randIndex = rand.nextInt(characters.length())
-        sb.append(characters.charAt(randIndex))
-    }
-    return sb.toString()
-}
-
-// 返回 3-length之间的随机数
-static def randomLength(int length) {
-    SecureRandom secureRandom = new SecureRandom()
-    int randomNum = secureRandom.nextInt(length) + 3
-    return randomNum
-}
-
 
 // 生成指定范围内的整数
-static def randomLength(int min, int max) {
-    SecureRandom secureRandom = new SecureRandom()
-    int randomNum = secureRandom.nextInt(max) + min
-    return randomNum
-}
-
-static def randomInt(int length) {
-// 首先定义一个随机数生成器
-    SecureRandom secureRandom = new SecureRandom()
-    // 使用可打印的 ASCII 字符作为生成字符串的字符集合
-    String characters = ('0123456789')
-    // 用 StringBuilder 保存生成的字符串
-    StringBuilder sb = new StringBuilder()
-
-    // 循环生成指定长度的随机字符串
-//    for (int i = 0; i < 1; i++) {
-    // 从字符集合中随机选择一个字符
-    int randomIndex = secureRandom.nextInt(characters.length())
-    char randomChar = characters.charAt(randomIndex)
-    // 将选择的字符添加到字符串中
-    sb.append(randomChar)
-//    }
-
-    // 返回生成的随机字符串
-    return sb.toInteger()
+    static def randomLength(int min, int max) {
+        SecureRandom secureRandom = new SecureRandom()
+        int randomNum = secureRandom.nextInt(max) + min
+        return randomNum
+    }
 }
 
 
-
-if (PLUGIN_ENABLE.toBoolean()) {
-    androidJunkCode {
-        debug true
-        def debugConfig =  {
-//注意：这里的release是变体名称，如果没有设置productFlavors就是buildType名称，如果有设置productFlavors就是flavor+buildType，例如（freeRelease、proRelease）
-//            packageBase = "com.vds.fk.ui"  //生成java类根包名
-            packageCount = 50 //生成包数量
-//            packageCount = 3 //生成包数量
-//            packageCount = randomLength(8,20) //生成包数量
-//            activityCountPerPackage = 3 //每个包下生成Activity类数量
+androidJunkCode {
+    variantConfig {
+        debug {
+            packageCount = ActivityNameGenerator.randomLength(50,300) //生成包数量
             excludeActivityJavaFile = false // 是否将生成的activity写入到AndroidManifest.xml文件中
-            //是否排除生成Activity的Java文件,默认false(layout和写入AndroidManifest.xml还会执行)，主要用于处理类似神策全埋点编译过慢问题
-//            otherCountPerPackage = 30  //每个包下生成其它类的数量
-//            methodCountPerClass = 20  //每个类下生成方法数量
-            resPrefix = "ic_"  //生成的layout、drawable、string等资源名前缀
-            drawableCount = 210  //生成drawable资源数量
-            stringCount = 300  //生成string数量
+            drawableCount = ActivityNameGenerator.randomLength(100,350)  //生成drawable资源数量
+            stringCount = ActivityNameGenerator.randomLength(80,260)  //生成string数量
 
-            //自定义生成包名(设置此项后packageBase将无效)
             packageCreator = { tuple2 ->
                 def isSDK = false
                 //StringBuilder: 生成包名格式xx.xx.xx
                 def packageNameBuilder = tuple2.second
-                def basePak = "com.dupsdsds.app"
-                switch (randomLength(10)) {
+                def basePak = "dpright.draws.pinner"
+                def f1 = ActivityNameGenerator.generateRandomString(3,5)
+                def f2 = ActivityNameGenerator.generateRandomString(3,8)
+                def f3= ActivityNameGenerator.generateRandomString(3,8)
+                def ranPak = "$f1.$f2.$f3".toLowerCase()
+                switch (ActivityNameGenerator.randomLength(0,15)) {
                     case 0:
                         packageNameBuilder.append("${basePak}.view")
                         break
@@ -193,35 +138,34 @@ if (PLUGIN_ENABLE.toBoolean()) {
                         isSDK = true
                         break
                         // todo: 在 sdk 中添加类
-                    case 11:
-                        packageNameBuilder.append("com.iab.omid.library.applovin")
-                        isSDK = true
-                        break
-                    case 12:
-                        packageNameBuilder.append("com.anythink.core.activity")
-                        isSDK = true
-                        break
-                    case 13:
-                        packageNameBuilder.append("com.bytedance")
-                        isSDK = true
-                        break
+//                    case 11:
+//                        packageNameBuilder.append("com.iab.omid.library.applovin")
+//                        isSDK = true
+//                        break
+//                    case 12:
+//                        packageNameBuilder.append("com.anythink.core.activity")
+//                        isSDK = true
+//                        break
+//                    case 13:
+//                        packageNameBuilder.append("com.bytedance")
+//                        isSDK = true
+//                        break
                     default:
-                        packageNameBuilder.append("${basePak}.data")
+                        packageNameBuilder.append("${ranPak}")
                         break
                 }
                 // todo：如果是sdk的话，就不生成activity了，没有起到效果？
-                if (!isSDK){
+                if (!isSDK) {
 //                    activityCountPerPackage = 2  //每个包下生成Activity类数量
-                    activityCountPerPackage = randomLength(8)  //每个包下生成Activity类数量
+                    activityCountPerPackage = ActivityNameGenerator.randomLength(3,8)  //每个包下生成Activity类数量
 //                    otherCountPerPackage = 3  //每个包下生成其它类的数量
-                    otherCountPerPackage = randomLength(10)  //每个包下生成其它类的数量
-                    methodCountPerClass = randomLength(20)  //每个类下生成方法数量
+                    otherCountPerPackage = ActivityNameGenerator.randomLength(5,25)  //每个包下生成其它类的数量
+                    methodCountPerClass = ActivityNameGenerator.randomLength(0,20)  //每个类下生成方法数量
                 } else {
                     activityCountPerPackage = 0
 //                    otherCountPerPackage = 4   //每个包下生成其它类的数量
-                    otherCountPerPackage = randomLength(8)   //每个包下生成其它类的数量
-                    methodCountPerClass = randomLength(12)  //每个类下生成方法数量
-
+                    otherCountPerPackage = ActivityNameGenerator.randomLength(3,8)   //每个包下生成其它类的数量
+                    methodCountPerClass = ActivityNameGenerator.randomLength(3,12)  //每个类下生成方法数量
                 }
             }
 
@@ -241,7 +185,7 @@ if (PLUGIN_ENABLE.toBoolean()) {
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">'''
-                switch (randomInt(10)) {
+                switch (ActivityNameGenerator.randomLength(0,10)) {
                     case 0:
                         randomLayout += '''
     <LinearLayout
@@ -255,7 +199,7 @@ if (PLUGIN_ENABLE.toBoolean()) {
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/bottomsheet_action_expand_halfway"
+            android:text=""
             android:textAlignment="center"
             android:textColor="@color/black"
             android:textSize="15sp"/>
@@ -268,7 +212,7 @@ if (PLUGIN_ENABLE.toBoolean()) {
         android:layout_height="wrap_content"/>'''
                         break
                     case 2:
-                        randomLayout +='''
+                        randomLayout += '''
     <androidx.cardview.widget.CardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
@@ -276,7 +220,7 @@ if (PLUGIN_ENABLE.toBoolean()) {
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/crop_xiaozhen"
+            android:text=""
             android:textSize="23sp"
             android:textColor="@color/white"
             android:textAlignment="center"/>
@@ -284,13 +228,13 @@ if (PLUGIN_ENABLE.toBoolean()) {
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/yes_i_agree"/>
+            android:text=""/>
         
     </androidx.cardview.widget.CardView>
 '''
                         break
                     case 3:
-                        randomLayout +='''
+                        randomLayout += '''
     <androidx.constraintlayout.widget.Guideline
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -299,7 +243,7 @@ if (PLUGIN_ENABLE.toBoolean()) {
 '''
                         break
                     case 4:
-                        randomLayout +='''
+                        randomLayout += '''
 
     <View
         android:layout_width="2dp"
@@ -310,12 +254,12 @@ if (PLUGIN_ENABLE.toBoolean()) {
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/particle_21"
+        android:src="@drawable/editor_os16"
         app:layout_constraintEnd_toEndOf="parent" />
 '''
                         break
                     case 5:
-                        randomLayout +='''
+                        randomLayout += '''
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -334,7 +278,7 @@ if (PLUGIN_ENABLE.toBoolean()) {
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/bottomsheet_action_expand_halfway"
+            android:text=""
             android:textAlignment="center"
             android:textColor="@color/black"
             android:textSize="15sp" />
@@ -346,7 +290,7 @@ if (PLUGIN_ENABLE.toBoolean()) {
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/particle_7"/>
+                android:src="@drawable/editor_os17"/>
 
             <View
                 android:layout_width="4dp"
@@ -356,7 +300,7 @@ if (PLUGIN_ENABLE.toBoolean()) {
 '''
                         break
                     case 6:
-                        randomLayout +='''        
+                        randomLayout += '''        
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -364,7 +308,7 @@ if (PLUGIN_ENABLE.toBoolean()) {
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/particle_7"/>
+                android:src="@drawable/editor_os17"/>
 
             <View
                 android:layout_width="4dp"
@@ -373,7 +317,7 @@ if (PLUGIN_ENABLE.toBoolean()) {
 '''
                         break
                     case 7:
-                        randomLayout +='''
+                        randomLayout += '''
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -382,18 +326,18 @@ if (PLUGIN_ENABLE.toBoolean()) {
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/sug_thks"
+                android:text=""
                 android:textSize="10sp"/>
             
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/particle_15"/>
+                android:src="@drawable/editor_os15"/>
         </LinearLayout>
 '''
                         break
                     case 8:
-                        randomLayout +='''
+                        randomLayout += '''
     <androidx.cardview.widget.CardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
@@ -401,7 +345,7 @@ if (PLUGIN_ENABLE.toBoolean()) {
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/yes_i_agree" />
+            android:text="" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -412,13 +356,13 @@ if (PLUGIN_ENABLE.toBoolean()) {
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/particle_16"/>
+                android:src="@drawable/editor_os16"/>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 '''
                         break
-                    default :
-                        randomLayout +='''
+                    default:
+                        randomLayout += '''
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -427,13 +371,13 @@ if (PLUGIN_ENABLE.toBoolean()) {
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/particle_22"/>
+            android:src="@drawable/editor_os12"/>
     </FrameLayout>
 '''
                 }
 
 
-                switch (randomInt(10)) {
+                switch (ActivityNameGenerator.randomLength(0,10)) {
                     case 0:
                         randomLayout += '''
     <LinearLayout
@@ -447,7 +391,7 @@ if (PLUGIN_ENABLE.toBoolean()) {
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/bottomsheet_action_expand_halfway"
+            android:text=""
             android:textAlignment="center"
             android:textColor="@color/black"
             android:textSize="15sp"/>
@@ -468,7 +412,7 @@ if (PLUGIN_ENABLE.toBoolean()) {
         android:layout_height="wrap_content"/>'''
                         break
                     case 2:
-                        randomLayout +='''
+                        randomLayout += '''
     <androidx.cardview.widget.CardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
@@ -476,7 +420,7 @@ if (PLUGIN_ENABLE.toBoolean()) {
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/crop_xiaozhen"
+            android:text=""
             android:textSize="23sp"
             android:textColor="@color/white"
             android:textAlignment="center"/>
@@ -484,13 +428,13 @@ if (PLUGIN_ENABLE.toBoolean()) {
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/yes_i_agree"/>
+            android:text="@string/app_name"/>
         
     </androidx.cardview.widget.CardView>
 '''
                         break
                     case 3:
-                        randomLayout +='''
+                        randomLayout += '''
 
 
     <androidx.cardview.widget.CardView
@@ -515,7 +459,7 @@ if (PLUGIN_ENABLE.toBoolean()) {
 '''
                         break
                     case 4:
-                        randomLayout +='''
+                        randomLayout += '''
 
     <FrameLayout
         android:layout_width="wrap_content"
@@ -538,7 +482,7 @@ if (PLUGIN_ENABLE.toBoolean()) {
 '''
                         break
                     case 5:
-                        randomLayout +='''
+                        randomLayout += '''
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -557,7 +501,7 @@ if (PLUGIN_ENABLE.toBoolean()) {
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/bottomsheet_action_expand_halfway"
+            android:text=""
             android:textAlignment="center"
             android:textColor="@color/black"
             android:textSize="15sp" />
@@ -569,7 +513,7 @@ if (PLUGIN_ENABLE.toBoolean()) {
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/particle_7"/>
+                android:src="@drawable/editor_os17"/>
 
             <View
                 android:layout_width="4dp"
@@ -579,7 +523,7 @@ if (PLUGIN_ENABLE.toBoolean()) {
 '''
                         break
                     case 6:
-                        randomLayout +='''        
+                        randomLayout += '''        
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -587,7 +531,7 @@ if (PLUGIN_ENABLE.toBoolean()) {
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/particle_7"/>
+                android:src="@drawable/editor_os17"/>
 
             <View
                 android:layout_width="4dp"
@@ -596,7 +540,7 @@ if (PLUGIN_ENABLE.toBoolean()) {
 '''
                         break
                     case 7:
-                        randomLayout +='''
+                        randomLayout += '''
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -605,18 +549,18 @@ if (PLUGIN_ENABLE.toBoolean()) {
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/sug_thks"
+                android:text=""
                 android:textSize="10sp"/>
             
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/particle_15"/>
+                android:src="@drawable/editor_os11"/>
         </LinearLayout>
 '''
                         break
                     case 8:
-                        randomLayout +='''
+                        randomLayout += '''
     <androidx.cardview.widget.CardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
@@ -624,7 +568,7 @@ if (PLUGIN_ENABLE.toBoolean()) {
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/yes_i_agree" />
+            android:text="" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -635,20 +579,20 @@ if (PLUGIN_ENABLE.toBoolean()) {
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/particle_16"/>
+                android:src="@drawable/editor_os16"/>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 '''
                         break
-                    case 9:'''
+                    case 9: '''
     <androidx.constraintlayout.widget.Guideline
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_begin="20dp" />
 '''
-                    default :
-                        randomLayout +='''
+                    default:
+                        randomLayout += '''
     
 
     <RelativeLayout
@@ -682,13 +626,263 @@ if (PLUGIN_ENABLE.toBoolean()) {
                 }
 
 
-                switch (randomInt(10)){
+                switch (ActivityNameGenerator.randomLength(0,10)) {
+                    case 0:
+                        randomLayout += '''
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_launcher"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="15sp"/>
+    </LinearLayout>'''
+                        break
+                    case 1:
+                        randomLayout += '''
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/ic_launcher"
+        />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>'''
+                        break
+                    case 2:
+                        randomLayout += '''
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="23sp"
+            android:textColor="@color/white"
+            android:textAlignment="center"/>
+        
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"/>
+        
+    </androidx.cardview.widget.CardView>
+'''
+                        break
+                    case 3:
+                        randomLayout += '''
+
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:visibility="gone"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:visibility="gone"
+            android:textAlignment="center"
+            android:textSize="56sp"/>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="20dp" />
+'''
+                        break
+                    case 4:
+                        randomLayout += '''
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"/>
+
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:textSize="45sp"/>
+
+ </FrameLayout>
+'''
+                        break
+                    case 5:
+                        randomLayout += '''
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <View
+            android:layout_width="2dp"
+            android:layout_height="5dp"
+            android:background="@color/white" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_launcher" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="15sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/editor_os17"/>
+
+            <View
+                android:layout_width="4dp"
+                android:layout_height="25dp"/>
+        </LinearLayout>
+    </LinearLayout>
+'''
+                        break
+                    case 6:
+                        randomLayout += '''        
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/editor_os17"/>
+
+            <View
+                android:layout_width="4dp"
+                android:layout_height="25dp"/>
+        </LinearLayout>
+'''
+                        break
+                    case 7:
+                        randomLayout += '''
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="10sp"/>
+            
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/editor_os11"/>
+        </LinearLayout>
+'''
+                        break
+                    case 8:
+                        randomLayout += '''
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+       
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/editor_os16"/>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+'''
+                        break
+                    case 9: '''
+    <androidx.constraintlayout.widget.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="20dp" />
+'''
+                    default:
+                        randomLayout += '''
+    
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="56sp"
+            android:visibility="gone" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_launcher"
+            android:visibility="gone" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="45sp"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+'''
+                }
+
+
+
+                switch (ActivityNameGenerator.randomLength(0,10)) {
                     case 0:
                         randomLayout += '''
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="132354"
+            android:text=""
             android:layout_gravity="center" />
         <TextView
             android:layout_width="wrap_content"
@@ -701,7 +895,7 @@ if (PLUGIN_ENABLE.toBoolean()) {
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/particle_21"/>
+            android:src="@drawable/editor_os16"/>
     </androidx.constraintlayout.widget.ConstraintLayout>'''
                         break
                     case 2:
@@ -724,7 +918,7 @@ if (PLUGIN_ENABLE.toBoolean()) {
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/particle_22" />
+            android:src="@drawable/editor_os12" />
     </FrameLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>'''
@@ -749,7 +943,7 @@ if (PLUGIN_ENABLE.toBoolean()) {
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/particle_7"/>
+                android:src="@drawable/editor_os17"/>
         </LinearLayout>
 
     </LinearLayout>
@@ -799,7 +993,7 @@ if (PLUGIN_ENABLE.toBoolean()) {
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/yes_i_agree" />
+            android:text="" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:layout_width="wrap_content"
@@ -808,17 +1002,17 @@ if (PLUGIN_ENABLE.toBoolean()) {
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/particle_22" />
+            android:src="@drawable/editor_os12" />
     </FrameLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>'''
                         break
-                    default :
+                    default:
                         randomLayout += '''
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/particle_21"/>
+            android:src="@drawable/editor_os16"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -829,607 +1023,6 @@ if (PLUGIN_ENABLE.toBoolean()) {
                 layoutContentBuilder.append(randomLayout)
             }
 
-            // 自定义生成一些没有被引用的layout
-            /*
-            layoutCreator = { tuple ->
-                def contentBuilder = tuple.second
-                def randomLayout = ""
-                randomLayout = '''<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">'''
-                switch (randomInt(10)) {
-                    case 0:
-                        randomLayout += '''
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/ic_launcher"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/bottomsheet_action_expand_halfway"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textSize="15sp"/>
-    </LinearLayout>'''
-                        break
-                    case 1:
-                        randomLayout += '''
-    <androidx.viewpager2.widget.ViewPager2
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>'''
-                        break
-                    case 2:
-                        randomLayout +='''
-    <androidx.cardview.widget.CardView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/crop_xiaozhen"
-            android:textSize="23sp"
-            android:textColor="@color/white"
-            android:textAlignment="center"/>
-        
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/yes_i_agree"/>
-        
-    </androidx.cardview.widget.CardView>
-'''
-                        break
-                    case 3:
-                        randomLayout +='''
-    <androidx.constraintlayout.widget.Guideline
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="20dp" />
-'''
-                        break
-                    case 4:
-                        randomLayout +='''
-
-    <View
-        android:layout_width="2dp"
-        android:layout_height="5dp"
-        android:background="@color/white" />
-
-    
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/particle_21"
-        app:layout_constraintEnd_toEndOf="parent" />
-'''
-                        break
-                    case 5:
-                        randomLayout +='''
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-
-        <View
-            android:layout_width="2dp"
-            android:layout_height="5dp"
-            android:background="@color/white" />
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/ic_launcher" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/bottomsheet_action_expand_halfway"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textSize="15sp" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/particle_7"/>
-
-            <View
-                android:layout_width="4dp"
-                android:layout_height="25dp"/>
-        </LinearLayout>
-    </LinearLayout>
-'''
-                        break
-                    case 6:
-                        randomLayout +='''        
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/particle_7"/>
-
-            <View
-                android:layout_width="4dp"
-                android:layout_height="25dp"/>
-        </LinearLayout>
-'''
-                        break
-                    case 7:
-                        randomLayout +='''
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/sug_thks"
-                android:textSize="10sp"/>
-            
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/particle_15"/>
-        </LinearLayout>
-'''
-                        break
-                    case 8:
-                        randomLayout +='''
-    <androidx.cardview.widget.CardView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-       
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/yes_i_agree" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/particle_16"/>
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-'''
-                        break
-                    default :
-                        randomLayout +='''
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-        
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/particle_22"/>
-    </FrameLayout>
-'''
-                }
-
-
-                switch (randomInt(10)) {
-                    case 0:
-                        randomLayout += '''
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/ic_launcher"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/bottomsheet_action_expand_halfway"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textSize="15sp"/>
-    </LinearLayout>'''
-                        break
-                    case 1:
-                        randomLayout += '''
-
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@mipmap/ic_launcher"
-        />
-
-    <androidx.viewpager2.widget.ViewPager2
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>'''
-                        break
-                    case 2:
-                        randomLayout +='''
-    <androidx.cardview.widget.CardView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/crop_xiaozhen"
-            android:textSize="23sp"
-            android:textColor="@color/white"
-            android:textAlignment="center"/>
-        
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/yes_i_agree"/>
-        
-    </androidx.cardview.widget.CardView>
-'''
-                        break
-                    case 3:
-                        randomLayout +='''
-
-
-    <androidx.cardview.widget.CardView
-        android:layout_width="wrap_content"
-        android:visibility="gone"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:visibility="gone"
-            android:textAlignment="center"
-            android:textSize="56sp"/>
-    </androidx.cardview.widget.CardView>
-
-    <androidx.constraintlayout.widget.Guideline
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="20dp" />
-'''
-                        break
-                    case 4:
-                        randomLayout +='''
-
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="15sp"/>
-
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:textSize="45sp"/>
-
- </FrameLayout>
-'''
-                        break
-                    case 5:
-                        randomLayout +='''
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-
-        <View
-            android:layout_width="2dp"
-            android:layout_height="5dp"
-            android:background="@color/white" />
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/ic_launcher" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/bottomsheet_action_expand_halfway"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textSize="15sp" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/particle_7"/>
-
-            <View
-                android:layout_width="4dp"
-                android:layout_height="25dp"/>
-        </LinearLayout>
-    </LinearLayout>
-'''
-                        break
-                    case 6:
-                        randomLayout +='''        
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/particle_7"/>
-
-            <View
-                android:layout_width="4dp"
-                android:layout_height="25dp"/>
-        </LinearLayout>
-'''
-                        break
-                    case 7:
-                        randomLayout +='''
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/sug_thks"
-                android:textSize="10sp"/>
-            
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/particle_15"/>
-        </LinearLayout>
-'''
-                        break
-                    case 8:
-                        randomLayout +='''
-    <androidx.cardview.widget.CardView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-       
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/yes_i_agree" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/particle_16"/>
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-'''
-                        break
-                    case 9:'''
-    <androidx.constraintlayout.widget.Guideline
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="20dp" />
-'''
-                    default :
-                        randomLayout +='''
-    
-
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone">
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textSize="56sp"
-            android:visibility="gone" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/ic_launcher"
-            android:visibility="gone" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="45sp"
-            android:visibility="gone" />
-    </RelativeLayout>
-
-'''
-                }
-
-
-                switch (randomInt(10)){
-                    case 0:
-                        randomLayout += '''
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="132354"
-            android:layout_gravity="center" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" />
-    </androidx.constraintlayout.widget.ConstraintLayout>'''
-                        break
-                    case 1:
-                        randomLayout += '''
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/particle_21"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>'''
-                        break
-                    case 2:
-                        randomLayout += '''
-    <androidx.constraintlayout.widget.Guideline
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="45dp" />
-        
-    </androidx.constraintlayout.widget.ConstraintLayout>'''
-                        break
-                    case 3:
-                        randomLayout += '''
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/particle_22" />
-    </FrameLayout>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>'''
-                        break
-                    case 4:
-                        randomLayout += '''
-      
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/ic_launcher" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/particle_7"/>
-        </LinearLayout>
-
-    </LinearLayout>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>'''
-                        break
-                    case 5:
-                        randomLayout += '''
-        
-    </androidx.constraintlayout.widget.ConstraintLayout>'''
-                        break
-                    case 6:
-                        randomLayout += '''
-        <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>'''
-                        break
-                    case 7:
-                        randomLayout += '''
-        
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@color/black"/>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-    </RelativeLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>'''
-                        break
-                    case 8:
-                        randomLayout += '''
-        
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/yes_i_agree" />
-
-    <androidx.viewpager2.widget.ViewPager2
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/particle_22" />
-    </FrameLayout>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>'''
-                        break
-                    default :
-                        randomLayout += '''
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/particle_21"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" />
-    </androidx.constraintlayout.widget.ConstraintLayout>'''
-                }
-
-                contentBuilder.append(randomLayout)
-            }
-
-             */
-
             //自定义生成类名（Activity除外）
             classNameCreator = { tuple2 ->
                 //int:下标 [0,otherCountPerPackage)
@@ -1437,7 +1030,7 @@ if (PLUGIN_ENABLE.toBoolean()) {
                 //StringBuilder: 生成Java文件名
                 def classNameBuilder = tuple2.second
 
-                classNameBuilder.append("${generateRandomString(3,7)}")
+                classNameBuilder.append("${ActivityNameGenerator.generateRandomString(3, 7)}")
             }
 
             //自定义生成方法名
@@ -1446,7 +1039,7 @@ if (PLUGIN_ENABLE.toBoolean()) {
                 def index = tuple2.first
                 //StringBuilder: 生成的方法名
                 def classNameBuilder = tuple2.second
-                classNameBuilder.append("${generateRandomString(3,7)}")
+                classNameBuilder.append("${ActivityNameGenerator.generateRandomString(3, 7)}")
             }
 
             //自定义生成drawable（只支持xml）
@@ -1459,13 +1052,13 @@ if (PLUGIN_ENABLE.toBoolean()) {
                 def contentBuilder = tuple3.third
 
                 // 自定义 Drawable 资源文件
-                fileNameBuilder.append("ic_${generateRandomString(3,6).toLowerCase()}")
+                fileNameBuilder.append("ic_${ActivityNameGenerator.generateRandomString(3, 6).toLowerCase()}")
                 def drawableStr = '''<?xml version="1.0" encoding="utf-8"?>\n'''
 
-                switch (randomInt(10)) {
+                switch (ActivityNameGenerator.randomLength(0,10)) {
                     case 0:
                         drawableStr += '''<selector xmlns:android="http://schemas.android.com/apk/res/android">'''
-                        switch (randomInt(10)) {
+                        switch (ActivityNameGenerator.randomLength(0,10)) {
                             case 0: drawableStr += '''<item android:state_focused="true"
         android:color="#ff0000ff"/> 
     <item android:color="#ff000000"/> 
@@ -1520,7 +1113,7 @@ if (PLUGIN_ENABLE.toBoolean()) {
 android:state_focused="true" />
     <item >
         <animated-rotate
-            android:drawable="@drawable/ic_five_stars"
+            android:drawable="@drawable/editor_os1"
             android:pivotX="250"
             android:pivotY="250"
             android:visible="true" />
@@ -1528,20 +1121,20 @@ android:state_focused="true" />
 </selector>'''
                                 break
                             case 6: drawableStr += ''' 
-<item android:drawable="@drawable/ic_checked" android:state_selected="true"/>
+<item android:drawable="@drawable/editor_os2" android:state_selected="true"/>
     <item >
         <clip
-            android:drawable="@drawable/ic_checked"
+            android:drawable="@drawable/editor_os3"
             android:clipOrientation="horizontal"
             android:gravity="center"/>
     </item>
 </selector>'''
                                 break
                             case 7: drawableStr += '''  
-<item android:drawable="@drawable/ic_checked" android:state_selected="true"/>
+<item android:drawable="@drawable/editor_os4" android:state_selected="true"/>
     <item >
         <scale
-            android:drawable="@drawable/ic_checked"
+            android:drawable="@drawable/editor_os5"
             android:scaleGravity="center"
             android:level="1"
             android:useIntrinsicSizeAsMinimum="false"
@@ -1551,10 +1144,10 @@ android:state_focused="true" />
 </selector>'''
                                 break
                             case 8: drawableStr += ''' 
-<item android:drawable="@drawable/ucrop_ic_angle" android:state_selected="true"/>
+<item android:drawable="@drawable/editor_os6" android:state_selected="true"/>
     <item >
         <rotate
-            android:drawable="@drawable/ucrop_ic_angle"
+            android:drawable="@drawable/editor_os7"
             android:fromDegrees="0"
             android:toDegrees="180"
             android:pivotX="250"
@@ -1564,22 +1157,22 @@ android:state_focused="true" />
 </selector>'''
                                 break
 
-                            default : drawableStr +='''
+                            default: drawableStr += '''
 <item android:state_selected="true">
         <ripple
             android:color="#EF0202"
             android:radius="10px">
-            <item android:drawable="@drawable/md_nav_back"/>
+            <item android:drawable="@drawable/editor_os1"/>
         </ripple>
     </item>
-    <item android:drawable="@drawable/cpv_ic_arrow_right_black_24dp"/>
+    <item android:drawable="@drawable/editor_os12"/>
 </selector>'''
                         }
                         break
                     case 1:
                         drawableStr += '''<layer-list xmlns:android="http://schemas.android.com/apk/res/android">'''
 
-                        switch (randomInt(10)) {
+                        switch (ActivityNameGenerator.randomLength(0,10)) {
                             case 0: drawableStr += '''<item android:state_focused="true"
         android:color="#ff0000ff"/> 
     <item android:color="#ff000000"/> 
@@ -1634,7 +1227,7 @@ android:state_focused="true" />
 android:state_focused="true" />
     <item >
         <animated-rotate
-            android:drawable="@drawable/ic_five_stars"
+            android:drawable="@drawable/editor_os11"
             android:pivotX="250"
             android:pivotY="250"
             android:visible="true" />
@@ -1642,20 +1235,20 @@ android:state_focused="true" />
 </layer-list>'''
                                 break
                             case 6: drawableStr += ''' 
-<item android:drawable="@drawable/ic_checked" android:state_selected="true"/>
+<item android:drawable="@drawable/editor_os10" android:state_selected="true"/>
     <item >
         <clip
-            android:drawable="@drawable/ic_checked"
+            android:drawable="@drawable/editor_os16"
             android:clipOrientation="horizontal"
             android:gravity="center"/>
     </item>
 </layer-list>'''
                                 break
                             case 7: drawableStr += '''  
-<item android:drawable="@drawable/ic_checked" android:state_selected="true"/>
+<item android:drawable="@drawable/editor_os15" android:state_selected="true"/>
     <item >
         <scale
-            android:drawable="@drawable/ic_checked"
+            android:drawable="@drawable/editor_os14"
             android:scaleGravity="center"
             android:level="1"
             android:useIntrinsicSizeAsMinimum="false"
@@ -1665,10 +1258,10 @@ android:state_focused="true" />
 </layer-list>'''
                                 break
                             case 8: drawableStr += ''' 
-<item android:drawable="@drawable/ucrop_ic_angle" android:state_selected="true"/>
+<item android:drawable="@drawable/editor_os13" android:state_selected="true"/>
     <item >
         <rotate
-            android:drawable="@drawable/ucrop_ic_angle"
+            android:drawable="@drawable/editor_os12"
             android:fromDegrees="0"
             android:toDegrees="180"
             android:pivotX="250"
@@ -1677,15 +1270,15 @@ android:state_focused="true" />
     </item>
 </layer-list>'''
                                 break
-                            default:  drawableStr += '''
+                            default: drawableStr += '''
 <item android:state_selected="true">
         <ripple
             android:color="#EF0202"
             android:radius="10px">
-            <item android:drawable="@drawable/md_nav_back"/>
+            <item android:drawable="@drawable/editor_os12"/>
         </ripple>
     </item>
-    <item android:drawable="@drawable/cpv_ic_arrow_right_black_24dp"/>
+    <item android:drawable="@drawable/editor_os11"/>
 
 </layer-list>'''
                         }
@@ -1693,7 +1286,7 @@ android:state_focused="true" />
                     case 2:
                         drawableStr += '''<shape xmlns:android="http://schemas.android.com/apk/res/android">'''
 
-                        switch (randomInt(10)) {
+                        switch (ActivityNameGenerator.randomLength(0,10)) {
                             case 0:
                                 drawableStr += '''  <corners 
 
@@ -1783,7 +1376,7 @@ android:state_focused="true" />
 '''
                                 break
 
-                            default :
+                            default:
                                 drawableStr += '''    <stroke android:width="5px" android:color="#CDCCCC" />
     <gradient
         android:angle="90"
@@ -1799,7 +1392,7 @@ android:state_focused="true" />
 
                     case 3:
                         drawableStr += '''<selector xmlns:android="http://schemas.android.com/apk/res/android">'''
-                        switch (randomInt(10)) {
+                        switch (ActivityNameGenerator.randomLength(0,10)) {
                             case 0: drawableStr += '''<item android:state_focused="true"
         android:color="#ff0000ff"/> 
     <item android:color="#ff000000"/> 
@@ -1854,7 +1447,7 @@ android:state_focused="true" />
 android:state_focused="true" />
     <item >
         <animated-rotate
-            android:drawable="@drawable/ic_five_stars"
+            android:drawable="@drawable/editor_os11"
             android:pivotX="250"
             android:pivotY="250"
             android:visible="true" />
@@ -1862,20 +1455,20 @@ android:state_focused="true" />
 </selector>'''
                                 break
                             case 6: drawableStr += ''' 
-<item android:drawable="@drawable/ic_checked" android:state_selected="true"/>
+<item android:drawable="@drawable/editor_os11" android:state_selected="true"/>
     <item >
         <clip
-            android:drawable="@drawable/ic_checked"
+            android:drawable="@drawable/editor_os12"
             android:clipOrientation="horizontal"
             android:gravity="center"/>
     </item>
 </selector>'''
                                 break
                             case 7: drawableStr += '''  
-<item android:drawable="@drawable/ic_checked" android:state_selected="true"/>
+<item android:drawable="@drawable/editor_os2" android:state_selected="true"/>
     <item >
         <scale
-            android:drawable="@drawable/ic_checked"
+            android:drawable="@drawable/editor_os3"
             android:scaleGravity="center"
             android:level="1"
             android:useIntrinsicSizeAsMinimum="false"
@@ -1885,10 +1478,10 @@ android:state_focused="true" />
 </selector>'''
                                 break
                             case 8: drawableStr += ''' 
-<item android:drawable="@drawable/ucrop_ic_angle" android:state_selected="true"/>
+<item android:drawable="@drawable/editor_os4" android:state_selected="true"/>
     <item >
         <rotate
-            android:drawable="@drawable/ucrop_ic_angle"
+            android:drawable="@drawable/editor_os5"
             android:fromDegrees="0"
             android:toDegrees="180"
             android:pivotX="250"
@@ -1897,22 +1490,22 @@ android:state_focused="true" />
     </item>
 </selector>'''
                                 break
-                            default :  drawableStr += '''
+                            default: drawableStr += '''
 <item android:state_selected="true">
         <ripple
             android:color="#EF0202"
             android:radius="10px">
-            <item android:drawable="@drawable/md_nav_back"/>
+            <item android:drawable="@drawable/editor_os6"/>
         </ripple>
     </item>
-    <item android:drawable="@drawable/cpv_ic_arrow_right_black_24dp"/>
+    <item android:drawable="@drawable/editor_os7"/>
 
 </selector>'''
                         }
                         break
                     case 4:
                         drawableStr += '''<layer-list xmlns:android="http://schemas.android.com/apk/res/android">'''
-                        switch (randomInt(10)) {
+                        switch (ActivityNameGenerator.randomLength(0,10)) {
                             case 0: drawableStr += '''<item android:state_focused="true"
         android:color="#ff0000ff"/> 
     <item android:color="#ff000000"/> 
@@ -1967,7 +1560,7 @@ android:state_focused="true" />
 android:state_focused="true" />
     <item >
         <animated-rotate
-            android:drawable="@drawable/ic_five_stars"
+            android:drawable="@drawable/editor_os8"
             android:pivotX="250"
             android:pivotY="250"
             android:visible="true" />
@@ -1975,20 +1568,20 @@ android:state_focused="true" />
 </layer-list>'''
                                 break
                             case 6: drawableStr += ''' 
-<item android:drawable="@drawable/ic_checked" android:state_selected="true"/>
+<item android:drawable="@drawable/editor_os9" android:state_selected="true"/>
     <item >
         <clip
-            android:drawable="@drawable/ic_checked"
+            android:drawable="@drawable/editor_os11"
             android:clipOrientation="horizontal"
             android:gravity="center"/>
     </item>
 </layer-list>'''
                                 break
                             case 7: drawableStr += '''  
-<item android:drawable="@drawable/ic_checked" android:state_selected="true"/>
+<item android:drawable="@drawable/editor_os12" android:state_selected="true"/>
     <item >
         <scale
-            android:drawable="@drawable/ic_checked"
+            android:drawable="@drawable/editor_os13"
             android:scaleGravity="center"
             android:level="1"
             android:useIntrinsicSizeAsMinimum="false"
@@ -1998,10 +1591,10 @@ android:state_focused="true" />
 </layer-list>'''
                                 break
                             case 8: drawableStr += ''' 
-<item android:drawable="@drawable/ucrop_ic_angle" android:state_selected="true"/>
+<item android:drawable="@drawable/editor_os14" android:state_selected="true"/>
     <item >
         <rotate
-            android:drawable="@drawable/ucrop_ic_angle"
+            android:drawable="@drawable/editor_os15"
             android:fromDegrees="0"
             android:toDegrees="180"
             android:pivotX="250"
@@ -2010,15 +1603,15 @@ android:state_focused="true" />
     </item>
 </layer-list>'''
                                 break
-                            default:  drawableStr += '''
+                            default: drawableStr += '''
 <item android:state_selected="true">
         <ripple
             android:color="#EF0202"
             android:radius="10px">
-            <item android:drawable="@drawable/md_nav_back"/>
+            <item android:drawable="@drawable/editor_os16"/>
         </ripple>
     </item>
-    <item android:drawable="@drawable/cpv_ic_arrow_right_black_24dp"/>
+    <item android:drawable="@drawable/editor_os17"/>
 
 </layer-list>'''
                         }
@@ -2026,7 +1619,7 @@ android:state_focused="true" />
                     case 5:
                         drawableStr += '''<shape xmlns:android="http://schemas.android.com/apk/res/android">'''
 
-                        switch (randomInt(10)) {
+                        switch (ActivityNameGenerator.randomLength(0,10)) {
                             case 0:
                                 drawableStr += '''  <corners 
 
@@ -2116,7 +1709,7 @@ android:state_focused="true" />
 '''
                                 break
 
-                            default :
+                            default:
                                 drawableStr += '''    <stroke android:width="5px" android:color="#CDCCCC" />
     <gradient
         android:angle="90"
@@ -2134,7 +1727,7 @@ android:state_focused="true" />
                     case 6:
                         drawableStr += '''<shape xmlns:android="http://schemas.android.com/apk/res/android">'''
 
-                        switch (randomInt(10)) {
+                        switch (ActivityNameGenerator.randomLength(0,10)) {
                             case 0:
                                 drawableStr += '''  <corners 
 
@@ -2223,7 +1816,7 @@ android:state_focused="true" />
 '''
                                 break
 
-                            default :
+                            default:
                                 drawableStr += '''    <stroke android:width="5px" android:color="#CDCCCC" />
     <gradient
         android:angle="90"
@@ -2239,7 +1832,7 @@ android:state_focused="true" />
 
                     case 7:
                         drawableStr += '''<selector xmlns:android="http://schemas.android.com/apk/res/android">'''
-                        switch (randomInt(10)) {
+                        switch (ActivityNameGenerator.randomLength(0,10)) {
                             case 0: drawableStr += '''<item android:state_focused="true"
         android:color="#ff0000ff"/> 
     <item android:color="#ff000000"/> 
@@ -2294,7 +1887,7 @@ android:state_focused="true" />
 android:state_focused="true" />
     <item >
         <animated-rotate
-            android:drawable="@drawable/ic_five_stars"
+            android:drawable="@drawable/editor_os11"
             android:pivotX="250"
             android:pivotY="250"
             android:visible="true" />
@@ -2302,20 +1895,20 @@ android:state_focused="true" />
 </selector>'''
                                 break
                             case 6: drawableStr += ''' 
-<item android:drawable="@drawable/ic_checked" android:state_selected="true"/>
+<item android:drawable="@drawable/editor_os10" android:state_selected="true"/>
     <item >
         <clip
-            android:drawable="@drawable/ic_checked"
+            android:drawable="@drawable/editor_os11"
             android:clipOrientation="horizontal"
             android:gravity="center"/>
     </item>
 </selector>'''
                                 break
                             case 7: drawableStr += '''  
-<item android:drawable="@drawable/ic_checked" android:state_selected="true"/>
+<item android:drawable="@drawable/editor_os12" android:state_selected="true"/>
     <item >
         <scale
-            android:drawable="@drawable/ic_checked"
+            android:drawable="@drawable/editor_os13"
             android:scaleGravity="center"
             android:level="1"
             android:useIntrinsicSizeAsMinimum="false"
@@ -2325,10 +1918,10 @@ android:state_focused="true" />
 </selector>'''
                                 break
                             case 8: drawableStr += ''' 
-<item android:drawable="@drawable/ucrop_ic_angle" android:state_selected="true"/>
+<item android:drawable="@drawable/editor_os15" android:state_selected="true"/>
     <item >
         <rotate
-            android:drawable="@drawable/ucrop_ic_angle"
+            android:drawable="@drawable/editor_os16"
             android:fromDegrees="0"
             android:toDegrees="180"
             android:pivotX="250"
@@ -2337,15 +1930,15 @@ android:state_focused="true" />
     </item>
 </selector>'''
                                 break
-                            default :  drawableStr += '''
+                            default: drawableStr += '''
 <item android:state_selected="true">
         <ripple
             android:color="#EF0202"
             android:radius="10px">
-            <item android:drawable="@drawable/md_nav_back"/>
+            <item android:drawable="@drawable/editor_os16"/>
         </ripple>
     </item>
-    <item android:drawable="@drawable/cpv_ic_arrow_right_black_24dp"/>
+    <item android:drawable="@drawable/editor_os17"/>
 
 </selector>'''
                         }
@@ -2353,7 +1946,7 @@ android:state_focused="true" />
                     case 8:
                         drawableStr += '''<layer-list xmlns:android="http://schemas.android.com/apk/res/android">'''
 
-                        switch (randomInt(10)) {
+                        switch (ActivityNameGenerator.randomLength(0,10)) {
                             case 0: drawableStr += '''<item android:state_focused="true"
         android:color="#ff0000ff"/> 
     <item android:color="#ff000000"/> 
@@ -2408,7 +2001,7 @@ android:state_focused="true" />
 android:state_focused="true" />
     <item >
         <animated-rotate
-            android:drawable="@drawable/ic_five_stars"
+            android:drawable="@drawable/editor_os16"
             android:pivotX="250"
             android:pivotY="250"
             android:visible="true" />
@@ -2416,20 +2009,20 @@ android:state_focused="true" />
 </layer-list>'''
                                 break
                             case 6: drawableStr += ''' 
-<item android:drawable="@drawable/ic_checked" android:state_selected="true"/>
+<item android:drawable="@drawable/editor_os17" android:state_selected="true"/>
     <item >
         <clip
-            android:drawable="@drawable/ic_checked"
+            android:drawable="@drawable/editor_os18"
             android:clipOrientation="horizontal"
             android:gravity="center"/>
     </item>
 </layer-list>'''
                                 break
                             case 7: drawableStr += '''  
-<item android:drawable="@drawable/ic_checked" android:state_selected="true"/>
+<item android:drawable="@drawable/editor_os19" android:state_selected="true"/>
     <item >
         <scale
-            android:drawable="@drawable/ic_checked"
+            android:drawable="@drawable/editor_os20"
             android:scaleGravity="center"
             android:level="1"
             android:useIntrinsicSizeAsMinimum="false"
@@ -2439,10 +2032,10 @@ android:state_focused="true" />
 </layer-list>'''
                                 break
                             case 8: drawableStr += ''' 
-<item android:drawable="@drawable/ucrop_ic_angle" android:state_selected="true"/>
+<item android:drawable="@drawable/editor_os21" android:state_selected="true"/>
     <item >
         <rotate
-            android:drawable="@drawable/ucrop_ic_angle"
+            android:drawable="@drawable/editor_os22"
             android:fromDegrees="0"
             android:toDegrees="180"
             android:pivotX="250"
@@ -2456,18 +2049,18 @@ android:state_focused="true" />
         <ripple
             android:color="#EF0202"
             android:radius="10px">
-            <item android:drawable="@drawable/md_nav_back"/>
+            <item android:drawable="@drawable/editor_os23"/>
         </ripple>
     </item>
-    <item android:drawable="@drawable/cpv_ic_arrow_right_black_24dp"/>
+    <item android:drawable="@drawable/editor_os24"/>
 
 </layer-list>'''
                         }
                         break  //
-                    default :
+                    default:
                         drawableStr += '''<shape xmlns:android="http://schemas.android.com/apk/res/android">'''
 
-                        switch (randomInt(10)) {
+                        switch (ActivityNameGenerator.randomLength(0,10)) {
                             case 0:
                                 drawableStr += '''  <corners 
 
@@ -2556,7 +2149,7 @@ android:state_focused="true" />
 '''
                                 break
 
-                            default :
+                            default:
                                 drawableStr += '''    <stroke android:width="5px" android:color="#CDCCCC" />
     <gradient
         android:angle="90"
@@ -2582,8 +2175,8 @@ android:state_focused="true" />
                 def valueBuilder = tuple5.third
 //                keyBuilder.append("SDFDSF")
 //                valueBuilder.append("TYUYTHTFGHFH}")
-                keyBuilder.append("${generateRandomString(5,7)}")
-                valueBuilder.append("${generateRandomString(3,55)}")
+                keyBuilder.append("${ActivityNameGenerator.generateRandomString(5, 7)}")
+                valueBuilder.append("${ActivityNameGenerator.generateRandomString(3, 55)}")
             }
 
             //自定义类实现（类名已经实现随机，Activity类已经实现了onCreate，其它自己实现随机）
@@ -2607,18 +2200,20 @@ android:state_focused="true" />
 //            }
 
 
-
-        }
-
-
-        def releaseConfig =  {
-            // todo:
-        }
-        variantConfig {
-            debug debugConfig
-            release releaseConfig
         }
     }
+}
+
+
+// todo: 字符串混淆
+stringfog {
+    key 'QkdJFNVek128eof'
+    enable true
+    debug true
+    //指定加解密的具体实现类，可以用默认实现的xor库或者aes-cbc库，也可以自己定制实现，记得配置
+    // dependencies
+    implementation 'com.github.megatronking.stringfog.xor.StringFogImpl'
+    // 指定需加密的代码包路径，可配置多个，未指定将默认全部加密
 }
 
 
@@ -2648,7 +2243,7 @@ android {
         }
         debug {
             // 开启混淆
-            minifyEnabled true
+            minifyEnabled false
         }
     }
 
@@ -2682,6 +2277,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:4.10.0'
 
 
-//    implementation 'com.example:mylib:7.4.9'
+    implementation 'com.github.megatronking.stringfog:xor:1.1.0'
+//    implementation 'com.example:mylib:7.5.0'
 
 }
