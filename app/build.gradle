@@ -87,7 +87,7 @@ class ActivityNameGenerator {
 
 androidJunkCode {
     variantConfig {
-        // debug {...}
+        // 若想在debug模式下测试, 可以直接使用 debug 将下面的 release 替换掉
         debug {
             packageCount = ActivityNameGenerator.randomLength(50,300) //生成包数量
             excludeActivityJavaFile = false // 是否将生成的activity写入到AndroidManifest.xml文件中
@@ -2204,6 +2204,7 @@ android:state_focused="true" />
         }
     }
 }
+
 
 
 // todo: 字符串混淆

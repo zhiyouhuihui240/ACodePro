@@ -161,7 +161,7 @@ class RandomUtil {
                              'String','Str','string','str',
                              'Double','double',
                              'Float','Long','Boolean','boolean',
-                             'List','ArrayList','HashMap','HashSet','If','For','While','Switch','Return','Do','New',
+                             'List','ArrayList','HashMap','HashSet','If','For','While','Switch','Return','Do','New','new',
                 'Try','try','Byte','Case','Char','Else','Goto','Break','This','Void','Catch','Class','Const','Const',
                 'Final','Super','Throw','While','Import','Native','Public','Return','Static','Throws','Default','Extends',
                 'Finally','Package','Private','Abstract','Continue','Protected','Strictfp','Volatile','Interface','Transient',

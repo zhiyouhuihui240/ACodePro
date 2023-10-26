@@ -331,7 +331,8 @@ class JunkUtil {
 //                className = activityNameBuilder.toString()
 //                layoutName1 = layoutNameBuilder.toString()
 //                def drawableName = "${config.resPrefix.toLowerCase()}${generateName(i)}"
-                writeStringToFile(new File(resDir, "layout/${layoutFile}.xml"), layoutContentBuilder.toString())
+//                writeStringToFile(new File(resDir, "${layoutFile}"), layoutContentBuilder.toString())
+                writeStringToFile(layoutFile, layoutContentBuilder.toString())
 
 
 //                writeStringToFile(new File(resDir, "drawable/${drawableName}.xml"), contentBuilder.toString())
