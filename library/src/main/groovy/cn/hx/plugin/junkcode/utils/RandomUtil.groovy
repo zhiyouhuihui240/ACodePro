@@ -162,7 +162,7 @@ class RandomUtil {
                              'Double','double',
                              'Float','Long','Boolean','boolean',
                              'List','ArrayList','HashMap','HashSet','If','For','While','Switch','Return','Do','New',
-                'Try','Byte','Case','Char','Else','Goto','Break','This','Void','Catch','Class','Const','Const',
+                'Try','try','Byte','Case','Char','Else','Goto','Break','This','Void','Catch','Class','Const','Const',
                 'Final','Super','Throw','While','Import','Native','Public','Return','Static','Throws','Default','Extends',
                 'Finally','Package','Private','Abstract','Continue','Protected','Strictfp','Volatile','Interface','Transient',
                 'Implements','Instanceof','Synchronized']
@@ -210,6 +210,7 @@ class RandomUtil {
     }
 
 
+    // 获取本类中生成的方法, 便于内部调用, 目前用于activity中
     static String getRandomMethod(stringList){
         def unm = generateRandomNum()
         def num = stringList.size()
@@ -227,14 +228,28 @@ class RandomUtil {
         def c =generateRandomStr(index)
         return "$a.$b.$c"
     }
-
-
     // 随机生成一个Meta-data名称,类名和包名
     static String generateMetaDataName(int index) {
         def a =generateRandomStr(index)
         def b =generateRandomStr(index)
         def c =generateRandomStr(index)
         return "$a.$b.$c"
+    }
+    static String generateRandomStr(int index){
+        def sb = new StringBuilder()
+        for (i in 0..4) {
+            sb.append(abc[random.nextInt(abc.size())])
+        }
+        int temp = index
+        while (temp >= 0) {
+            sb.append(abc[temp % abc.size()])
+            temp = temp / abc.size()
+            if (temp == 0) {
+                temp = -1
+            }
+        }
+        sb.append(index.toString())
+        return sb.toString()
     }
 
 
@@ -255,23 +270,6 @@ class RandomUtil {
         return sb.toString()
     }
 
-
-    static String generateRandomStr(int index){
-        def sb = new StringBuilder()
-        for (i in 0..4) {
-            sb.append(abc[random.nextInt(abc.size())])
-        }
-        int temp = index
-        while (temp >= 0) {
-            sb.append(abc[temp % abc.size()])
-            temp = temp / abc.size()
-            if (temp == 0) {
-                temp = -1
-            }
-        }
-        sb.append(index.toString())
-        return sb.toString()
-    }
 
 
 

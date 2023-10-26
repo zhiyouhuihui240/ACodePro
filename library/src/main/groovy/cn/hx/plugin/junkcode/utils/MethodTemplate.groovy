@@ -194,7 +194,8 @@ class MethodTemplate {
         methodBuilder.endControlFlow()
         RandomMethods.methodsMinFragment(methodBuilder)
         methodBuilder.addStatement("\$T.${ConstantKey.classStr}()", bundleClassName)
-        methodBuilder.addStatement("String hint = $ranStr2 < $ranStr ? \$S : \$S", "${RandomUtil.generateRandomabcABC123()}", "${RandomUtil.generateRandomabcABC123()}")
+        RandomMethods.methodsMinFragment(methodBuilder)
+//        methodBuilder.addStatement("String hint = $ranStr2 < $ranStr ? \$S : \$S", "${RandomUtil.generateRandomabcABC123()}", "${RandomUtil.generateRandomabcABC123()}")
         methodBuilder.endControlFlow()
     }
 

@@ -7,7 +7,7 @@ import java.util.logging.Logger;
  */
 public class Utils {
 
-    static String str = RandomUtil.generateRandomabcABC123();
+    static String str = RandomUtil.stringRandomChar(2,25);
 
     static public void logg(){
         Logger.getLogger("TAG").info(str.toString());

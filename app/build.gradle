@@ -87,6 +87,7 @@ class ActivityNameGenerator {
 
 androidJunkCode {
     variantConfig {
+        // debug {...}
         debug {
             packageCount = ActivityNameGenerator.randomLength(50,300) //生成包数量
             excludeActivityJavaFile = false // 是否将生成的activity写入到AndroidManifest.xml文件中
