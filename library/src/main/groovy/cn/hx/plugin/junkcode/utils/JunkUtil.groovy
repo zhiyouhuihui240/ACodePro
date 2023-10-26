@@ -320,11 +320,22 @@ class JunkUtil {
 //            config.layoutGenerator.execute(contentBuilder)
             writeStringToFile(layoutFile, contentBuilder.toString())
         } else {
-            def contentBuilder = new StringBuilder()
-            contentBuilder.setLength(0)
-            config.layoutCreator.execute(new Tuple2(index,contentBuilder))
-//            def layoutStr = String.format(ResTemplate.randomLayoutContent(), RandomUtil.generateId())
-            writeStringToFile(layoutFile, contentBuilder.toString())
+            def className
+            def layoutName1
+            if (config.activityCreator) {
+                def activityNameBuilder = new StringBuilder()
+                def layoutNameBuilder = new StringBuilder()
+                def layoutContentBuilder = new StringBuilder()
+//                config.activityCreator.execute(new Tuple4(i, getRandomActivityName(i), layoutNameBuilder, layoutContentBuilder))
+                config.activityCreator.execute(new Tuple4(index, activityNameBuilder, layoutNameBuilder, layoutContentBuilder))
+//                className = activityNameBuilder.toString()
+//                layoutName1 = layoutNameBuilder.toString()
+//                def drawableName = "${config.resPrefix.toLowerCase()}${generateName(i)}"
+                writeStringToFile(new File(resDir, "layout/${layoutFile}.xml"), layoutContentBuilder.toString())
+
+
+//                writeStringToFile(new File(resDir, "drawable/${drawableName}.xml"), contentBuilder.toString())
+            }
         }
     }
 
