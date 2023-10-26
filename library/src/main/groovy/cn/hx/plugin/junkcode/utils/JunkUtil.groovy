@@ -320,8 +320,11 @@ class JunkUtil {
 //            config.layoutGenerator.execute(contentBuilder)
             writeStringToFile(layoutFile, contentBuilder.toString())
         } else {
-            def layoutStr = String.format(ResTemplate.randomLayoutContent(), RandomUtil.generateId())
-            writeStringToFile(layoutFile, layoutStr)
+            def contentBuilder = new StringBuilder()
+            contentBuilder.setLength(0)
+            config.layoutCreator.execute(new Tuple2(index,contentBuilder))
+//            def layoutStr = String.format(ResTemplate.randomLayoutContent(), RandomUtil.generateId())
+            writeStringToFile(layoutFile, contentBuilder.toString())
         }
     }
 
@@ -366,7 +369,7 @@ class JunkUtil {
                 // todo：.9图不能生成，原因待
 //                    writeStringToFile(new File(resDir, "drawable/${drawableName}nine.xml"), String.format(ResTemplate.DRAWABLE, RandomUtil.generateColor()))
 //                } else  {
-
+                /// ?????
                 def drawableName = "${config.resPrefix.toLowerCase()}${generateName(i)}"
                 writeStringToFile(new File(resDir, "drawable/${drawableName}.xml"), contentBuilder.toString())
 //                }
