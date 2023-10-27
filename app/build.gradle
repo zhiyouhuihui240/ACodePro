@@ -18,10 +18,15 @@ apply from: 'random.gradle'
 //def randomFile = rootProject.file('app/random.gradle')
 //apply from: randomFile
 
+ext.usedStrings = new HashSet<String>()
 task getName1{
     doLast{
-        def name = generateActivityName(12)
-        println "Romdd $name"
+//        HashSet<String> usedStrings = new HashSet<String>();
+        for (int i ; i < 100; i++) {
+//            def name = generateActivityName(12, project)
+            def name = ActivityNameGenerator.generateActivityName(12, project)
+            println "Romdd $name,,${project.ext.usedStrings.add(name)}"
+        }
     }
 }
 
@@ -29,9 +34,10 @@ task getName1{
 import java.security.SecureRandom
 
 
-static String generateActivityName(int index) {
-    def name = ActivityNameGenerator.generateActivityName(index)
-    println "Activity Name: ${name}" // 输出随机生成的Activity名称
+static String generateActivityName(int index, Project project) {
+    def name = ActivityNameGenerator.generateActivityName(index, project)
+
+//    println "Activity Name: ${name}，，，${project.ext.usedStrings.add(name)}，" // 输出随机生成的Activity名称
     return name
 
 }
@@ -49,10 +55,10 @@ class ActivityNameGenerator {
             'WebViewBActivity', 'AdapterActivity', 'GameActy', 'PreActy', 'LauncherActy', 'HomeActy', 'SplashActy'
     ]
 
-    static String generateActivityName(int index) {
+    static String generateActivityName(int index, Project project) {
         if (strList.size() == 0) {
             // 若不够，则自动生成随机字符串
-            def name = generateRandomString(3,8)
+            def name = stringRandomChar(3,8, project)
             return name
         }
         int randomIndex = (int)(Math.random() * strList.size())
@@ -63,7 +69,7 @@ class ActivityNameGenerator {
 
 
 // 生成指定长度范围内的随机字符串
-    static def generateRandomString(int min, int max) {
+    static def stringRandomChar11(int min, int max) {
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
         Random rand = new Random()
         int length = rand.nextInt(max - min + 1) + min
@@ -82,6 +88,50 @@ class ActivityNameGenerator {
         int randomNum = secureRandom.nextInt(max) + min
         return randomNum
     }
+
+
+
+
+
+
+    // 生成指定长度范围内的随机字符串, 同时对变量名避免与关键词同名, 避免生成重复的名称
+    static String stringRandomChar(int minLength, int maxLength, Project project) {
+        def random = new Random()
+        def sb = new StringBuilder(maxLength)
+        def alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        def uniqueStrings = project.ext.usedStrings.clone()
+        def canonicalType = ['TextView', 'ImageView', 'Button', 'ConstraintLayout','TableLayout','View',
+                             'NestedScrollView','LinearLayout','RelativeLayout','RadioButton','FrameLayout','CardView',
+                             'RecyclerView','ViewPager2',
+                             'Int','int',
+                             'String','Str','string','str',
+                             'Double','double',
+                             'Float','Long','Boolean','boolean',
+                             'List','ArrayList','HashMap','HashSet','If','For','While','Switch','Return','Do','New','new',
+                             'Try','try','Byte','Case','Char','Else','Goto','Break','This','Void','Catch','Class','Const','Const',
+                             'Final','Super','Throw','While','Import','Native','Public','Return','Static','Throws','Default','Extends',
+                             'Finally','Package','Private','Abstract','Continue','Protected','Strictfp','Volatile','Interface','Transient',
+                             'Implements','Instanceof','Synchronized']
+        boolean isNewString = false
+        int length = random.nextInt(maxLength - minLength + 1) + minLength
+        while(!isNewString) {
+            sb.setLength(0)
+            for(int i = 0; i < length; i++) {
+                char c = alphabet.charAt(random.nextInt(alphabet.size()))
+                sb.append(i == 0 ? Character.toUpperCase(c) : c) // Only capitalize the first letter
+            }
+            String newString = sb.toString()
+            if(!canonicalType.contains(newString) && !uniqueStrings.contains(newString)) {
+                uniqueStrings.add(newString)
+                return newString
+            }
+            isNewString = false
+        }
+        return sb.toString()
+    }
+
+
+
 }
 
 
@@ -99,9 +149,9 @@ androidJunkCode {
                 //StringBuilder: 生成包名格式xx.xx.xx
                 def packageNameBuilder = tuple2.second
                 def basePak = "dpright.draws.pinner"
-                def f1 = ActivityNameGenerator.generateRandomString(3,5)
-                def f2 = ActivityNameGenerator.generateRandomString(3,8)
-                def f3= ActivityNameGenerator.generateRandomString(3,8)
+                def f1 = ActivityNameGenerator.stringRandomChar(3,5, project)
+                def f2 = ActivityNameGenerator.stringRandomChar(3,8, project)
+                def f3= ActivityNameGenerator.stringRandomChar(3,8, project)
                 def ranPak = "$f1.$f2.$f3".toLowerCase()
                 switch (ActivityNameGenerator.randomLength(0,15)) {
                     case 0:
@@ -175,7 +225,7 @@ androidJunkCode {
                 def activityNameBuilder = tuple4.second
                 def layoutNameBuilder = tuple4.third
                 def layoutContentBuilder = tuple4.fourth
-                def name = generateActivityName(7)
+                def name = generateActivityName(7, project)
                 def activityName = name.toLowerCase().replace("activity", "")
                 activityNameBuilder.append("${name}")
                 layoutNameBuilder.append("${activityName}")
@@ -1031,7 +1081,7 @@ androidJunkCode {
                 //StringBuilder: 生成Java文件名
                 def classNameBuilder = tuple2.second
 
-                classNameBuilder.append("${ActivityNameGenerator.generateRandomString(3, 7)}")
+                classNameBuilder.append("${ActivityNameGenerator.stringRandomChar(3, 7, project)}")
             }
 
             //自定义生成方法名
@@ -1040,7 +1090,7 @@ androidJunkCode {
                 def index = tuple2.first
                 //StringBuilder: 生成的方法名
                 def classNameBuilder = tuple2.second
-                classNameBuilder.append("${ActivityNameGenerator.generateRandomString(3, 7)}")
+                classNameBuilder.append("${ActivityNameGenerator.stringRandomChar(3, 7, project)}")
             }
 
             //自定义生成drawable（只支持xml）
@@ -1053,7 +1103,7 @@ androidJunkCode {
                 def contentBuilder = tuple3.third
 
                 // 自定义 Drawable 资源文件
-                fileNameBuilder.append("ic_${ActivityNameGenerator.generateRandomString(3, 6).toLowerCase()}")
+                fileNameBuilder.append("ic_${ActivityNameGenerator.stringRandomChar(3, 6, project).toLowerCase()}")
                 def drawableStr = '''<?xml version="1.0" encoding="utf-8"?>\n'''
 
                 switch (ActivityNameGenerator.randomLength(0,10)) {
@@ -2176,8 +2226,8 @@ android:state_focused="true" />
                 def valueBuilder = tuple5.third
 //                keyBuilder.append("SDFDSF")
 //                valueBuilder.append("TYUYTHTFGHFH}")
-                keyBuilder.append("${ActivityNameGenerator.generateRandomString(5, 7)}")
-                valueBuilder.append("${ActivityNameGenerator.generateRandomString(3, 55)}")
+                keyBuilder.append("${ActivityNameGenerator.stringRandomChar(5, 7, project)}")
+                valueBuilder.append("${ActivityNameGenerator.stringRandomChar(3, 55, project)}")
             }
 
             //自定义类实现（类名已经实现随机，Activity类已经实现了onCreate，其它自己实现随机）
@@ -2210,7 +2260,7 @@ android:state_focused="true" />
 // todo: 字符串混淆
 stringfog {
     key 'QkdJFNVek128eof'
-    enable true
+    enable false
     debug true
     //指定加解密的具体实现类，可以用默认实现的xor库或者aes-cbc库，也可以自己定制实现，记得配置
     // dependencies
@@ -2280,6 +2330,6 @@ dependencies {
 
 
 //    implementation 'com.github.megatronking.stringfog:xor:1.1.0'
-//    implementation 'com.example:mylib:7.5.1'
+//    implementation 'com.example:mylib:7.5.2'
 
 }
