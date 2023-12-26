@@ -34,14 +34,6 @@ task getName1{
 import java.security.SecureRandom
 
 
-static String generateActivityName(int index, Project project) {
-    def name = ActivityNameGenerator.generateActivityName(index, project)
-
-//    println "Activity Name: ${name}，，，${project.ext.usedStrings.add(name)}，" // 输出随机生成的Activity名称
-    return name
-
-}
-
 class ActivityNameGenerator {
     static List<String> strList = [
             'GameActivity', 'PreActivity', 'LauncherActivity', 'HomeActivity', 'SplashActivity', 'LoadActivity',
@@ -68,31 +60,12 @@ class ActivityNameGenerator {
     }
 
 
-// 生成指定长度范围内的随机字符串
-    static def stringRandomChar11(int min, int max) {
-        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-        Random rand = new Random()
-        int length = rand.nextInt(max - min + 1) + min
-
-        StringBuilder sb = new StringBuilder(length)
-        for(int i = 0; i < length; i++) {
-            int randIndex = rand.nextInt(characters.length())
-            sb.append(characters.charAt(randIndex))
-        }
-        return sb.toString()
-    }
-
 // 生成指定范围内的整数
     static def randomLength(int min, int max) {
         SecureRandom secureRandom = new SecureRandom()
         int randomNum = secureRandom.nextInt(max) + min
         return randomNum
     }
-
-
-
-
-
 
     // 生成指定长度范围内的随机字符串, 同时对变量名避免与关键词同名, 避免生成重复的名称
     static String stringRandomChar(int minLength, int maxLength, Project project) {
@@ -129,8 +102,6 @@ class ActivityNameGenerator {
         }
         return sb.toString()
     }
-
-
 
 }
 
